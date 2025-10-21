@@ -42,8 +42,11 @@ Example: `git checkout -b feature/project-skeleton`
 ### Step 6: Staging your changes for commit
 
 After making changes, add to your current commit.
+
 Add a specific file: `git add <filename>`
+
 Add all changed files: `git add .`
+
 Add all modified files: `git add -u`
 
 Run `git status` to ensure you are making the correct changes and are in the
@@ -56,7 +59,9 @@ Example: `git commit -m "Added navbar.tsx component to home.tsx"`
 
 After finalizing your commit, you need to push your changes to your branch.
 If you had just created the branch, you'll need to publish it first.
+
 New branch: `git push -u origin <branch-name>`
+
 Existing branch: `git push`
 
 Once you are finished pushing your changes, you should create a pull
