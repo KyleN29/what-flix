@@ -1,5 +1,5 @@
 # Contributing
-## Setup Guide
+## Getting Started
 
 ### Step 1: Install Node and npm
 Go to https://nodejs.org/en/download and run the installer.
