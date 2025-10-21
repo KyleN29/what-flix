@@ -18,7 +18,7 @@ Frontend: ```npm run frontend```
 
 Backend: ```npm run backend```
 
-### Step 3: Making changes
+### Step 4: Making changes
 No changes should be directly added to main. All changes should be made in a separate branch and then merged with a pull request.
 
 To create a branch run ```git checkout -b <type>/<name>```. 
@@ -27,7 +27,7 @@ Type should describe the type of change your branch will make. The type should b
 
 Example ```git checkout -b feature/project-skeleton```
 
-### Step 4: Submitting changes
+### Step 5: Submitting changes
 Once you are finished implementing your features, you should create a pull request to merge with main.
 
 
