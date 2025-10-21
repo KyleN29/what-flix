@@ -1,5 +1,15 @@
 # What-flix
-What-flix is a personalized movie recommendation system that helps users quickly find films they are likely to enjoy across multiple streaming platforms. The application allows users to create accounts, select the streaming services they subscribe to, rank genres, and rate movies they have seen. Based on these preferences, What-flix generates tailored recommendations using factors such as genre, popularity, similarity to liked movies, actors and directors. Each movie listing includes a trailer link and information on which platforms offer the film. The frontend uses React and the backend uses Node.js with Express along with MongoDB for the database. The application is deployed on Render.
+
+What-flix is a personalized movie recommendation system that helps users quickly
+find films they are likely to enjoy across multiple streaming platforms. The
+application allows users to create accounts, select the streaming services they
+subscribe to, rank genres, and rate movies they have seen. Based on these
+preferences, What-flix generates tailored recommendations using factors such as
+genre, popularity, similarity to liked movies, actors and directors. Each movie
+listing includes a trailer link and information on which platforms offer the
+film. The frontend uses React and the backend uses Node.js with Express along
+with MongoDB for the database. The application is deployed on Render.
 
 # Team Members
+
 Kyle Noelker, Dagon Williams, Connor Winning
