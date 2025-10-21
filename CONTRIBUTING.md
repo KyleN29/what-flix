@@ -12,7 +12,11 @@ Verify installed correctly by running `node -v` and `npm -v`
 
 `git clone https://github.com/KyleN29/what-flix.git` `cd what-flix`
 
-### Step 3: Running the environment
+### Step 3: Installing dependencies
+
+To install all necessary dependencies, run: `npm run install-all`
+
+### Step 4: Running the environment
 
 The frontend and backend need to be run separately in development.
 
@@ -22,7 +26,7 @@ Frontend: `npm run frontend`
 
 Backend: `npm run backend`
 
-### Step 4: Making changes
+### Step 5: Making changes
 
 No changes should be directly added to main. All changes should be made in a
 separate branch and then merged with a pull request.
@@ -35,7 +39,7 @@ describe the branch.
 
 Example `git checkout -b feature/project-skeleton`
 
-### Step 5: Submitting changes
+### Step 6: Submitting changes
 
 Once you are finished implementing your features, you should create a pull
 request to merge with main.

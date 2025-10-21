@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "start": "node server.js"
+    "start": "node src/server.js"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "what-flix": "file:.."
   }
 }
