@@ -37,13 +37,27 @@ Type should describe the type of change your branch will make. The type should
 be feature, style, fixes, or refactor. The name should be a short title to
 describe the branch.
 
-Example `git checkout -b feature/project-skeleton`
+Example: `git checkout -b feature/project-skeleton`
 
-### Step 6: Submitting changes
+### Step 6: Staging your changes for commit
 
-Once you are finished implementing your features, you should create a pull
+After making changes, add to your current commit.
+Add a specific file: `git add <filename>`
+Add all changed files: `git add .`
+Add all modified files: `git add -u`
+
+Run `git status` to ensure you are making the correct changes and are in the
+correct branch. Then commit with a message describing your changes.
+`git commit -m <your-message>`
+
+Example: `git commit -m "Added navbar.tsx component to home.tsx"`
+
+### Step 7: Pushing your changes
+
+After finalizing your commit, you need to push your changes to your branch.
+If you had just created the branch, you'll need to publish it first.
+New branch: `git push -u origin <branch-name>`
+Existing branch: `git push`
+
+Once you are finished pushing your changes, you should create a pull
 request to merge with main.
-
-```
-
-```
