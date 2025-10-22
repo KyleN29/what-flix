@@ -66,3 +66,10 @@ Existing branch: `git push`
 
 Once you are finished pushing your changes, you should create a pull
 request to merge with main.
+
+# Additional Notes
+
+### Run Dev Tasks
+
+To start up both the frontend and backend npm scripts, navigate to the VS Code
+search, and type "task", spacebar, then select "Run Dev Tasks"
