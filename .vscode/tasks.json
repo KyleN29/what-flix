@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Frontend",
+      "type": "shell",
+      "command": "npm run frontend",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Backend",
+      "type": "shell",
+      "command": "npm run backend",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Dev Tasks",
+      "dependsOn":["Run Frontend", "Run Backend"],
+      "problemMatcher": []
+    }
+  ]
+}
