@@ -9,5 +9,8 @@
     "backend": "npm run start --prefix backend"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "react-router-dom": "^7.9.4"
+  }
 }
