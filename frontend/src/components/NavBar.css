@@ -1,17 +1,30 @@
 .nav-bar {
-  width: calc(100% - 2em);
-  height: 3em;
-  margin: 1em;
-  top: 1em;
+  width: calc(100% - 1em);
+  min-height: 3em;
+  height: 3em; /* Notice: When changing this make sure you also change the "pageY > 3 * 16" (current 3 for 3em and 16 for em size) in NavBar.tsx */
+  margin: 0.5em;
+  top: 0.5em;
   position: sticky;
 
   background: linear-gradient(135deg, var(--color-4), var(--color-3));
   border-radius: 10px;
-  color: var(--white);
 
   display: flex;
   align-items: center;
-  justify-content: center; /* Probably remove this once you start actually adding stuff */
+  justify-content: center; /* Probably remove this once you start actually adding stuff inside the navbar */
+  
+  overflow-x: auto;
+  scrollbar-width: none;
+  text-wrap-mode: nowrap;
 
+  /* Text */
+  color: var(--white);
   font-weight: bold;
+
+  transition: width 0.5s ease-in-out;
+}
+
+.nav-bar.minimized {
+  width: 3em; /* This should be equal to the height of the div */
+  cursor: pointer;
 }
