@@ -1,7 +1,7 @@
 function Home() {
   return (
     <>
-      <p>Hello World!</p>
+      <p style={{ height: '200vh' }}>Hello World!</p>
     </>
   );
 }
