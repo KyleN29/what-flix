@@ -21,7 +21,7 @@ function NavBar() {
   }, []);
 
   const passedScrollThreshold = () => {
-    return pageY > 3 * 16;
+    return pageY > 3 * 16; // This 16 should be equal to an em, not really sure how to find that though
   };
 
   return (

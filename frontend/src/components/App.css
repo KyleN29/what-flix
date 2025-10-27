@@ -1,2 +1,7 @@
 @import "tailwindcss";
 
+.main {
+  top: 0;
+  
+  position: absolute;
+}

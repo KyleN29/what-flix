@@ -4,7 +4,8 @@
   height: 3em; /* Notice: When changing this make sure you also change the "pageY > 3 * 16" (current 3 for 3em and 16 for em size) in NavBar.tsx */
   margin: 0.5em;
   top: 0.5em;
-  position: sticky;
+  position: fixed;
+  text-wrap-mode: nowrap;
 
   background: linear-gradient(135deg, var(--color-4), var(--color-3));
   border-radius: 10px;
@@ -15,7 +16,6 @@
   
   overflow-x: auto;
   scrollbar-width: none;
-  text-wrap-mode: nowrap;
 
   /* Text */
   color: var(--white);
