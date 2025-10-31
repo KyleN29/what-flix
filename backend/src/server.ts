@@ -1,4 +1,6 @@
 import MovieService from './services/MovieService.js';
+import type { MovieResponse } from './services/MovieService.js';
+
 import express from 'express'
 import cors from 'cors'
 const app = express();
@@ -10,7 +12,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/movie/popular', async (req, res) => {
-  const data = await MovieService.getPopularMovies();
+  const data: MovieResponse = await MovieService.getPopularMovies();
   res.json(data);
 })
 
