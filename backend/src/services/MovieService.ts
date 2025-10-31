@@ -38,7 +38,6 @@ class MovieService {
   }); 
   
   static async getPopularMovies(page = 1): Promise<MovieResponse> {
-    console.log(MovieService.apiKey)
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
     });
