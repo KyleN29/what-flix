@@ -1,0 +1,77 @@
+.category-slider {
+  height: 27rem;
+  width: 100%;
+
+  overflow-x: hidden;
+
+  /* Honestly might make this transparent later */
+  background: linear-gradient(135deg, var(--black), var(--color-5));
+}
+
+.category-slider .title {
+  padding-left: 1rem;
+  height: 3rem;
+
+  font-size: 2rem;
+  color: var(--white);
+  font-weight: bold;
+}
+
+.category-slider .movies {
+  display: flex;
+  position: relative;
+
+  height: calc(100% - 3rem);
+  width: fit-content;
+
+  transition: left 0.5s;
+  background-color: rgba(30, 30, 30, 0.5);
+}
+
+.category-slider .movies .movie {
+  display: flex;
+  height: 100%;
+  aspect-ratio: 3/4;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 4em;
+
+  /* TODO: Remove */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(0, 0, 0, 0.5)
+  );
+}
+
+.category-slider .movies .move-left,
+.category-slider .movies .move-right {
+  display: flex;
+  position: absolute;
+
+  width: 4rem;
+  height: 8rem;
+
+  align-self: center;
+  align-items: center;
+  text-align: center;
+
+  font-size: 3rem;
+  line-height: 2.5rem;
+
+  background-color: aqua;
+
+  transition: left 0.5s;
+  user-select: none;
+}
+
+.category-slider .move-left:hover,
+.category-slider .move-right:hover {
+  cursor: pointer;
+}
+
+.category-slider .move-right {
+  margin-left: calc(100vw - 4rem);
+}
