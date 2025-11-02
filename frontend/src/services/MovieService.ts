@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-interface Movie {
+export interface Movie {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -29,7 +29,7 @@ class MovieService {
     baseURL: 'http://localhost:3000',
   }); 
   
-  static async getPopularMovies(page = 1): Promise<MovieResponse> {
+  static async getPopularMovies(page = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
     });
