@@ -14,8 +14,9 @@ function CategorySlider(props: Props) {
 
 
   // movieWidthInPx = movieWidthInRem * Px/Rem
+  const gapRem = 1
   const movieWidthInPx =
-    18 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    (18+gapRem) * parseFloat(getComputedStyle(document.documentElement).fontSize);
 
   // Width of movies div (viewport width) in movies
   const moviesDivWidth = window.innerWidth / movieWidthInPx;
@@ -45,9 +46,8 @@ function CategorySlider(props: Props) {
               <img
                 src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
                 alt={movie.title}
-                className="movie-img h-full"
+                className="movie-img h-full w-full"
               />
-
             </div>
           ))}
 
