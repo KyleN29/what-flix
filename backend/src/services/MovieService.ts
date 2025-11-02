@@ -2,7 +2,7 @@ import axios from 'axios';
 import dotenv from 'dotenv'
 dotenv.config()
 
-interface Movie {
+export interface Movie {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -37,12 +37,12 @@ class MovieService {
     }
   }); 
   
-  static async getPopularMovies(page = 1): Promise<MovieResponse> {
+  static async getPopularMovies(page = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
     });
-
-    return response.data;
+    console.log(response.data.results);
+    return response.data.results;
   }
 }
 
