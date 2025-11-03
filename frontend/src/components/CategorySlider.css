@@ -26,19 +26,22 @@
 
   transition: left 0.5s;
   background-color: rgba(30, 30, 30, 0.5);
-  gap: 1rem;
 }
 
 .category-slider .movies .movie {
   display: flex;
   height: 100%;
-  aspect-ratio: 2/3;
+  /* aspect-ratio is "movieDivAspectRatio" in CategorySlider.tsx */
 
   align-items: center;
   justify-content: center;
 
   font-size: 4em;
+}
 
+.category-slider .movies .movie .movie-img {
+  height: 100%;
+  aspect-ratio: 2/3;
 }
 
 .category-slider .movies .move-left,

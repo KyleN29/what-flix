@@ -5,18 +5,19 @@ import './variables.css';
 
 interface Props {
   title: string;
-  movies: Movie[]
+  movies: Movie[];
 }
-
 
 function CategorySlider(props: Props) {
   const [scroll, setScroll] = useState(0);
 
+  // Aspect ratio of the "movie" div. Should be greater than 2/3 as that is the default movie poster ratio.
+  const movieDivAspectRatio = 3 / 4.2;
 
-  // movieWidthInPx = movieWidthInRem * Px/Rem
-  const gapRem = 1
   const movieWidthInPx =
-    (18+gapRem) * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    24.0 * // This is the height of the category slider (in rems) minus the height of the title
+    movieDivAspectRatio *
+    parseFloat(getComputedStyle(document.documentElement).fontSize);
 
   // Width of movies div (viewport width) in movies
   const moviesDivWidth = window.innerWidth / movieWidthInPx;
@@ -26,7 +27,10 @@ function CategorySlider(props: Props) {
     if (scroll <= 0 && direction < 0) return;
 
     // If final movie is not yet reached, keep scrolling
-    if (direction < 0 || scroll + direction + moviesDivWidth < props.movies.length)
+    if (
+      direction < 0 ||
+      scroll + direction + moviesDivWidth < props.movies.length
+    )
       setScroll(Math.floor(scroll + direction));
     // If the final movie is cut off by the screen's width, clicking one more time will move it to the right as far as possible without going past the final movie.
     else if (scroll + direction + moviesDivWidth - 1 < props.movies.length)
@@ -39,14 +43,20 @@ function CategorySlider(props: Props) {
         <div className="title">{props.title}</div>
         <div
           className="movies"
-          style={{ left: -1 * scroll * movieWidthInPx + 'px' }}
+          style={{
+            left: -1 * scroll * movieWidthInPx + 'px'
+          }}
         >
           {props.movies.map((movie, index) => (
-            <div className="movie" key={index}>
+            <div
+              className="movie"
+              key={index}
+              style={{ aspectRatio: movieDivAspectRatio }}
+            >
               <img
                 src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
                 alt={movie.title}
-                className="movie-img h-full w-full"
+                className="movie-img"
               />
             </div>
           ))}
