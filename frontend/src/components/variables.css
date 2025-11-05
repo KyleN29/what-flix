@@ -1,9 +1,11 @@
 :root {
   --white: #ffd7c3;
+  --whitergb: 255, 215, 195;
   --black: #2c1a24;
-  --color-1: #FAA275;
-  --color-2: #FF8C61;
-  --color-3: #CE6A85;
+  --blackrgb: 44, 26, 36;
+  --color-1: #faa275;
+  --color-2: #ff8c61;
+  --color-3: #ce6a85;
   --color-4: #985277;
-  --color-5: #5C374C;
+  --color-5: #5c374c;
 }
