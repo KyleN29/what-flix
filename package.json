@@ -11,6 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "react-router-dom": "^7.9.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
   }
 }

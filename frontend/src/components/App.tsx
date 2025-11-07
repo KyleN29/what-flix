@@ -15,6 +15,7 @@ function App() {
 
         {/* in case of invalid route, return to home page */}
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/description" element={}/>
       </Routes>
     </BrowserRouter>
     </QueryClientProvider>
