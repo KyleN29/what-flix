@@ -15,12 +15,41 @@ function MovieDescription(){
     
     if (isLoading) return <div>. . . Loading</div>;
     if (isError || !movie) return <div>Movie not found</div>;
+
+    const backgroundStyle = movie?.backdrop_path 
+    ? {
+        backgroundImage: `
+            linear-gradient(to bottom, 
+                transparent 0%, 
+                transparent 50%,  
+                var(--color-5) 100%
+            ),
+            url(https://image.tmdb.org/t/p/original${movie.backdrop_path})
+        `,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundRepeat: 'no-repeat',
+        }
+    : {};
     
     return (
-        <div className="max-w-7xl mx-auto px-4 py-6">
-            <h1 className="text-3xl font-bold">{movie.title}</h1>
-            <p className="text-gray-700 mt-4">{movie.overview}</p>
-            <p className="mt-2">Rating: {movie.vote_average}/10</p>
+        <div className='MovieDescription' style={backgroundStyle}>
+            <div className="max-w-7xl mx-auto px-4 py-6 container">
+                <div className="grid grid-cols-3">
+                    <div className="col-span-1">
+                        <img
+                            src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
+                            alt={movie.title}
+                            className="movie-img"
+                        />
+                    </div>
+                    <div className='col-span-2'>
+                        <div className='movie-details'>
+                            OTHER STUFF
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
