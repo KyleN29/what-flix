@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import MovieService, { type Movie } from '../../services/MovieService';
+import MovieService, { type Movie, type Trailer } from '../../services/MovieService';
 import MovieRatings from '../MovieRatingsDisplay';
 import './MovieDescription-Page.css';
 import '../variables.css';
@@ -13,6 +13,8 @@ function MovieDescription(){
         queryFn: () => MovieService.getMovieDetail(movieId!),
         enabled: !!movieId, 
     });
+
+    const { data: trailer, isLoadingTrailer, isError } = useQuery<Trailer>
     
     if (isLoading) return <div>. . . Loading</div>;
     if (isError || !movie) return <div>Movie not found</div>;
