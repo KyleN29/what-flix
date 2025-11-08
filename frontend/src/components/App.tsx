@@ -13,10 +13,10 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/movie/:movieId" element={<MovieDescription />} />
 
         {/* in case of invalid route, return to home page */}
         <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/movie/:movieId" element={<MovieDescription />} />
       </Routes>
     </BrowserRouter>
     </QueryClientProvider>

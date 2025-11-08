@@ -37,11 +37,11 @@ class MovieService {
     return response.data;
   }
   
-  static async getMovieDetail(movieId: number): Promise<Movie> {
-    const response = await this.axiosInstance.get('/movie', {
-      params: {movieId}
+  static async getMovieDetail(movieId: string): Promise<Movie> {
+    const response = await this.axiosInstance.get(`/movie/detail`, {
+      params: { movieId }
     });
-    return response.data
+    return response.data;
   }
 }
 

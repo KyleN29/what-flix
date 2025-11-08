@@ -15,4 +15,17 @@ router.get('/popular', async (req, res) => {
   }
 });
 
+router.get('/detail', async (req, res) => {
+  try {
+    const movieId = req.query.movieId as string;
+    if (!movieId) {
+      return res.status(400).json({ message: 'Movie ID is required' });
+    }
+    const data: Movie = await MovieService.getMovieDetail(movieId);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching movie detail' });
+  }
+});
+
 export default router;
