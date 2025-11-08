@@ -8,6 +8,7 @@
     background: color-mix(in srgb, var(--color-5) 80%, transparent);
     border-radius: 2rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
 }
 
 .movie-img {
@@ -16,5 +17,16 @@
 }
 
 .movie-details {
-    padding-left: 10rem;
+    padding-left: 6rem;
+    padding-top: 2rem;
+}
+
+.movie-title {
+    font-family: 'Arial Black', 'Arial Bold', sans-serif;
+    color: var(--white);
+}
+
+.movie-subtitle {
+    font-style: italic;
+    padding-left: 3px;
 }

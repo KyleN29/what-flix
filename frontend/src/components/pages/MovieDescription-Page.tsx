@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import MovieService, { type Movie } from '../../services/MovieService';
+import MovieRatings from '../MovieRatingsDisplay';
 import './MovieDescription-Page.css';
 import '../variables.css';
 
@@ -34,7 +35,7 @@ function MovieDescription(){
     
     return (
         <div className='MovieDescription' style={backgroundStyle}>
-            <div className="max-w-7xl mx-auto px-4 py-6 container">
+            <div className="max-w-7xl mx-auto px-4 py-6 container ">
                 <div className="grid grid-cols-3">
                     <div className="col-span-1">
                         <img
@@ -45,7 +46,15 @@ function MovieDescription(){
                     </div>
                     <div className='col-span-2'>
                         <div className='movie-details'>
-                            OTHER STUFF
+                            <div className='grid grid-cols-2'>
+                                <div className='col-span-1'>
+                                    <p className="text-6xl font-bold wrap-normal movie-title">{movie.title}</p>
+                                    <p className="text-xl wrap-normal movie-title movie-title movie-subtitle">{movie.release_date}</p>
+                                </div>
+                                <div className='col-span-1'>
+                                    <MovieRatings vote_average={movie.vote_average} vote_count={movie.vote_count} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
