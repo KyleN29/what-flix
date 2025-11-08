@@ -68,7 +68,7 @@ class MovieService {
   }
 
   static async getMovieTrailers(movieId: string): Promise<Trailer[]> {
-    const response = await this.axiosInstance.get('/movie/${movieId}/videos');
+    const response = await this.axiosInstance.get(`/movie/${movieId}/videos`);
     return response.data.results;
   }
 }

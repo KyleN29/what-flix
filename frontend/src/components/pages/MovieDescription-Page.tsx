@@ -14,9 +14,17 @@ function MovieDescription(){
         enabled: !!movieId, 
     });
 
-    const { data: trailer, isLoadingTrailer, isError } = useQuery<Trailer>
-    
-    if (isLoading) return <div>. . . Loading</div>;
+    const { data: movieTrailer, isLoading: trailerLoading } = useQuery<Trailer>({
+        queryKey: ['getMovieTrailer', movieId],
+        queryFn: () => MovieService.getMovieTrailer(movieId!),
+        enabled: !!movieId,
+    });
+
+    console.log('movieTrailer:', movieTrailer);
+    console.log('trailerKey:', movieTrailer?.key);
+
+
+    if (isLoading && trailerLoading) return <div>. . . Loading</div>;
     if (isError || !movie) return <div>Movie not found</div>;
 
     const backgroundStyle = movie?.backdrop_path 
@@ -52,7 +60,7 @@ function MovieDescription(){
     );
 
 
-    var trailerKey = "M_HjrYiwS2I"
+    var trailerKey = movieTrailer?.key;
     var trailerSrc = "https://www.youtube.com/embed/" + trailerKey;
     const trailer = (
         <div className='movie-trailer'>
