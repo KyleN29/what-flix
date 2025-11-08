@@ -1,6 +1,6 @@
 import express from 'express';
 import MovieService from '../services/MovieService.js';
-import type { Movie } from '../services/MovieService.js';
+import type { Movie, Trailer } from '../services/MovieService.js';
 
 const router = express.Router();
 
@@ -25,6 +25,25 @@ router.get('/detail', async (req, res) => {
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movie detail' });
+  }
+});
+
+router.get('/trailer', async (req, res) => {
+  try {
+    const movieId = req.query.movieId as string;
+    if (!movieId) {
+      return res.status(400).json({ message: 'Movie ID is required' });
+    }
+    const data: Trailer[] = await MovieService.getMovieTrailers(movieId);
+
+    for (const trailer of data) {
+      if (trailer.site == "YouTube") {
+        res.json(trailer);
+      }
+    }
+
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching movie trailer' });
   }
 });
 
