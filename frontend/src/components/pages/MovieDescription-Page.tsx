@@ -20,10 +20,6 @@ function MovieDescription(){
         enabled: !!movieId,
     });
 
-    console.log('movieTrailer:', movieTrailer);
-    console.log('trailerKey:', movieTrailer?.key);
-
-
     if (isLoading && trailerLoading) return <div>. . . Loading</div>;
     if (isError || !movie) return <div>Movie not found</div>;
 

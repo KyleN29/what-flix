@@ -1,6 +1,7 @@
 .MovieDescription {
     background-color: var(--black);
-    padding-top: 10rem;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
     min-height: 100vh;
 }
 

@@ -37,14 +37,23 @@ router.get('/trailer', async (req, res) => {
     
     const data: Trailer[] = await MovieService.getMovieTrailers(movieId);
     
-    // Find the first YouTube trailer
-    const youtubeTrailer = data.find(trailer => trailer.site === "YouTube");
+    // Find official YouTube trailer first
+    const officialTrailer = data.find(trailer => trailer.site === "YouTube" && trailer.official);
     
-    if (youtubeTrailer) {
-      return res.json(youtubeTrailer);
-    } else {
-      return res.status(404).json({ message: 'No YouTube trailer found' });
+    if (officialTrailer) {
+      return res.json(officialTrailer);
     }
+    
+    // If no official trailer, get the last YouTube trailer
+    const youtubeTrailers = data.filter(trailer => trailer.site === "YouTube");
+    
+    if (youtubeTrailers.length > 0) {
+      const lastTrailer = youtubeTrailers[youtubeTrailers.length - 1];
+      return res.json(lastTrailer);
+    }
+    
+    // No YouTube trailers at all
+    return res.status(404).json({ message: 'No YouTube trailer found' });
     
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movie trailer' });
