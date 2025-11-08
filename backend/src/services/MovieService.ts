@@ -44,6 +44,13 @@ class MovieService {
     console.log(response.data.results);
     return response.data.results;
   }
+
+  static async getMovieDetail(movieId: number): Promise<Movie> {
+    const response = await this.axiosInstance.get('/movie', {
+      params: {movieId}
+    });
+    return response.data
+  }
 }
 
 export default MovieService
