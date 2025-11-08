@@ -46,14 +46,10 @@ function MovieDescription(){
                     </div>
                     <div className='col-span-2'>
                         <div className='movie-details'>
-                            <div className='grid grid-cols-2'>
-                                <div className='col-span-1'>
-                                    <p className="text-6xl font-bold wrap-normal movie-title">{movie.title}</p>
-                                    <p className="text-xl wrap-normal movie-title movie-title movie-subtitle">{movie.release_date}</p>
-                                </div>
-                                <div className='col-span-1'>
-                                    <MovieRatings vote_average={movie.vote_average} vote_count={movie.vote_count} />
-                                </div>
+                            <div className=' flexbox items-center'>
+                                <p className="text-6xl font-bold wrap-normal movie-title">{movie.title}</p>
+                                <p className="text-xl wrap-normal movie-title movie-title movie-subtitle">{movie.release_date}</p>
+                                <MovieRatings vote_average={movie.vote_average} vote_count={movie.vote_count} />
                             </div>
                         </div>
                     </div>
