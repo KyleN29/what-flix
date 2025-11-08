@@ -65,6 +65,12 @@ function MovieDescription(){
                 />
         </div>
     );
+
+    const description = (
+        <p className="text-lg leading-loose max-w-3xl italic border-l-4 pl-4 movie-description">
+            {movie.overview}
+        </p>
+    )
     
     return (
         <div className='MovieDescription' style={backgroundStyle}>
@@ -77,6 +83,7 @@ function MovieDescription(){
                         <div className='movie-details'>
                             {movieDetails}
                             {trailer}
+                            {description}
                         </div>
                     </div>
                 </div>
