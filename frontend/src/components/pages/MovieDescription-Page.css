@@ -30,3 +30,13 @@
     font-style: italic;
     padding-left: 3px;
 }
+
+.movie-trailer {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+}
+
+.movie-trailer iframe {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}

@@ -53,7 +53,7 @@ function MovieDescription(){
     var trailerKey = "M_HjrYiwS2I"
     var trailerSrc = "https://www.youtube.com/embed/" + trailerKey;
     const trailer = (
-        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '1rem'}}>
+        <div className='movie-trailer'>
             <iframe
                 width="560"
                 height="315"
