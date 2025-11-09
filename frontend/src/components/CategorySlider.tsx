@@ -58,6 +58,17 @@ function CategorySlider(props: Props) {
                 alt={movie.title}
                 className="movie-img"
               />
+              <div className="hover-popup">
+                <p>
+                  <b>
+                    {movie.title} ({movie.release_date.substring(0, 4)})
+                  </b>
+                  {/*Later this will be an image*/}
+                  <div className="watch-later" title="Add to Watch Later">
+                    <b>+</b>
+                  </div>
+                </p>
+              </div>
             </div>
           ))}
 
