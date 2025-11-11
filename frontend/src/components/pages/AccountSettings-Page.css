@@ -1,0 +1,8 @@
+.AccountSettings {
+    background-color: var(--black);
+    min-height: 100vh;
+}
+
+.AccountNavigationBar {
+    background-color: var(--color-5);
+}
