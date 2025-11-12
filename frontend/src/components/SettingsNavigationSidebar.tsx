@@ -1,3 +1,4 @@
+import { ChevronDown, Home, Settings, Users, FileText, BarChart, Mail, Bell, Shield } from 'lucide-react';
 
 function NavigationSidebar() {
     const general = (
