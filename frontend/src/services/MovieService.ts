@@ -23,6 +23,23 @@ export interface MovieResponse {
   total_pages: number;
   total_results: number;
 }
+
+export interface Trailer {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+}
+export interface TrailerResponse {
+  id: number;
+  results: Trailer[];
+}
 class MovieService {
 
   static axiosInstance = axios.create({
@@ -34,6 +51,20 @@ class MovieService {
       params: { page }
     });
     console.log(response.data)
+    return response.data;
+  }
+  
+  static async getMovieDetail(movieId: string): Promise<Movie> {
+    const response = await this.axiosInstance.get(`/movie/detail`, {
+      params: { movieId }
+    });
+    return response.data;
+  }
+
+  static async getMovieTrailer(movieId: string): Promise<Trailer> {
+    const response = await this.axiosInstance.get('/movie/trailer', {
+      params: { movieId }
+    });
     return response.data;
   }
 }

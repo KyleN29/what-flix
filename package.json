@@ -13,5 +13,8 @@
   "dependencies": {
     "lucide-react": "^0.553.0",
     "react-router-dom": "^7.9.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
   }
 }

@@ -26,6 +26,23 @@ export interface MovieResponse {
   total_results: number;
 }
 
+export interface Trailer {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+}
+export interface TrailerResponse {
+  id: number;
+  results: Trailer[];
+}
+
 class MovieService {
   static baseURL = 'https://api.themoviedb.org/3';
   static apiKey = process.env.TMDB_API_KEY;
@@ -42,6 +59,16 @@ class MovieService {
       params: { page }
     });
     console.log(response.data.results);
+    return response.data.results;
+  }
+
+  static async getMovieDetail(movieId: string): Promise<Movie> {
+    const response = await this.axiosInstance.get(`/movie/${movieId}`);
+    return response.data;
+  }
+
+  static async getMovieTrailers(movieId: string): Promise<Trailer[]> {
+    const response = await this.axiosInstance.get(`/movie/${movieId}/videos`);
     return response.data.results;
   }
 }
