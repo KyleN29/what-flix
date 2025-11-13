@@ -50,7 +50,7 @@
 /* Warning: with description, if a word is longer than the width of the div, it will expand the width */
 .category-slider .movies .movie .hover-popup {
   z-index: 1;
-  /* left: calc(-2 * (var(--height) - var(--title-height)) / 3); */
+  margin-left: 1rem;
   top: 100%;
 
   overflow-y: auto;
