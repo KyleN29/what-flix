@@ -1,0 +1,16 @@
+#genreOptions {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border: 1px black solid;
+    width: 200px;
+    height: fit-content;
+    top: 0;
+    right: 0;
+}
+#genreOptions button {
+    background-color: white;
+    border: 1px black solid;
+    border-collapse: collapse;
+    cursor: pointer;
+}

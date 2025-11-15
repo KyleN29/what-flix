@@ -18,7 +18,10 @@ function Home() {
       <div className="home">
         <p style={{ height: '30vh' }}>Hello World!</p>
         <CategorySlider title="Category Slider" movies={data ?? []} />
-        <GenreRanking></GenreRanking>
+        <div className="w-[300px]">
+          <GenreRanking></GenreRanking>
+        </div>
+        
         <p style={{ height: '50vh' }}>Hello World!</p>
         <p style={{ height: '50vh' }}>Hello World!</p>
       </div>
