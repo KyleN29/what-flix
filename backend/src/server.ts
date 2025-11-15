@@ -24,18 +24,7 @@ app.get('/', (req, res) => {
 
 app.use('/movie', movieRoutes)
 
-setInterval(async () => {
-  const movies: Movie[] = await MovieService.getPopularMovies();
-  await MovieModel.bulkWrite(
-    movies.map(movie => ({
-      updateOne: {
-        filter: { id: movie.id},
-        update: { $set: movie },
-        upsert: true
-      }
-    }))
-  )
-}, 1000 * 5)
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

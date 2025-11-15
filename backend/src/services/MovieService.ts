@@ -42,6 +42,10 @@ export interface TrailerResponse {
   id: number;
   results: Trailer[];
 }
+interface Cache {
+    timestamp: number;
+    movies: Movie[];
+}
 
 class MovieService {
   static baseURL = 'https://api.themoviedb.org/3';
@@ -53,12 +57,30 @@ class MovieService {
       api_key: MovieService.apiKey
     }
   }); 
-  
+
+  /* Cache popular movies so it doesn't get called by every user
+  loading the main page */
+  static popularMovieCache: Cache = {
+    timestamp: 0,
+    movies: [],
+  }
+  // Timeout for when cache is expired and should no longer be used
+  static CACHE_TIMEOUT = 1000 * 60 * 10 // 10 minutes
+
+  // Return list of popular movies from TMDB API
   static async getPopularMovies(page = 1): Promise<Movie[]> {
+    if (Date.now() - this.popularMovieCache.timestamp < this.CACHE_TIMEOUT) {
+      return this.popularMovieCache.movies;
+    }
+
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
     });
-    console.log(response.data.results);
+
+    // Update cache
+    this.popularMovieCache.timestamp = Date.now()
+    this.popularMovieCache.movies = response.data.results;
+
     return response.data.results;
   }
 
