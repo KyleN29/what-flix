@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Movie } from '../services/MovieService';
 import './CategorySlider.css';
 import './variables.css';
@@ -48,28 +49,30 @@ function CategorySlider(props: Props) {
           }}
         >
           {props.movies.map((movie, index) => (
-            <div
-              className="movie"
-              key={index}
-              style={{ aspectRatio: movieDivAspectRatio }}
-            >
-              <img
-                src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
-                alt={movie.title}
-                className="movie-img"
-              />
-              <div className="hover-popup">
-                <p>
-                  <b>
-                    {movie.title} ({movie.release_date.substring(0, 4)})
-                  </b>
-                  {/*Later this will be an image*/}
-                  <div className="watch-later" title="Add to Watch Later">
-                    <b>+</b>
-                  </div>
-                </p>
+            <Link to={`/movie/${movie.id}`} key={index}>
+              <div
+                className="movie"
+                key={index}
+                style={{ aspectRatio: movieDivAspectRatio }}
+              >
+                <img
+                  src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
+                  alt={movie.title}
+                  className="movie-img"
+                />
+                <div className="hover-popup">
+                  <p>
+                    <b>
+                      {movie.title} ({movie.release_date.substring(0, 4)})
+                    </b>
+                    {/*Later this will be an image*/}
+                    <div className="watch-later" title="Add to Watch Later">
+                      <b>+</b>
+                    </div>
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
 
           {/* Note: This will look better once real images are used instead of < and >*/}
