@@ -6,26 +6,23 @@ import {
   type DropResult
 } from '@hello-pangea/dnd';
 import './GenreRanking.css';
-// Define a genre interface for better type safety
-interface Genre {
-  id: string;
+import { type Genre } from '../services/GenreService';
+
+interface AddedGenre {
+  rank: number;
   name: string;
 }
 
-function GenreRanking() {
+interface Props {
+  genres: Genre[]
+}
+
+function GenreRanking(props: Props) {
   const [showingGenreOptions, setShowingGenreOptions] = useState(false);
   const genreOptionsRef = useRef<HTMLDivElement>(null);
-  // Define an initial list of genres
-  const initialGenres: Genre[] = [
-    { id: '1', name: 'Pop' },
-    { id: '2', name: 'Rock' },
-    { id: '3', name: 'Jazz' },
-    { id: '4', name: 'Classical' },
-    { id: '5', name: 'Hip-Hop' }
-  ];
 
   // State to store the genres list
-  const [genres, setGenres] = useState<Genre[]>(initialGenres);
+  const [genres, setGenres] = useState<AddedGenre[]>([]);
 
   // Handle drag end and reorder genres
   const onDragEnd = (result: DropResult) => {
@@ -42,8 +39,9 @@ function GenreRanking() {
     const [removed] = items.splice(source.index, 1); // Remove item from original position
     items.splice(destination.index, 0, removed); // Insert item in new position
 
+    const rankedItems = assignRanks(items);
     // Update the state with the new order
-    setGenres(items);
+    setGenres(rankedItems);
   };
 
   //   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -81,16 +79,38 @@ function GenreRanking() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showingGenreOptions]);
+
+  function addGenre(genre: Genre) {
+    setGenres(prevGenres => {
+      // Prevent duplicates by name
+      if (prevGenres.some(g => g.name === genre.name)) {
+        return prevGenres;
+      }
+
+      const newRank = prevGenres.length + 1;
+
+      return [...prevGenres, { rank: newRank, name: genre.name }];
+    });
+  }
+
+  function assignRanks(list: AddedGenre[]) {
+    return list.map((item, index) => ({
+      ...item,
+      rank: index + 1
+    }));
+  }
+
   return (
     <>
-      <div className="bg-green-500 cursor-pointer relative">
+      <div className="bg-green-500 cursor-pointer relative select-none">
         <div onClick={() => setShowingGenreOptions(!showingGenreOptions)}>
           + Add Genre
         </div>
         {showingGenreOptions && (
           <div id="genreOptions" ref={genreOptionsRef}>
-            <button>Horror</button>
-            <button>Comedy</button>
+            {props.genres.map((genre) => (
+              <button disabled={genres.some(g => g.name === genre.name)} onClick={() => addGenre(genre)}key={genre.id}>{genre.name}</button>
+            ))}
           </div>
         )}
       </div>
@@ -103,16 +123,16 @@ function GenreRanking() {
               style={{ listStyleType: 'none', padding: 0 }}
             >
               {genres.map((genre, index) => (
-                <Draggable key={genre.id} draggableId={genre.id} index={index}>
+                <Draggable key={genre.rank} draggableId={genre.rank.toString()} index={index}>
                   {(provided) => (
                     <div
                       ref={provided.innerRef} // Attach innerRef for draggable item
                       {...provided.draggableProps} // Attach draggableProps
                       {...provided.dragHandleProps} // Attach dragHandleProps
                       style={{ ...provided.draggableProps.style }}
-                      className="bg-blue-500"
+                      className="bg-blue-500 select-none"
                     >
-                      {genre.id}
+                      {genre.rank}
                       {': '}
                       {genre.name}
                     </div>
