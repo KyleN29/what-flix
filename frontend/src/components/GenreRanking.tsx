@@ -14,85 +14,56 @@ interface AddedGenre {
 }
 
 interface Props {
-  genres: Genre[]
+  genres: Genre[];
 }
 
 function GenreRanking(props: Props) {
+  // Controls visibility of the dropdown list of available genres
   const [showingGenreOptions, setShowingGenreOptions] = useState(false);
+
+  // Ref for detecting clicks outside the genre options dropdown
   const genreOptionsRef = useRef<HTMLDivElement>(null);
 
-  // State to store the genres list
+  // List of genres added and ranked by the user
   const [genres, setGenres] = useState<AddedGenre[]>([]);
 
-  // Handle drag end and reorder genres
-  const onDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
-
-    // If dropped outside the droppable area, do nothing
-    if (!destination) return;
-
-    // If the item was dropped in the same position, do nothing
-    if (destination.index === source.index) return;
-
-    // Reorder the list
-    const items = Array.from(genres);
-    const [removed] = items.splice(source.index, 1); // Remove item from original position
-    items.splice(destination.index, 0, removed); // Insert item in new position
-
-    const rankedItems = assignRanks(items);
-    // Update the state with the new order
-    setGenres(rankedItems);
-  };
-
-  //   const getItemStyle = (isDragging, draggableStyle) => ({
-  //     // some basic styles to make the items look a bit nicer
-  //     userSelect: "none",
-  //     padding: grid * 2,
-  //     margin: `0 0 ${grid}px 0`,
-
-  //     // change background colour if dragging
-  //     background: isDragging ? "lightgreen" : "grey",
-
-  //     // styles we need to apply on draggables
-  //     ...draggableStyle
-  //     });
-
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
+      const clickedOutside =
         genreOptionsRef.current &&
-        !genreOptionsRef.current.contains(event.target as Node)
-      ) {
-        setShowingGenreOptions(false); // Close the options if clicked outside
+        !genreOptionsRef.current.contains(event.target as Node);
+
+      if (clickedOutside) {
+        setShowingGenreOptions(false);
       }
     };
 
-    // Add event listener if the dropdown is showing
+    // Attach or detach event listener based on dropdown visibility
     if (showingGenreOptions) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    // Cleanup the event listener on component unmount
+    // Cleanup listener on unmount
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showingGenreOptions]);
 
+  // Adds a genre to the ranked list; prevents duplicates
   function addGenre(genre: Genre) {
-    setGenres(prevGenres => {
-      // Prevent duplicates by name
-      if (prevGenres.some(g => g.name === genre.name)) {
-        return prevGenres;
-      }
+    setGenres((prev) => {
+      const exists = prev.some((g) => g.name === genre.name);
+      if (exists) return prev;
 
-      const newRank = prevGenres.length + 1;
-
-      return [...prevGenres, { rank: newRank, name: genre.name }];
+      const nextRank = prev.length + 1;
+      return [...prev, { rank: nextRank, name: genre.name }];
     });
   }
 
+  // Updates rank numbers based on array order
   function assignRanks(list: AddedGenre[]) {
     return list.map((item, index) => ({
       ...item,
@@ -100,46 +71,85 @@ function GenreRanking(props: Props) {
     }));
   }
 
+  // Handles drag-and-drop reordering
+  function onDragEnd(result: DropResult) {
+    const { destination, source } = result;
+
+    const noDestination = !destination;
+    const unchanged = destination && destination.index === source.index;
+
+    // No movement occurred
+    if (noDestination || unchanged) return;
+
+    // Reorder list based on drag result
+    const items = Array.from(genres);
+    const [removed] = items.splice(source.index, 1);
+    items.splice(destination.index, 0, removed);
+
+    // Reassign ranks to reflect new order
+    const ranked = assignRanks(items);
+    setGenres(ranked);
+  }
+
   return (
     <>
+      {/* Genre dropdown container */}
       <div className="bg-green-500 cursor-pointer relative select-none">
         <div onClick={() => setShowingGenreOptions(!showingGenreOptions)}>
           + Add Genre
         </div>
+
+        {/* Dropdown options list */}
         {showingGenreOptions && (
           <div id="genreOptions" ref={genreOptionsRef}>
             {props.genres.map((genre) => (
-              <button disabled={genres.some(g => g.name === genre.name)} onClick={() => addGenre(genre)}key={genre.id}>{genre.name}</button>
+              <button
+                key={genre.id}
+                disabled={genres.some((g) => g.name === genre.name)} // Prevent selecting duplicates
+                onClick={() => addGenre(genre)}
+              >
+                {genre.name}
+              </button>
             ))}
           </div>
         )}
       </div>
+
+      {/* Ranking list with drag-and-drop support */}
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable" direction="vertical">
           {(provided) => (
             <div
-              {...provided.droppableProps} // Attach droppableProps
-              ref={provided.innerRef} // Attach innerRef
-              style={{ listStyleType: 'none', padding: 0 }}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{
+                listStyleType: 'none',
+                padding: 0
+              }}
             >
               {genres.map((genre, index) => (
-                <Draggable key={genre.rank} draggableId={genre.rank.toString()} index={index}>
+                <Draggable
+                  key={genre.rank}
+                  draggableId={genre.rank.toString()}
+                  index={index}
+                >
                   {(provided) => (
                     <div
-                      ref={provided.innerRef} // Attach innerRef for draggable item
-                      {...provided.draggableProps} // Attach draggableProps
-                      {...provided.dragHandleProps} // Attach dragHandleProps
-                      style={{ ...provided.draggableProps.style }}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style
+                      }}
                       className="bg-blue-500 select-none"
                     >
-                      {genre.rank}
-                      {': '}
-                      {genre.name}
+                      {genre.rank}: {genre.name}
                     </div>
                   )}
                 </Draggable>
               ))}
-              {provided.placeholder} {/* Add the placeholder here */}
+
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
