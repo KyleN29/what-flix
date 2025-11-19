@@ -1,0 +1,30 @@
+#genreOptions {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  width: 200px;
+  max-height: 250px;
+  overflow-y: auto;
+  background: white;
+  top: 0;
+  right: 0;
+}
+#genreOptions button {
+  background-color: white;
+  border: 1px solid black;
+  cursor: pointer;
+  padding: 6px;
+  text-align: left;
+}
+
+#genreOptions button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+#genreOptions button:disabled {
+  background-color: #ddd;
+  color: #777;
+  cursor: not-allowed;
+  border-color: #aaa;
+}

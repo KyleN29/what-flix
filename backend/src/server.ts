@@ -2,8 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from "mongoose"
 import movieRoutes from './routes/movieRoutes.js';
+import genreRoutes from './routes/genreRoutes.js'
 import MovieService, {type Movie} from './services/MovieService.js';
-import { MovieModel } from './routes/models/Movie.js';
+import { MovieModel } from './database/models/Movie.js';
 
 const app = express();
 const port = 3000;
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/movie', movieRoutes)
-
+app.use('/genre', genreRoutes)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

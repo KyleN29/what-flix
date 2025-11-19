@@ -58,19 +58,23 @@ class MovieService {
     }
   }); 
 
-  /* Cache popular movies so it doesn't get called by every user
-  loading the main page */
-  static popularMovieCache: Cache = {
-    timestamp: 0,
-    movies: [],
-  }
-  // Timeout for when cache is expired and should no longer be used
+  // Cache for popular movies keyed by page number
+  static popularMovieCache: Record<number, Cache> = {}
+  
+  // Timeout for when cache expires
   static CACHE_TIMEOUT = 1000 * 60 * 10 // 10 minutes
 
   // Return list of popular movies from TMDB API
   static async getPopularMovies(page = 1): Promise<Movie[]> {
-    if (Date.now() - this.popularMovieCache.timestamp < this.CACHE_TIMEOUT) {
-      return this.popularMovieCache.movies;
+    const cacheEntry = this.popularMovieCache[page];
+
+    // Check cache validity
+    const hasValidCache =
+      cacheEntry &&
+      Date.now() - cacheEntry.timestamp < this.CACHE_TIMEOUT;
+      
+    if (hasValidCache) {
+      return cacheEntry.movies;
     }
 
     const response = await this.axiosInstance.get('/movie/popular', {
@@ -78,8 +82,10 @@ class MovieService {
     });
 
     // Update cache
-    this.popularMovieCache.timestamp = Date.now()
-    this.popularMovieCache.movies = response.data.results;
+    this.popularMovieCache[page] = {
+      timestamp: Date.now(),
+      movies: response.data.results
+    }
 
     return response.data.results;
   }
