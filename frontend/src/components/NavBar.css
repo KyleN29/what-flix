@@ -1,9 +1,13 @@
 .nav-bar {
-  width: calc(100% - 1em);
-  min-height: 3em;
-  height: 3em; /* Notice: When changing this make sure you also change the "pageY > 3 * 16" (current 3 for 3em and 16 for em size) in NavBar.tsx */
-  margin: 0.5em;
-  top: 0.5em;
+  width: calc(100% - 1rem);
+  min-height: 3rem;
+  height: 3rem; /* Notice: When changing this make sure you also change the "pageY > 5 * 16" (currently 5 for 3em + 2 margin and 16 for em size) in NavBar.tsx */
+
+  margin: 0.5rem;
+  padding: 0 10% 0 10%;
+  top: 0.5rem;
+
+  z-index: 99;
   position: fixed;
   text-wrap-mode: nowrap;
 
@@ -12,7 +16,7 @@
 
   display: flex;
   align-items: center;
-  justify-content: center; /* Probably remove this once you start actually adding stuff inside the navbar */
+  justify-content: space-evenly; /* Probably remove this once you start actually adding stuff inside the navbar */
 
   overflow-x: auto;
   scrollbar-width: none;
@@ -21,10 +25,59 @@
   color: var(--white);
   font-weight: bold;
 
-  transition: width 0.5s ease-in-out;
+  transition-property: width, padding;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
 }
 
 .nav-bar.minimized {
-  width: 3em; /* This should be equal to the height of the div */
+  width: 3rem; /* This should be equal to the height of the div */
+  padding: 0 0 0 3rem;
+
   cursor: pointer;
+}
+
+.nav-bar .logo {
+  width: 3rem;
+
+  position: absolute;
+  left: 1rem;
+
+  color: var(--color-1);
+  text-align: center;
+
+  transition-property: left, font-size;
+  transition-duration: 0.75s;
+  transition-timing-function: ease-in-out;
+}
+
+/* .nav-bar .logo .second-color {
+  color: var(--color-1);
+} */
+
+.nav-bar.minimized .logo {
+  left: 0rem;
+  font-size: 1.25rem;
+  pointer-events: none;
+}
+
+.nav-bar .logo .expanding {
+  display: inline-block;
+  max-width: 2rem;
+
+  vertical-align: top;
+
+  overflow: hidden;
+  text-overflow: hidden;
+
+  transition: max-width 0.5s ease-in-out;
+}
+
+.nav-bar.minimized .logo .expanding {
+  max-width: 0;
+}
+
+.nav-bar Link {
+  height: 3rem;
+  text-align: center;
 }

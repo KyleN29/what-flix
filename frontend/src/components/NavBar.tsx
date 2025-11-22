@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import './NavBar.css';
 import './variables.css';
+import { Link } from 'react-router-dom';
 
 function NavBar() {
   const [pageY, setPageY] = useState(0);
@@ -21,7 +22,7 @@ function NavBar() {
   }, []);
 
   const passedScrollThreshold = () => {
-    return pageY > 3 * 16; // This 16 should be equal to an em, not really sure how to find that though
+    return pageY > 5 * 16; // This 16 should be equal to an em, not really sure how to find that though
   };
 
   return (
@@ -29,11 +30,17 @@ function NavBar() {
       className={'nav-bar' + (passedScrollThreshold() ? ' minimized' : '')}
       onClick={() => setPageY(0)}
     >
-      <p>
-        Hello World!Hello World!Hello World!Hello World!Hello World!Hello
-        World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello
-        World!Hello World!Hello World!Hello World!
-      </p>
+      {/* Later on this will be an img */}
+      <Link to="/" className="logo">
+        {'W'}
+        <span className="expanding">hat</span>
+        {/* <span className="second-color"> */}
+        {'F'}
+        <span className="expanding">lix</span>
+        {/* </span> */}
+      </Link>
+      <Link to="/">Home</Link>
+      <Link to="/login">Login/Create Account</Link>
     </div>
   );
 }
