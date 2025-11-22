@@ -30,7 +30,6 @@ function NavBar() {
       className={'nav-bar' + (passedScrollThreshold() ? ' minimized' : '')}
       onClick={() => setPageY(0)}
     >
-      {/* Later on this will be an img */}
       <Link to="/" className="logo">
         {'W'}
         <span className="expanding">hat</span>
