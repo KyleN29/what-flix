@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import accountQueryService from '../../services/query/accountQueryService.js';
+import accountQueryService from '../services/accountQueryService.js'
 
 const router = Router();
 

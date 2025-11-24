@@ -1,13 +1,13 @@
-import User from "../../models/User.js";
-import Preferences from "../../models/Preferences.js";
+import UserRead from "../models/UserRead.js"
+import PreferencesRead from "../models/PreferencesRead.js";
 
 class AccountQueryService {
   async getUser(id: string) {
-    return User.findById(id);
+    return UserRead.findById(id);
   }
 
   async getPreferences(userId: string) {
-    return Preferences.findOne({ userId });
+    return PreferencesRead.findOne({ userId });
   }
 }
 
