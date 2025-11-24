@@ -20,4 +20,5 @@ class EventBus {
 }
 
 
-export const eventBus = new EventBus('http://localhost:3000');
+const eventBus = new EventBus('http://localhost:3000');
+export default eventBus;
