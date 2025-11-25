@@ -1,5 +1,31 @@
 
 .nav-sidebar-container {
+    padding: 2%;
     margin-top: 5rem;
     color: var(--white);
+}
+
+.nav-sidebar-item {
+    margin-left: 5%;
+}
+
+.nav-sidebar-item h1 {
+    color: var(--white);
+    border-bottom-width: 1px;
+    padding: 5%;
+    padding-bottom: 1%;
+}
+
+.nav-sidebar-item h2 {
+    color: var(--color-4);
+    border-bottom-width: 1px;
+    padding: inherit;
+    margin-left: 10%;
+}
+
+.nav-sidebar-heading {
+    flex-direction: row;
+    align-items: center;
+    border-color: var(--white);
+    border-bottom-width: 2px;
 }
