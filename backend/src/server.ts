@@ -26,8 +26,8 @@ app.get('/', (req, res) => {
 });
 
 // app.use('/movie', movieRoutes)
-app.use('/account', accountCommandController)
-app.use('/account', accountQueryController)
+app.use('/user', accountCommandController)
+app.use('/user', accountQueryController)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

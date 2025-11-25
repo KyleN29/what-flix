@@ -9,6 +9,10 @@ class AccountQueryService {
   async getPreferences(userId: string) {
     return PreferencesRead.findOne({ userId });
   }
+
+  async getWatchList(userId: string) {
+    
+  }
 }
 
 const accountQueryService = new AccountQueryService();

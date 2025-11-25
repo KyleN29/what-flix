@@ -1,6 +1,10 @@
 import UserWrite from '../models/UserWrite.js'
+import UserRead from '../../queryService/models/UserRead.js';
+import UserAuthRead from '../../queryService/models/UserAuthRead.js';
 import PreferencesWrite from '../models/PreferencesWrite.js'
 import eventBus from '../eventBus/EventBus.js';
+import { comparePassword } from '../../password-utils.js';
+import jwt from 'jsonwebtoken'
 
 class AccountCommandService {
   async createUser(dto: any) {
@@ -29,6 +33,26 @@ class AccountCommandService {
     });
 
     return prefs;
+  }
+
+  async login(email: string, password: string) {
+    const user = await UserRead.findOne({email});
+    if (!user) {
+      throw { status: 401, message: 'Invalid credentials'}
+    }
+
+    const userAuth = await UserAuthRead.findOne({_id: user._id});
+
+    const isValidPassword = await comparePassword(password, user.password_hash);
+    if (!isValidPassword) {
+      throw {status: 401, message: 'Invalid credentials'}
+    }
+
+    const accessToken = jwt.sign({id: user._id, email: email}, 'access-secret', {
+      expiresIn: '3d'
+    })
+
+    return { accessToken }
   }
 }
 

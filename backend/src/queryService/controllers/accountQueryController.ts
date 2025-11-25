@@ -8,4 +8,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   res.json(user);
 });
 
+router.get('/:id/watch_later', async (req: Request, res: Response) => {
+  res.json([])
+})
 export default router;
