@@ -2,14 +2,14 @@ import { Schema, model, Document } from 'mongoose';
 
 export interface IPreferencesRead extends Document {
   userId: string;
-  genres: string[];
-  language: string;
+  genre_code: string;
+  rank: Number;
 }
 
 const PreferencesReadSchema = new Schema<IPreferencesRead>({
   userId: { type: String, required: true, index: true, unique: true },
-  genres: [{ type: String }],
-  language: { type: String }
+  genre_code: {type: String, required: true},
+  rank: { type: Number, required: true}
 });
 
 export default model<IPreferencesRead>(
