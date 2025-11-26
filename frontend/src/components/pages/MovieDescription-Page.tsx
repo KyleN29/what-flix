@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import MovieService, { type Movie, type Trailer } from '../../services/MovieService';
+import MovieService, { type MovieDetail, type Trailer } from '../../services/MovieService';
 import MovieRatings from '../MovieRatingsDisplay';
 import './MovieDescription-Page.css';
 import '../variables.css';
@@ -8,7 +8,7 @@ import '../variables.css';
 function MovieDescription(){
     const { movieId } = useParams();
     
-    const { data: movie, isLoading, isError } = useQuery<Movie>({
+    const { data: movie, isLoading, isError } = useQuery<MovieDetail>({
         queryKey: ['getMovieDetail', movieId],
         queryFn: () => MovieService.getMovieDetail(movieId!),
         enabled: !!movieId, 
@@ -82,10 +82,17 @@ function MovieDescription(){
         </p>
     )
 
+    const genres = movie.genres;
+
     const movieGenres = (
-        <p>
-            sadfsadf
-        </p>
+        <div className="flex gap-2" style={{ marginLeft: '1rem', marginTop: '1rem'}}>
+            {genres.map((genre) => (
+                <button key={genre.id} className="genre-button">
+                    {"+"}
+                    {genre.name}
+                </button>
+            ))}
+        </div>
     )
     
     return (

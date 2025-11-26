@@ -66,3 +66,14 @@
 .watch-later-button:active {
     border-color: var(--black);
 }
+
+.genre-button {
+    padding: 0.1rem;
+    color: var(--white);
+    border-radius: 0.5rem;
+    transition: background-color 200ms;
+}
+
+.genre-button:hover {
+    background-color: var(--color-3);
+}
