@@ -10,7 +10,7 @@ router.post('/', async (req: Request, res: Response) => {
   res.json({ status: 'success' });
 });
 
-router.put('/:id/preferences', async (req: Request, res: Response) => {
+router.put('/:id/genre_ranking', async (req: Request, res: Response) => {
   const prefs = await accountCommandService.updatePreferences(
     req.params.id,
     req.body
