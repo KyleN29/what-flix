@@ -1,7 +1,7 @@
 import UserRead from "../models/UserRead.js"
 import PreferencesRead from "../models/PreferencesRead.js";
 import WatchListRead from "../models/WatchListRead.js";
-import UserAccessibilityRead from "../models/UserAccessibilityRead.js";
+import AccessibilityRead from "../models/UserAccessibilityRead.js";
 
 class AccountQueryService {
   async getUser(id: string) {
@@ -17,7 +17,7 @@ class AccountQueryService {
   }
 
   async getAccessibility(userId: string) {
-    return UserAccessibilityRead.findOne({ userId });
+    return AccessibilityRead.findOne({ userId });
   }
 
   async getMoviesSeen(userId: string) {
