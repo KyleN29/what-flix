@@ -47,3 +47,33 @@
     padding-top: 2rem;
     border-color: var(--color-2);
 }
+
+.watch-later-button {
+    padding: 0.5rem 1rem;
+    margin: 1rem;
+    background-color: var(--color-2);
+    color: var(--black);
+    border-radius: 0.5rem;
+    transition: background-color 200ms;
+    margin-left: auto;
+    display: flex;
+}
+
+.watch-later-button:hover {
+    background-color: var(--white);
+}
+
+.watch-later-button:active {
+    border-color: var(--black);
+}
+
+.genre-button {
+    padding: 0.1rem;
+    color: var(--white);
+    border-radius: 0.5rem;
+    transition: background-color 200ms;
+}
+
+.genre-button:hover {
+    background-color: var(--color-3);
+}

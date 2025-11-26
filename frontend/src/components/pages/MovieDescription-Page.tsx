@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import MovieService, { type Movie, type Trailer } from '../../services/MovieService';
+import MovieService, { type MovieDetail, type Trailer } from '../../services/MovieService';
 import MovieRatings from '../MovieRatingsDisplay';
 import './MovieDescription-Page.css';
 import '../variables.css';
@@ -8,7 +8,7 @@ import '../variables.css';
 function MovieDescription(){
     const { movieId } = useParams();
     
-    const { data: movie, isLoading, isError } = useQuery<Movie>({
+    const { data: movie, isLoading, isError } = useQuery<MovieDetail>({
         queryKey: ['getMovieDetail', movieId],
         queryFn: () => MovieService.getMovieDetail(movieId!),
         enabled: !!movieId, 
@@ -22,6 +22,8 @@ function MovieDescription(){
 
     if (isLoading && trailerLoading) return <div>. . . Loading</div>;
     if (isError || !movie) return <div>Movie not found</div>;
+
+
 
     const backgroundStyle = movie?.backdrop_path 
     ? {
@@ -44,6 +46,9 @@ function MovieDescription(){
             <p className="text-6xl font-bold wrap-normal movie-title">{movie.title}</p>
             <p className="text-xl wrap-normal movie-title movie-title movie-subtitle">{movie.release_date}</p>
             <MovieRatings vote_average={movie.vote_average} vote_count={movie.vote_count} />
+            <button className="watch-later-button">
+                Watch Later
+            </button>
         </div>
     );
 
@@ -76,6 +81,19 @@ function MovieDescription(){
             {movie.overview}
         </p>
     )
+
+    const genres = movie.genres;
+
+    const movieGenres = (
+        <div className="flex gap-2" style={{ marginLeft: '1rem', marginTop: '1rem'}}>
+            {genres.map((genre) => (
+                <button key={genre.id} className="genre-button">
+                    {"+"}
+                    {genre.name}
+                </button>
+            ))}
+        </div>
+    )
     
     return (
         <div className='MovieDescription' style={backgroundStyle}>
@@ -83,6 +101,9 @@ function MovieDescription(){
                 <div className="grid grid-cols-3">
                     <div className="col-span-1">
                         {poster}
+                        <div className='movie-genres'>
+                            {movieGenres}
+                        </div>
                     </div>
                     <div className='col-span-2'>
                         <div className='movie-details'>
