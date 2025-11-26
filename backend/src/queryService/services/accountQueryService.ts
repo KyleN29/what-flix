@@ -1,5 +1,6 @@
 import UserRead from "../models/UserRead.js"
 import PreferencesRead from "../models/PreferencesRead.js";
+import WatchListRead from "../models/WatchListRead.js";
 
 class AccountQueryService {
   async getUser(id: string) {
@@ -11,8 +12,21 @@ class AccountQueryService {
   }
 
   async getWatchList(userId: string) {
-    
+    return WatchListRead.find({ userId });
   }
+
+  async getAcessibility(userId: string) {
+
+  }
+
+  async getMoviesSeen(userId: string) {
+
+  }
+
+  async getMovieRanking(userId: string, movieId: number){
+
+  }
+
 }
 
 const accountQueryService = new AccountQueryService();
