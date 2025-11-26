@@ -54,6 +54,23 @@ class AccountCommandService {
 
     return { accessToken }
   }
+
+  async verifyToken(token: string, userId: string): Promise<boolean> {
+    try {
+      const decoded = jwt.verify(token, 'access-secret') as { id: string, email: string };
+      return decoded.id === userId;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async updateAccountInfo(email: string, password: string, dto: any) {
+
+  }
+
+  async deleteAccount(email: string, password: string) {
+
+  }
 }
 
 const accountCommandService = new AccountCommandService();
