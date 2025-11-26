@@ -20,4 +20,9 @@ router.get('/:id/genre_ranking/:genre_code', async (req: Request, res: Response)
   res.json(genrePreference);
 });
 
+router.get('/:id/movie_rating/:movie_id', async (req: Request, res: Response) => {
+  const movieRating = await accountQueryService.getMovieRanking(req.params.id, req.params.movie_id);
+  res.json(movieRating);
+});
+
 export default router;

@@ -2,6 +2,7 @@ import UserWrite from '../models/UserWrite.js'
 import UserRead from '../../queryService/models/UserRead.js';
 import UserAuthRead from '../../queryService/models/UserAuthRead.js';
 import PreferencesWrite from '../models/PreferencesWrite.js'
+import UserMovieRankingWrite from '../models/UserMovieRankingWrite.js';
 import eventBus from '../eventBus/EventBus.js';
 import { comparePassword } from '../../password-utils.js';
 import jwt from 'jsonwebtoken'
@@ -55,21 +56,37 @@ class AccountCommandService {
     return { accessToken }
   }
 
-  async verifyToken(token: string, userId: string): Promise<boolean> {
-    try {
-      const decoded = jwt.verify(token, 'access-secret') as { id: string, email: string };
-      return decoded.id === userId;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async updateAccountInfo(email: string, password: string, dto: any) {
+  async updateAccountInfo(token: string, userId: string, dto: any) {
 
   }
 
   async deleteAccount(email: string, password: string) {
 
+  }
+
+  async updateMovieRanking(userId: string, dto: any){
+
+    const ranking = await UserMovieRankingWrite.findOneAndUpdate(
+      { user_id: userId, movie_id: dto.movie_id },
+      { $set: { rating: dto.rating } },
+      { new: true, upsert: true }
+    );
+
+    return ranking;
+  }
+
+  async deleteMovieRanking(userId: string, movieId: number){
+
+    const result = await UserMovieRankingWrite.deleteOne({ 
+      user_id: userId, 
+      movie_id: movieId 
+    });
+    
+    if (result.deletedCount === 0) {
+      throw new Error("Movie ranking not found");
+    }
+    
+    return { message: "Movie ranking deleted successfully" };
   }
 }
 
