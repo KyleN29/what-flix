@@ -66,5 +66,37 @@ router.post('/:id/remove_movie_rating', async (req: Request, res: Response) => {
   }
 });
 
+router.post('/:id/add_watch_later', async (req: Request, res: Response) => {
+  const user_id = req.params.id;
+  if(user_id == undefined) {
+    throw new Error("Invalid user id");
+  }
+
+  const movie_id = req.body;
+
+  try{
+    const result = await accountCommandService.addWatchLater(user_id, movie_id);
+    return res.json(result);
+  } catch (err: any) {
+    return res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
+router.post('/:id/remove_watch_later', async (req: Request, res: Response) => {
+  const user_id = req.params.id;
+  if(user_id == undefined) {
+    throw new Error("Invalid user id");
+  }
+
+  const movie_id = req.body;
+
+  try{
+    const result = await accountCommandService.removeWatchLater(user_id, movie_id);
+    return res.json(result);
+  } catch (err: any) {
+    return res.status(err.status || 500).json({ error: err.message });
+  }
+
+});
 
 export default router;

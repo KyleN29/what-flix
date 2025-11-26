@@ -3,6 +3,7 @@ import UserRead from '../../queryService/models/UserRead.js';
 import UserAuthRead from '../../queryService/models/UserAuthRead.js';
 import PreferencesWrite from '../models/PreferencesWrite.js'
 import UserMovieRankingWrite from '../models/UserMovieRankingWrite.js';
+import WatchLaterWrite from '../models/WatchLaterWrite.js';
 import eventBus from '../eventBus/EventBus.js';
 import { comparePassword } from '../../password-utils.js';
 import jwt from 'jsonwebtoken'
@@ -87,6 +88,28 @@ class AccountCommandService {
     }
     
     return { message: "Movie ranking deleted successfully" };
+  }
+
+  async addWatchLater(userId: string, movieId: number){
+    const watchLater = await WatchLaterWrite.create({ 
+      user_id: userId, 
+      movie_id: movieId 
+    });
+    
+    return watchLater;
+  }
+
+  async removeWatchLater(userId: string, movieId: number){
+    const result = await WatchLaterWrite.deleteOne({ 
+      user_id: userId, 
+      movie_id: movieId 
+    });
+      
+    if (result.deletedCount === 0) {
+      throw new Error("Movie not found in watch later list");
+    }
+      
+    return { message: "Movie removed from watch later list" };
   }
 }
 
