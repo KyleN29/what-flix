@@ -23,6 +23,8 @@ function MovieDescription(){
     if (isLoading && trailerLoading) return <div>. . . Loading</div>;
     if (isError || !movie) return <div>Movie not found</div>;
 
+
+
     const backgroundStyle = movie?.backdrop_path 
     ? {
         backgroundImage: `
@@ -44,6 +46,9 @@ function MovieDescription(){
             <p className="text-6xl font-bold wrap-normal movie-title">{movie.title}</p>
             <p className="text-xl wrap-normal movie-title movie-title movie-subtitle">{movie.release_date}</p>
             <MovieRatings vote_average={movie.vote_average} vote_count={movie.vote_count} />
+            <button className="watch-later-button">
+                Watch Later
+            </button>
         </div>
     );
 
@@ -76,6 +81,12 @@ function MovieDescription(){
             {movie.overview}
         </p>
     )
+
+    const movieGenres = (
+        <p>
+            sadfsadf
+        </p>
+    )
     
     return (
         <div className='MovieDescription' style={backgroundStyle}>
@@ -83,6 +94,9 @@ function MovieDescription(){
                 <div className="grid grid-cols-3">
                     <div className="col-span-1">
                         {poster}
+                        <div className='movie-genres'>
+                            {movieGenres}
+                        </div>
                     </div>
                     <div className='col-span-2'>
                         <div className='movie-details'>
