@@ -1,6 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import type { Movie } from '../../services/MovieService';
 import MovieService from '../../services/MovieService';
 
@@ -24,7 +23,7 @@ function SearchResults() {
       <h2>Search Results for: "{query}"</h2>
 
       <div className="movie-grid">
-        {data.map((movie: Movie) => (
+        {data?.map((movie: Movie) => (
           <div key={movie.id}>
             <h3>{movie.title}</h3>
           </div>
