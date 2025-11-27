@@ -148,6 +148,20 @@ class MovieQueryService {
     const response = await this.axiosInstance.get(`/movie/${movieId}/videos`);
     return response.data.results;
   }
+
+  async searchMovies(query: string, page = 1): Promise<Movie[]> {
+    const response = await this.axiosInstance.get<MovieResponse>(
+      '/search/movie',
+      {
+        params: {
+          query,
+          page
+        }
+      }
+    );
+
+    return response.data.results;
+  }
 }
 
 const movieQueryService = new MovieQueryService();
