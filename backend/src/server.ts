@@ -4,6 +4,9 @@ import mongoose from "mongoose"
 // import movieRoutes from './routes/movieRoutes.js';
 import accountCommandController from './commandService/controllers/accountCommandController.js'
 import accountQueryController from './queryService/controllers/accountQueryController.js'
+import genreQueryController from './queryService/controllers/genreQueryController.js'
+import movieQueryController from './queryService/controllers/movieQueryController.js'
+
 // import MovieService, {type Movie} from './services/MovieService.js';
 // import { MovieModel } from './models/Movie.js';
 import dotenv from "dotenv";
@@ -25,9 +28,11 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-// app.use('/movie', movieRoutes)
+
 app.use('/user', accountCommandController)
 app.use('/user', accountQueryController)
+app.use('/genre', genreQueryController)
+app.use('/movie', movieQueryController)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

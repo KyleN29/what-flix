@@ -102,9 +102,9 @@ class MovieQueryService {
   apiKey = process.env.TMDB_API_KEY;
 
   axiosInstance = axios.create({
-    baseURL: MovieQueryService.baseURL,
+    baseURL: this.baseURL,
     params: {
-      api_key: MovieQueryService.apiKey
+      api_key: this.apiKey
     }
   });
 
