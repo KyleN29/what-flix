@@ -12,14 +12,14 @@ interface Cache {
     genres: Genre[]
 }
 
-class GenreService {
+class GenreQueryService {
   static baseURL = 'https://api.themoviedb.org/3';
   static apiKey = process.env.TMDB_API_KEY;
 
   static axiosInstance = axios.create({
-    baseURL: GenreService.baseURL,
+    baseURL: GenreQueryService.baseURL,
     params: {
-      api_key: GenreService.apiKey
+      api_key: GenreQueryService.apiKey
     }
   }); 
   // Timeout for when cache is expired and should no longer be used
@@ -52,4 +52,5 @@ class GenreService {
 }
 
 
-export default GenreService;
+const genreQueryService = new GenreQueryService();
+export default genreQueryService;

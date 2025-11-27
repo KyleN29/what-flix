@@ -97,14 +97,14 @@ interface Cache {
     movies: Movie[];
 }
 
-class MovieService {
+class MovieQueryService {
   static baseURL = 'https://api.themoviedb.org/3';
   static apiKey = process.env.TMDB_API_KEY;
 
   static axiosInstance = axios.create({
-    baseURL: MovieService.baseURL,
+    baseURL: MovieQueryService.baseURL,
     params: {
-      api_key: MovieService.apiKey
+      api_key: MovieQueryService.apiKey
     }
   }); 
 
@@ -151,4 +151,5 @@ class MovieService {
   }
 }
 
-export default MovieService
+const movieQueryService = new MovieQueryService();
+export default movieQueryService;
