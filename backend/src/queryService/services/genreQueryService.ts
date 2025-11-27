@@ -50,7 +50,5 @@ class GenreQueryService {
     return genres;
   }
 }
-
-
 const genreQueryService = new GenreQueryService();
 export default genreQueryService;
