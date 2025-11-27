@@ -1,6 +1,6 @@
 import axios from 'axios';
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 export interface Genre {
   id: number;
@@ -8,28 +8,28 @@ export interface Genre {
 }
 
 interface Cache {
-    timestamp: number,
-    genres: Genre[]
+  timestamp: number;
+  genres: Genre[];
 }
 
-class GenreService {
-  static baseURL = 'https://api.themoviedb.org/3';
-  static apiKey = process.env.TMDB_API_KEY;
+class GenreQueryService {
+  baseURL = 'https://api.themoviedb.org/3';
+  apiKey = process.env.TMDB_API_KEY;
 
-  static axiosInstance = axios.create({
-    baseURL: GenreService.baseURL,
+  axiosInstance = axios.create({
+    baseURL: this.baseURL,
     params: {
-      api_key: GenreService.apiKey
+      api_key: this.apiKey
     }
-  }); 
+  });
   // Timeout for when cache is expired and should no longer be used
-  static CACHE_TIMEOUT = 1000 * 60 * 10 // 10 minutes
+  CACHE_TIMEOUT = 1000 * 60 * 10; // 10 minutes
 
-  static genreCache: Cache = {
+  genreCache: Cache = {
     timestamp: 0,
     genres: []
   };
-  static async getGenres(): Promise<Genre[]> {
+  async getGenres(): Promise<Genre[]> {
     const now = Date.now();
 
     // Serve from cache if fresh
@@ -37,9 +37,7 @@ class GenreService {
       return this.genreCache.genres;
     }
 
-    const response = await this.axiosInstance.get(
-      '/genre/movie/list'
-    );
+    const response = await this.axiosInstance.get('/genre/movie/list');
 
     const genres = response.data.genres;
 
@@ -50,6 +48,5 @@ class GenreService {
     return genres;
   }
 }
-
-
-export default GenreService;
+const genreQueryService = new GenreQueryService();
+export default genreQueryService;

@@ -1,14 +1,13 @@
-import express from 'express';
-import MovieService from '../services/MovieService.js';
-import type { Movie, Trailer } from '../services/MovieService.js';
+import { Router, type Request, type Response } from 'express';
+import movieQueryService, {type Movie, type MovieDetail, type Trailer} from '../services/movieQueryService.js';
 
-const router = express.Router();
+const router = Router();
 
 router.get('/popular', async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
 
-    const data: Movie[] = await MovieService.getPopularMovies(page);
+    const data: Movie[] = await movieQueryService.getPopularMovies(page);
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movies' });
@@ -21,7 +20,7 @@ router.get('/detail', async (req, res) => {
     if (!movieId) {
       return res.status(400).json({ message: 'Movie ID is required' });
     }
-    const data: Movie = await MovieService.getMovieDetail(movieId);
+    const data: MovieDetail = await movieQueryService.getMovieDetail(movieId);
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movie detail' });
@@ -35,7 +34,7 @@ router.get('/trailer', async (req, res) => {
       return res.status(400).json({ message: 'Movie ID is required' });
     }
     
-    const data: Trailer[] = await MovieService.getMovieTrailers(movieId);
+    const data: Trailer[] = await movieQueryService.getMovieTrailers(movieId);
     
     // Find official YouTube trailer first
     const officialTrailer = data.find(trailer => trailer.site === "YouTube" && trailer.official);
@@ -59,5 +58,6 @@ router.get('/trailer', async (req, res) => {
     res.status(500).json({ message: 'Error fetching movie trailer' });
   }
 });
+
 
 export default router;

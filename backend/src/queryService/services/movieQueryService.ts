@@ -1,6 +1,6 @@
 import axios from 'axios';
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 export interface Movie {
   adult: boolean;
@@ -93,36 +93,35 @@ export interface TrailerResponse {
   results: Trailer[];
 }
 interface Cache {
-    timestamp: number;
-    movies: Movie[];
+  timestamp: number;
+  movies: Movie[];
 }
 
-class MovieService {
-  static baseURL = 'https://api.themoviedb.org/3';
-  static apiKey = process.env.TMDB_API_KEY;
+class MovieQueryService {
+  baseURL = 'https://api.themoviedb.org/3';
+  apiKey = process.env.TMDB_API_KEY;
 
-  static axiosInstance = axios.create({
-    baseURL: MovieService.baseURL,
+  axiosInstance = axios.create({
+    baseURL: this.baseURL,
     params: {
-      api_key: MovieService.apiKey
+      api_key: this.apiKey
     }
-  }); 
+  });
 
   // Cache for popular movies keyed by page number
-  static popularMovieCache: Record<number, Cache> = {}
-  
+  popularMovieCache: Record<number, Cache> = {};
+
   // Timeout for when cache expires
-  static CACHE_TIMEOUT = 1000 * 60 * 10 // 10 minutes
+  CACHE_TIMEOUT = 1000 * 60 * 10; // 10 minutes
 
   // Return list of popular movies from TMDB API
-  static async getPopularMovies(page = 1): Promise<Movie[]> {
+  async getPopularMovies(page = 1): Promise<Movie[]> {
     const cacheEntry = this.popularMovieCache[page];
 
     // Check cache validity
     const hasValidCache =
-      cacheEntry &&
-      Date.now() - cacheEntry.timestamp < this.CACHE_TIMEOUT;
-      
+      cacheEntry && Date.now() - cacheEntry.timestamp < this.CACHE_TIMEOUT;
+
     if (hasValidCache) {
       return cacheEntry.movies;
     }
@@ -135,20 +134,21 @@ class MovieService {
     this.popularMovieCache[page] = {
       timestamp: Date.now(),
       movies: response.data.results
-    }
+    };
 
     return response.data.results;
   }
 
-  static async getMovieDetail(movieId: string): Promise<MovieDetail> {
+  async getMovieDetail(movieId: string): Promise<MovieDetail> {
     const response = await this.axiosInstance.get(`/movie/${movieId}`);
     return response.data;
   }
 
-  static async getMovieTrailers(movieId: string): Promise<Trailer[]> {
+  async getMovieTrailers(movieId: string): Promise<Trailer[]> {
     const response = await this.axiosInstance.get(`/movie/${movieId}/videos`);
     return response.data.results;
   }
 }
 
-export default MovieService
+const movieQueryService = new MovieQueryService();
+export default movieQueryService;
