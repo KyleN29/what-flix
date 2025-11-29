@@ -4,7 +4,7 @@ import './MovieCard.css';
 
 interface Props {
   movie: Movie;
-  aspectRatio?: number; // optional for flexibility
+  aspectRatio?: number;
 }
 
 function MovieCard({ movie, aspectRatio = 3 / 4.2 }: Props) {
@@ -14,15 +14,13 @@ function MovieCard({ movie, aspectRatio = 3 / 4.2 }: Props) {
         <img
           src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
           alt={movie.title}
-          className="movie-img"
+          className="movie-card-img"
         />
-
         <div className="hover-popup">
           <p>
             <b>
-              {movie.title} ({movie.release_date?.substring(0, 4)})
+              {movie.title} ({movie.release_date.substring(0, 4)})
             </b>
-
             <div className="watch-later" title="Add to Watch Later">
               <b>+</b>
             </div>
