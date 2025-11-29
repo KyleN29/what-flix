@@ -8,7 +8,7 @@ import './SearchResults.css';
 function SearchResults() {
   const [params] = useSearchParams();
   const query = params.get('q') || '';
-  const page = Number(params.get('page') || 1);
+  const page = Number(params.get('page') || 3);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['search', query, page],
