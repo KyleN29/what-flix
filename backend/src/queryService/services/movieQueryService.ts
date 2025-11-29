@@ -159,8 +159,7 @@ class MovieQueryService {
       );
 
       allResults.push(...response.data.results);
-      console.log("iteration")
-      if (page >= response.data.total_pages) break; // TMDB has fewer pages than requested
+      if (page >= response.data.total_pages) break;
     }
     
     return allResults.sort((a, b) => b.popularity - a.popularity);
