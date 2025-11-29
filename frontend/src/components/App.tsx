@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MovieDescription, Login } from './pages';
+import { MovieDescription, Login, SearchResults } from './pages';
 import NavBar from './NavBar';
 import Home from './Home';
 import './App.css';
@@ -15,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/movie/:movieId" element={<MovieDescription />} />
           <Route path="/login/" element={<Login />} />
+          <Route path="/search" element={<SearchResults />} />
 
           {/* in case of invalid route, return to home page */}
           <Route path="*" element={<Navigate to="/" replace />} />

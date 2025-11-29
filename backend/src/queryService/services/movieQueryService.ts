@@ -148,6 +148,23 @@ class MovieQueryService {
     const response = await this.axiosInstance.get(`/movie/${movieId}/videos`);
     return response.data.results;
   }
+
+  async searchMovies(query: string, pagesToFetch = 3): Promise<Movie[]> {
+    let allResults: Movie[] = [];
+    console.log(pagesToFetch)
+    for (let page = 1; page <= pagesToFetch; page++) {
+      const response = await this.axiosInstance.get<MovieResponse>(
+        '/search/movie',
+        { params: { query, page } }
+      );
+
+      allResults.push(...response.data.results);
+      console.log("iteration")
+      if (page >= response.data.total_pages) break; // TMDB has fewer pages than requested
+    }
+    
+    return allResults.sort((a, b) => b.popularity - a.popularity);
+  }
 }
 
 const movieQueryService = new MovieQueryService();

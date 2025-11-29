@@ -91,19 +91,18 @@ export interface TrailerResponse {
   results: Trailer[];
 }
 class MovieService {
-
   static axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',
-  }); 
-  
+    baseURL: 'http://localhost:3000'
+  });
+
   static async getPopularMovies(page = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
     });
-    console.log(response.data)
+    console.log(response.data);
     return response.data;
   }
-  
+
   static async getMovieDetail(movieId: string): Promise<MovieDetail> {
     const response = await this.axiosInstance.get(`/movie/detail`, {
       params: { movieId }
@@ -117,6 +116,13 @@ class MovieService {
     });
     return response.data;
   }
+
+  static async searchMovies(query: string, page = 1): Promise<Movie[]> {
+    const response = await this.axiosInstance.get('/movie/search', {
+      params: { query, page }
+    });
+    return response.data;
+  }
 }
 
-export default MovieService
+export default MovieService;

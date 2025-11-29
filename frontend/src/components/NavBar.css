@@ -3,8 +3,10 @@
   min-height: 3rem;
   height: 3rem; /* Notice: When changing this make sure you also change the "pageY > 5 * 16" (currently 5 for 3em + 2 margin and 16 for em size) in NavBar.tsx */
 
+  justify-content: space-between;
+  gap: 1rem;
+
   margin: 0.5rem;
-  padding: 0 10% 0 10%;
   top: 0.5rem;
 
   z-index: 99;
@@ -80,4 +82,53 @@
 .nav-bar Link {
   height: 3rem;
   text-align: center;
+}
+
+.search-bar-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 20rem;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 0.4rem 1rem;
+
+  border-radius: 2rem;
+  border: none;
+  outline: none;
+
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  backdrop-filter: blur(3px);
+}
+
+.search-bar::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.nav-right .nav-link {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: bold;
+  padding-right: 1rem;
+}
+
+.nav-bar.minimized .search-bar-container {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.nav-bar .search-bar-container {
+  transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
 }

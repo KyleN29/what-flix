@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+
 import type { Movie } from '../services/MovieService';
 import './CategorySlider.css';
 import './variables.css';
+import MovieCard from './MovieCard';
 
 interface Props {
   title: string;
@@ -39,60 +40,36 @@ function CategorySlider(props: Props) {
   }
 
   return (
-    <>
-      <div className="category-slider">
-        <div className="title">{props.title}</div>
-        <div
-          className="movies"
-          style={{
-            left: -1 * scroll * movieWidthInPx + 'px'
-          }}
-        >
-          {props.movies.map((movie, index) => (
-            <Link to={`/movie/${movie.id}`} key={index}>
-              <div
-                className="movie"
-                key={index}
-                style={{ aspectRatio: movieDivAspectRatio }}
-              >
-                <img
-                  src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
-                  alt={movie.title}
-                  className="movie-img"
-                />
-                <div className="hover-popup">
-                  <p>
-                    <b>
-                      {movie.title} ({movie.release_date.substring(0, 4)})
-                    </b>
-                    {/*Later this will be an image*/}
-                    <div className="watch-later" title="Add to Watch Later">
-                      <b>+</b>
-                    </div>
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+    <div className="category-slider">
+      <div className="title">{props.title}</div>
 
-          {/* Note: This will look better once real images are used instead of < and >*/}
-          <div
-            className="move-left"
-            style={{ left: 1 * scroll * movieWidthInPx + 'px' }}
-            onClick={() => slide(-1)}
-          >
-            {'<\n<\n<'}
-          </div>
-          <div
-            className="move-right"
-            style={{ left: 1 * scroll * movieWidthInPx + 'px' }}
-            onClick={() => slide(1)}
-          >
-            {'>\n>\n>'}
-          </div>
+      <div
+        className="movies"
+        style={{
+          left: -1 * scroll * movieWidthInPx + 'px'
+        }}
+      >
+        {props.movies.map((movie, i) => (
+          <MovieCard key={i} movie={movie} aspectRatio={movieDivAspectRatio} />
+        ))}
+
+        {/* Movement Buttons */}
+        <div
+          className="move-left"
+          style={{ left: 1 * scroll * movieWidthInPx + 'px' }}
+          onClick={() => slide(-1)}
+        >
+          {'<\n<\n<'}
+        </div>
+        <div
+          className="move-right"
+          style={{ left: 1 * scroll * movieWidthInPx + 'px' }}
+          onClick={() => slide(1)}
+        >
+          {'>\n>\n>'}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
