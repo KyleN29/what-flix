@@ -2,6 +2,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { Movie } from '../../services/MovieService';
 import MovieService from '../../services/MovieService';
+import MovieCard from '../../components/MovieCard';
+import './SearchResults.css';
 
 function SearchResults() {
   const [params] = useSearchParams();
@@ -18,16 +20,30 @@ function SearchResults() {
   if (isLoading) return <p>Loading search results…</p>;
   if (error) return <p>Error loading search results.</p>;
 
+
+  const movieDivAspectRatio = 3 / 4.2;
+  const movieHeightRem = 16;
+  const movieWidthRem = movieHeightRem * movieDivAspectRatio;
+
   return (
-    <div>
+    <div className="search-results">
       <h2>Search Results for: "{query}"</h2>
 
       <div className="movie-grid">
-        {data?.map((movie: Movie) => (
-          <div key={movie.id}>
-            <h3>{movie.title}</h3>
-          </div>
-        ))}
+        {data
+          ?.filter((movie) => movie.poster_path)
+          .map((movie: Movie) => (
+            <div
+              key={movie.id}
+              className="movie-grid-item"
+              style={{
+                width: `${movieWidthRem}rem`,
+                height: `${movieHeightRem}rem`
+              }}
+            >
+              <MovieCard movie={movie} aspectRatio={movieDivAspectRatio} />
+            </div>
+          ))}
       </div>
     </div>
   );
