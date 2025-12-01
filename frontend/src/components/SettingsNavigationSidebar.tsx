@@ -1,37 +1,68 @@
-import { ChevronDown, Home, Settings, Users, FileText, BarChart, Mail, Bell, Shield } from 'lucide-react';
+import { useState, useEffect } from "react";
 import "./SettingsNavigationSidebar.css"
 
-function NavigationSidebar() {
+function NavigationSidebar({ sections, user }) {
+    const [activeSection, setActiveSection] = useState(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY + 100;
+
+            sections.forEach((section, index: number) => {
+                if (section.ref.current) {
+                    const { offsetTop, offsetHeight } = section.ref.current;
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+                        setActiveSection(index);
+                    }
+                }
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [sections]);
+
+    const scrollToSection = (index: number) => {
+        sections[index].ref.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     const heading = (
-        <div className='flex nav-sidebar-heading'>
-            ACCOUNT DETAILS
+        <div className='nav-sidebar-heading flex items-center gap-4'>
+                <img 
+                    src="vite.svg" 
+                    alt="Profile" 
+                    className="w-12 h-12 rounded-full object-cover"
+                />
+                <div className="flex flex-col">
+                    <p className="text-base">{user.username}</p>
+                    <p className="text-sm">{user.email}</p>
+                </div>
         </div>
     );
-    
+
     return(
         <div className="nav-sidebar-container flex flex-col"> 
             {heading}
-            <div className='nav-sidebar-item'>
-                <h1>SECTION TITLE</h1>
-                <h2>DETAILS</h2>
-            </div>
-            <div className='nav-sidebar-item'>
-                <h1>SECTION TITLE</h1>
-                <h2>DETAILS</h2>
-            </div>
-            <div className='nav-sidebar-item'>
-                <h1>SECTION TITLE</h1>
-                <h2>DETAILS</h2>
-            </div>
-            <div className='nav-sidebar-item'>
-                <h1>SECTION TITLE</h1>
-                <h2>DETAILS</h2>
-            </div>
-            <div className='nav-sidebar-item'>
-                <h1>SECTION TITLE</h1>
-                <h2>DETAILS</h2>
-            </div>
+            {sections.map((section, index: number) => {
+                const Icon = section.icon;
+                return (
+                    <div 
+                        key={section.id}
+                        className={`nav-sidebar-item ${activeSection === index ? 'active' : ''}`}
+                        onClick={() => scrollToSection(index)}
+                    >
+                        <h1 className="flex items-center gap-2">
+                            <Icon size={18} />
+                            {section.label}
+                        </h1>
+                        {section.settings.map((setting, i: number) => (
+                            <h2 key={i}>
+                                {setting.name}
+                            </h2>
+                        ))}
+                    </div>
+                );
+            })}
         </div>
     )
 }

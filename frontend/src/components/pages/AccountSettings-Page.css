@@ -6,3 +6,15 @@
 .AccountNavigationBar {
     background-color: var(--color-5);
 }
+
+.AccountSettings .col-span-4 {
+    margin: 2rem;
+    margin-top: 6rem;
+    color: var(--white);
+}
+
+.AccountSettings-Section {
+    padding-top: 20rem;
+    padding-bottom: 20rem;
+}
+

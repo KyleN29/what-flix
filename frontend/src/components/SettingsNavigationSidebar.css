@@ -7,25 +7,28 @@
 
 .nav-sidebar-item {
     margin-left: 5%;
+    margin-top: 0.5rem;
 }
 
 .nav-sidebar-item h1 {
     color: var(--white);
-    border-bottom-width: 1px;
+    border-bottom-width: 2px;
     padding: 5%;
     padding-bottom: 1%;
+    margin-bottom: 1rem;
 }
 
 .nav-sidebar-item h2 {
-    color: var(--color-4);
+    color: var(--color-1);
     border-bottom-width: 1px;
-    padding: inherit;
     margin-left: 10%;
+    justify-content: center;
+    display: flex;
+    margin-bottom: 1rem;
 }
 
 .nav-sidebar-heading {
-    flex-direction: row;
-    align-items: center;
     border-color: var(--white);
-    border-bottom-width: 2px;
+    border-bottom-width: 3px;
+    padding-bottom: 1rem;
 }
