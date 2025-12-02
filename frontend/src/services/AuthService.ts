@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-interface RegisterPayload {
+export interface RegisterPayload {
   email: string;
   username: string;
   password: string;
@@ -18,7 +18,7 @@ class AuthService {
   static async registerUser(formData: RegisterPayload) {
     const endpoint = '/user/register';
 
-    const response = await this.axiosInstance.post<AuthResponse>(endpoint, formData);
+    const response = await AuthService.axiosInstance.post<AuthResponse>(endpoint, formData);
 
     return response.data
   }
