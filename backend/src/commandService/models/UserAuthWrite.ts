@@ -18,4 +18,4 @@ const UserAuthSchema = new Schema<IUserAuth>({
   }
 });
 
-export default model<IUserAuth>('UserAuth', UserAuthSchema);
+export default model<IUserAuth>('UserAuthWrite', UserAuthSchema);

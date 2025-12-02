@@ -1,55 +1,123 @@
 import { useState } from 'react';
-
+import { useMutation } from '@tanstack/react-query';
+import AuthService, {type LoginPaylod, type RegisterPayload} from '../../services/AuthService';
 import './../variables.css';
 import './Login.css';
+import { useAuth } from "../../context/AuthContext";
+
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
+  const { setIsLoggedIn } = useAuth();
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerUsername, setRegisterUsername] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [registerRepeatPassword, setRegisterRepeatPassword] = useState('');
+
+  const registerMutation = useMutation({
+    mutationFn: (formData: RegisterPayload) => AuthService.registerUser(formData),
+    onSuccess: (data) => {
+      console.log('Registered successfully!');
+      localStorage.setItem('accessToken', data.accessToken)
+      setIsLoggedIn(true);
+    },
+    onError: (err) => {
+      console.error('Registration failed:', err);
+    }
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: (formData: LoginPaylod) => AuthService.loginUser(formData),
+    onSuccess: (data) => {
+      console.log('Login successfully!');
+      localStorage.setItem('accessToken', data.accessToken)
+      setIsLoggedIn(true);
+    },
+    onError: (err) => {
+      console.error('Login failed:', err);
+    }
+  });
+
+  const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+
+    loginMutation.mutate({
+      email: loginEmail,
+      password: loginPassword
+    });
+  };
+
+    const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (registerPassword !== registerRepeatPassword) {
+      alert('Error: Passwords do not match!');
+      return;
+    }
+
+    registerMutation.mutate({
+      email: registerEmail,
+      username: registerUsername,
+      password: registerPassword
+    });
+  };
+
+
+  
+
 
   return (
     <div className="login-page">
       <h3>Login:</h3>
-      <form className="login">
+      <form className="login" onSubmit={handleLoginSubmit}>
         <p>Username:</p>
         <input
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={loginEmail}
+          onChange={(e) => setLoginEmail(e.target.value)}
         />
         <br />
         <p>Password:</p>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={loginPassword}
+          onChange={(e) => setLoginPassword(e.target.value)}
         />
         <br />
         <button type="submit">Submit</button>
       </form>
       <br />
       <h3>Create Account:</h3>
-      <form className="create-account">
+      <form className="create-account" onSubmit={handleRegisterSubmit}>
+        <p>Email:</p>
+        <input
+          type="text"
+          value={registerEmail}
+          onChange={(e) => setRegisterEmail(e.target.value)}
+        />
+        <br />
         <p>Username:</p>
         <input
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={registerUsername}
+          onChange={(e) => setRegisterUsername(e.target.value)}
         />
         <br />
         <p>Password:</p>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={registerPassword}
+          onChange={(e) => setRegisterPassword(e.target.value)}
         />
         <br />
         <p>Repeat Password:</p>
         <input
           type="password"
-          value={repeatPassword}
-          onChange={(e) => setRepeatPassword(e.target.value)}
+          value={registerRepeatPassword}
+          onChange={(e) => setRegisterRepeatPassword(e.target.value)}
         />
         <br />
         <button type="submit">Submit</button>
