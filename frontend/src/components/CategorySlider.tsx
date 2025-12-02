@@ -40,33 +40,31 @@ function CategorySlider(props: Props) {
   }
 
   return (
-    <div className="category-slider">
-      <div className="title">{props.title}</div>
-
-      <div
-        className="movies"
-        style={{
-          left: -1 * scroll * movieWidthInPx + 'px'
-        }}
-      >
-        {props.movies.map((movie, i) => (
-          <MovieCard key={i} movie={movie} aspectRatio={movieDivAspectRatio} />
-        ))}
-
-        {/* Movement Buttons */}
-        <div
-          className="move-left"
-          style={{ left: 1 * scroll * movieWidthInPx + 'px' }}
-          onClick={() => slide(-1)}
-        >
-          {'<\n<\n<'}
+    <div className="slider-container">
+      <div className="category-slider">
+        <div className="title">{props.title}</div>
+        <div className="move-left" onClick={() => slide(-1)}>
+          {'\u276E'}
         </div>
-        <div
-          className="move-right"
-          style={{ left: 1 * scroll * movieWidthInPx + 'px' }}
-          onClick={() => slide(1)}
+        <div className="slider-inner">
+          <div
+          className="movies"
+          style={{
+            left: -1 * scroll * movieWidthInPx + 'px'
+          }}
         >
-          {'>\n>\n>'}
+          {props.movies.map((movie, i) => (
+            <MovieCard
+              key={i}
+              movie={movie}
+              aspectRatio={movieDivAspectRatio}
+            />
+          ))}
+        </div>
+        </div>
+        
+        <div className="move-right" onClick={() => slide(1)}>
+          {'\u276F'}
         </div>
       </div>
     </div>

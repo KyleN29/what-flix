@@ -1,16 +1,20 @@
+.slider-container {
+  margin: 2rem;
+}
 .category-slider {
+  position: relative;
   --height: 27rem;
   --title-height: 3rem;
 
+  
   height: var(--height);
   width: 100%;
-
-  overflow: hidden;
-
-  /* Honestly might make this transparent later */
-  background: linear-gradient(135deg, var(--black), var(--color-5));
 }
-
+.slider-inner {
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+}
 .category-slider .title {
   padding-left: 1rem;
   height: var(--title-height);
@@ -29,6 +33,7 @@
 
   transition: left 0.5s;
   background-color: rgba(30, 30, 30, 0.5);
+  
 }
 
 .category-slider .movies .movie {
@@ -79,33 +84,46 @@
   cursor: pointer;
 }
 
-.category-slider .movies .move-left,
-.category-slider .movies .move-right {
+.category-slider .move-left,
+.category-slider .move-right {
   display: flex;
   position: absolute;
+  top: 50%;
   z-index: 2;
 
-  width: 4rem;
-  height: 8rem;
+  width: 3rem;
+  height: 3rem;
 
   align-self: center;
   align-items: center;
   text-align: center;
+  justify-content: center;
 
-  font-size: 3rem;
-  line-height: 2.5rem;
+  font-size: 1rem;
+  color: white;
 
-  background-color: aqua;
-
-  transition: left 0.5s;
+  background-color: #0f0e16;
+  border: 2px #0f0e16 solid;
+transition: left .5s, background .3s, transform .3s;
   user-select: none;
+  border-radius: 50%;
+  overflow: visible;
+}
+.category-slider .move-left {
+  left: -1.5rem;
+}
+.category-slider .move-right {
+  right: -1.5rem;
+}
+.category-slider .move-left:hover,
+.category-slider .move-right:hover {
+  background-color: #15121e;
+  border-color: #ce9fff;
+  opacity: 1;
+  transform: scale(1.2);
 }
 
-.category-slider .movies .move-left:hover,
-.category-slider .movies .move-right:hover {
+.category-slider .move-left:hover,
+.category-slider .move-right:hover {
   cursor: pointer;
-}
-
-.category-slider .movies .move-right {
-  margin-left: calc(100vw - 4rem);
 }
