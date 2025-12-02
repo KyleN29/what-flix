@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import AuthService, {type RegisterPayload} from '../../services/AuthService';
+import AuthService, {type LoginPaylod, type RegisterPayload} from '../../services/AuthService';
 import './../variables.css';
 import './Login.css';
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerUsername, setRegisterUsername] = useState('');
@@ -15,15 +15,36 @@ function Login() {
 
   const registerMutation = useMutation({
     mutationFn: (formData: RegisterPayload) => AuthService.registerUser(formData),
-    onSuccess: () => {
+    onSuccess: (data) => {
       console.log('Registered successfully!');
+      localStorage.setItem('accessToken', data.accessToken)
     },
     onError: (err) => {
       console.error('Registration failed:', err);
     }
   });
 
-  const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const loginMutation = useMutation({
+    mutationFn: (formData: LoginPaylod) => AuthService.loginUser(formData),
+    onSuccess: () => {
+      console.log('Login successfully!');
+    },
+    onError: (err) => {
+      console.error('Login failed:', err);
+    }
+  });
+
+  const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+
+    loginMutation.mutate({
+      email: loginEmail,
+      password: loginPassword
+    });
+  };
+
+    const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (registerPassword !== registerRepeatPassword) {
@@ -37,22 +58,27 @@ function Login() {
       password: registerPassword
     });
   };
+
+
+  
+
+
   return (
     <div className="login-page">
       <h3>Login:</h3>
-      <form className="login">
+      <form className="login" onSubmit={handleLoginSubmit}>
         <p>Username:</p>
         <input
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={loginEmail}
+          onChange={(e) => setLoginEmail(e.target.value)}
         />
         <br />
         <p>Password:</p>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={loginPassword}
+          onChange={(e) => setLoginPassword(e.target.value)}
         />
         <br />
         <button type="submit">Submit</button>

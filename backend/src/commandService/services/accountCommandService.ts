@@ -57,9 +57,12 @@ class AccountCommandService {
       throw { status: 401, message: 'Invalid credentials' };
     }
 
-    const userAuth = await UserAuthRead.findOne({ _id: user._id });
+    const userAuth = await UserAuthRead.findOne({ user_id: user.user_id });
+    if (!userAuth) {
+      throw { status: 401, message: 'Failed to authenticate' };
+    }
+    const isValidPassword = await comparePassword(password, userAuth.password_hash);
 
-    const isValidPassword = await comparePassword(password, user.password_hash);
     if (!isValidPassword) {
       throw { status: 401, message: 'Invalid credentials' };
     }

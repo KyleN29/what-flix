@@ -6,6 +6,11 @@ export interface RegisterPayload {
   password: string;
 }
 
+export interface LoginPaylod {
+  email: string;
+  password: string;
+}
+
 interface AuthResponse {
   accessToken: string;
 }
@@ -21,6 +26,13 @@ class AuthService {
     const response = await AuthService.axiosInstance.post<AuthResponse>(endpoint, formData);
 
     return response.data
+  }
+
+  static async loginUser(formData: LoginPaylod) {
+    const endpoint = '/user/login';
+
+    const response = await AuthService.axiosInstance.post<AuthResponse>(endpoint, formData);
+    return response.data;
   }
 }
 
