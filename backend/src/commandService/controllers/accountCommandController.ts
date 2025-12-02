@@ -30,6 +30,13 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 });
 
+router.post('/register', async (req: Request, res: Response) => {
+  const { email, username, password } = req.body;
+  try {
+    const result = await accountCommandService
+  }
+}) 
+
 router.post('/:id/add_movie_rating', async (req: Request, res: Response) => {
   const {movie_id, rating} = req.body;
   const dto = {
