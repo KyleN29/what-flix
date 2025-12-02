@@ -14,7 +14,23 @@
 }
 
 .AccountSettings-Section {
-    padding-top: 20rem;
-    padding-bottom: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.AccountSettings-Section .flex-col {
+    margin-top: 2rem;
+}
+
+.AccountSettings-Section h1 {
+    font-size: 1.875rem; 
+    font-weight: 700;
+}
+
+.AccountSettings button {
+    border-width: 1px;
+    border-color: var(--white);
+    padding: 0.5rem;
 }
 
