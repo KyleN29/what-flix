@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 import './NavBar.css';
 import './variables.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.js';
 
 function NavBar() {
+  const { isLoggedIn } = useAuth();
   const [pageY, setPageY] = useState(0);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ function NavBar() {
     return pageY > 5 * 16; // This 16 should be equal to an em, not really sure how to find that though
   };
 
-const submitSearch = (e: React.FormEvent) => {
+  const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim() !== '') navigate(`/search?q=${search.trim()}`);
   };
@@ -53,9 +55,17 @@ const submitSearch = (e: React.FormEvent) => {
 
       {/* Right side items */}
       <div className="nav-right">
-        <Link to="/login" className="nav-link">
-          Login / Create Account
-        </Link>
+        {isLoggedIn ? (
+          <>
+            <Link to="/profile" className="nav-link">
+              Profile
+            </Link>
+          </>
+        ) : (
+          <Link to="/login" className="nav-link">
+            Login / Create Account
+          </Link>
+        )}
       </div>
     </div>
   );

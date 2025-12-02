@@ -3,8 +3,11 @@ import { useMutation } from '@tanstack/react-query';
 import AuthService, {type LoginPaylod, type RegisterPayload} from '../../services/AuthService';
 import './../variables.css';
 import './Login.css';
+import { useAuth } from "../../context/AuthContext";
+
 
 function Login() {
+  const { setIsLoggedIn } = useAuth();
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
@@ -18,6 +21,7 @@ function Login() {
     onSuccess: (data) => {
       console.log('Registered successfully!');
       localStorage.setItem('accessToken', data.accessToken)
+      setIsLoggedIn(true);
     },
     onError: (err) => {
       console.error('Registration failed:', err);
@@ -26,8 +30,10 @@ function Login() {
 
   const loginMutation = useMutation({
     mutationFn: (formData: LoginPaylod) => AuthService.loginUser(formData),
-    onSuccess: () => {
+    onSuccess: (data) => {
       console.log('Login successfully!');
+      localStorage.setItem('accessToken', data.accessToken)
+      setIsLoggedIn(true);
     },
     onError: (err) => {
       console.error('Login failed:', err);
