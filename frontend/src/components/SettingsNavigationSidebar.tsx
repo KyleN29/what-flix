@@ -1,7 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type RefObject } from "react";
 import "./SettingsNavigationSidebar.css"
 
-function NavigationSidebar({ sections, user }) {
+type setting = {
+    name: string,
+    ref: RefObject<any>
+};
+
+type section = {
+    id: string,
+    label: string,
+    icon: React.ForwardRefExoticComponent<any>,
+    ref: RefObject<any>,
+    settings: setting[]
+};
+
+type user = {
+    username: string,
+    email: string,
+}
+
+interface props {
+    sections: section[],
+    user: user
+}
+
+function NavigationSidebar({ sections, user }: props) {
     const [activeSection, setActiveSection] = useState(0);
     const [activeSetting, setActiveSetting] = useState<number | null>(null);
 
@@ -9,14 +32,14 @@ function NavigationSidebar({ sections, user }) {
         const handleScroll = () => {
             const scrollPosition = window.scrollY + 100;
 
-            sections.forEach((section, sectionIndex) => {
+            sections.forEach((section: any, sectionIndex: number) => {
                 if (section.ref.current) {
                     const { offsetTop, offsetHeight } = section.ref.current;
                     if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
                         setActiveSection(sectionIndex);
                         
                         // Check which setting is active within this section
-                        section.settings.forEach((setting, settingIndex) => {
+                        section.settings.forEach((setting: any, settingIndex: number) => {
                             if (setting.ref && setting.ref.current) {
                                 const settingTop = setting.ref.current.offsetTop;
                                 const settingHeight = setting.ref.current.offsetHeight;
@@ -62,7 +85,7 @@ function NavigationSidebar({ sections, user }) {
     return(
         <div className="nav-sidebar-container flex flex-col sticky top-18"> 
             {heading}
-            {sections.map((section, sectionIndex) => {
+            {sections.map((section: any, sectionIndex: number) => {
                 const Icon = section.icon;
                 return (
                     <div 
@@ -74,7 +97,7 @@ function NavigationSidebar({ sections, user }) {
                             <Icon size={18} />
                             {section.label}
                         </h1>
-                        {section.settings.map((setting, settingIndex) => (
+                        {section.settings.map((setting: any, settingIndex: number) => (
                             <h2 
                                 key={settingIndex}
                                 className={
