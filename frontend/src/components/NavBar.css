@@ -1,20 +1,18 @@
 .nav-bar {
-  width: calc(100% - 1rem);
+  width: calc(100%);
   min-height: 3rem;
   height: 3rem; /* Notice: When changing this make sure you also change the "pageY > 5 * 16" (currently 5 for 3em + 2 margin and 16 for em size) in NavBar.tsx */
 
   justify-content: space-between;
   gap: 1rem;
 
-  margin: 0.5rem;
-  top: 0.5rem;
-
+  
   z-index: 99;
   position: fixed;
+  top: 0;
   text-wrap-mode: nowrap;
 
   background: linear-gradient(135deg, var(--color-4), var(--color-3));
-  border-radius: 10px;
 
   display: flex;
   align-items: center;
