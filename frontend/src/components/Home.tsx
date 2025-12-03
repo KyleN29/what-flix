@@ -3,8 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import MovieService, { type Movie } from '../services/MovieService';
 import CategorySlider from './CategorySlider';
 import './Home.css';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.js';
 
 function Home() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const { data: popularMovies } = useQuery<Movie[]>({
     queryKey: ['popularMovies'],
     queryFn: () => MovieService.getPopularMovies()
@@ -20,7 +24,7 @@ function Home() {
     if (topThree.length === 0) return;
 
     const interval = setInterval(() => {
-      setHeroIndex(prev => (prev + 1) % topThree.length);
+      setHeroIndex((prev) => (prev + 1) % topThree.length);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -31,30 +35,66 @@ function Home() {
   return (
     <div className="home">
       {featured && (
-        <div 
+        <div
           className="hero fade"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/w1280${featured.backdrop_path})`
           }}
         >
           <div className="hero-overlay" />
-          <div className="hero-content">
-            <h1 className="hero-title">{featured.title}</h1>
-            <p className="hero-desc">{featured.overview}</p>
 
-            <div className="hero-buttons">
-              <button className="btn-primary">Details</button>
-              <button className="btn-secondary">More Like This</button>
+          <div className="hero-inner">
+            {/* LEFT SIDE - MOVIE CONTENT */}
+            <div className="hero-left">
+              <h1 className="hero-title">{featured.title}</h1>
+              <p className="hero-desc">{featured.overview}</p>
+
+              <div className="hero-buttons">
+                <button className="btn-primary">Details</button>
+                <button className="btn-secondary">More Like This</button>
+              </div>
+
+              <div className="hero-dots">
+                {topThree.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`dot ${idx === heroIndex ? 'active' : ''}`}
+                    onClick={() => setHeroIndex(idx)}
+                  />
+                ))}
+              </div>
             </div>
 
-            <div className="hero-dots">
-              {topThree.map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`dot ${idx === heroIndex ? 'active' : ''}`}
-                  onClick={() => setHeroIndex(idx)}
-                />
-              ))}
+            <div className="hero-right">
+              {isLoggedIn ? (
+                <>
+                  <h2>Your Movie Taste</h2>
+                  <p>
+                    Customize your genre rankings to improve your
+                    recommendations.
+                  </p>
+                  <button
+                    onClick={() => navigate('/preferences')}
+                    className="btn-primary hero-login-btn"
+                  >
+                    Update Preferences
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h2>Personalize Your Experience</h2>
+                  <p>
+                    Log in to rank your favorite genres and unlock smarter movie
+                    recommendations.
+                  </p>
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="btn-primary hero-login-btn"
+                  >
+                    Log In to Personalize
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
