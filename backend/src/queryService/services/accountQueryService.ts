@@ -6,8 +6,8 @@ import MoviesSeenRead from "../models/UserMoviesSeenRead.js";
 import MovieRatingRead from "../models/MovieRatingRead.js";
 
 class AccountQueryService {
-  async getUser(id: string) {
-    return UserRead.findById(id);
+  async getUser(userId: string) {
+    return UserRead.findOne({ user_id: userId });
   }
 
   async getPreferences(userId: string) {

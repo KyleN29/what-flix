@@ -1,9 +1,15 @@
 import "./AccountSettings-Page.css"
 import NavigationSidebar from "../SettingsNavigationSidebar";
 import { useRef } from "react";
+import { useQuery } from '@tanstack/react-query';
 import { Settings, CreditCard, Sliders, Accessibility } from "lucide-react";
+import AccountService from "../../services/AccountService";
+import { type user } from "../../services/AccountService";
+import { useParams } from "react-router-dom";
 
 function AccountSettings() {
+    const { userId } = useParams();
+
     // general settings references
     const generalRef = useRef(null);
     const picRef = useRef(null);
@@ -71,14 +77,28 @@ function AccountSettings() {
         },
     ];
 
-    const user = {
-        username: "ConnorWinning2349",
-        email: "connoredwinwinning2367@gmail.com",
-    };
+    const { data: userData, isLoading, isError } = useQuery<user>({
+        queryKey: ['getUser', userId],
+        queryFn: () => AccountService.getUserData(userId!),
+        enabled: !!userId, 
+    });
+
+    if(isError) {
+        console.log("Unable to find user");
+    }
+
+    console.log("userData:", userData);
+    console.log("isLoading:", isLoading);
+    console.log("isError:", isError);
+
+    const dummyUser = {
+        email: "someone@gmail.com",
+        username: "someone User Name"
+    }
 
     const settingsNav = (
         <div className="col-span-1 AccountNavigationBar">
-            <NavigationSidebar sections={sections} user={user}/>
+            <NavigationSidebar sections={sections} user={userData ?? dummyUser}/>
         </div>
     );
 

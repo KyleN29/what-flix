@@ -16,7 +16,7 @@ function App() {
           <Route path="/movie/:movieId" element={<MovieDescription />} />
           <Route path="/login/" element={<Login />} />
           <Route path="/search" element={<SearchResults />} />
-          <Route path="/account" element={<AccountSettings />} />
+          <Route path="/account/:userId" element={<AccountSettings />} />
 
           {/* in case of invalid route, return to home page */}
           <Route path="*" element={<Navigate to="/" replace />} />
