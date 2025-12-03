@@ -25,7 +25,7 @@ function NavBar() {
   }, []);
 
   const passedScrollThreshold = () => {
-    return pageY > 5 * 16; // This 16 should be equal to an em, not really sure how to find that though
+    return pageY > 30 * 16; // This 16 should be equal to an em, not really sure how to find that though
   };
 
   const submitSearch = (e: React.FormEvent) => {

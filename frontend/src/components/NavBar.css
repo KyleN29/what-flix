@@ -51,10 +51,6 @@
   transition-timing-function: ease-in-out;
 }
 
-/* .nav-bar .logo .second-color {
-  color: var(--color-1);
-} */
-
 .nav-bar.minimized .logo {
   left: 0rem;
   font-size: 1.25rem;
@@ -87,7 +83,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 20rem;
+  max-width: 25rem;
 }
 
 .search-bar {

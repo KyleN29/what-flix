@@ -16,7 +16,6 @@
   position: relative;
 }
 .category-slider .title {
-  padding-left: 1rem;
   height: var(--title-height);
 
   font-size: 2rem;
