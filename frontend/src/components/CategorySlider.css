@@ -9,11 +9,13 @@
   
   height: var(--height);
   width: 100%;
+
 }
 .slider-inner {
   overflow: hidden;
   height: 100%;
   position: relative;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 .category-slider .title {
   height: var(--title-height);
@@ -27,7 +29,7 @@
   display: flex;
   position: relative;
 
-  height: calc(100% - var(--title-height));
+  height: 100%;
   width: fit-content;
 
   transition: left 0.5s;
@@ -87,7 +89,7 @@
 .category-slider .move-right {
   display: flex;
   position: absolute;
-  top: 50%;
+  top: 53%;
   z-index: 2;
 
   width: 3rem;

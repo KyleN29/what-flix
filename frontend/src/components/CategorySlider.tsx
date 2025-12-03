@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import type { Movie } from '../services/MovieService';
 import './CategorySlider.css';
@@ -12,15 +12,28 @@ interface Props {
 
 function CategorySlider(props: Props) {
   const [scroll, setScroll] = useState(0);
+  const [sliderHeightRem, setSliderHeightRem] = useState(0);
 
-  // Aspect ratio of the "movie" div. Should be greater than 2/3 as that is the default movie poster ratio.
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  // Aspect ratio of each movie card container
   const movieDivAspectRatio = 3 / 4.2;
 
-  const movieWidthInPx =
-    24.0 * // This is the height of the category slider (in rems) minus the height of the title
-    movieDivAspectRatio *
-    parseFloat(getComputedStyle(document.documentElement).fontSize);
+  // Get the slider height dynamically
+  useEffect(() => {
+    if (!sliderRef.current) return;
 
+    const sliderPx = sliderRef.current.getBoundingClientRect().height;
+    const rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+    setSliderHeightRem(sliderPx / rootFont);
+  }, []);
+
+  // Compute movie width in px based on actual slider height
+  const movieWidthInPx =
+    sliderHeightRem * movieDivAspectRatio *
+    parseFloat(getComputedStyle(document.documentElement).fontSize);
+  console.log(movieWidthInPx)
   // Width of movies div (viewport width) in movies
   const moviesDivWidth = window.innerWidth / movieWidthInPx;
 
@@ -41,12 +54,12 @@ function CategorySlider(props: Props) {
 
   return (
     <div className="slider-container">
-      <div className="category-slider">
+      <div className="category-slider" >
         <div className="title">{props.title}</div>
         <div className="move-left" onClick={() => slide(-1)}>
           {'\u276E'}
         </div>
-        <div className="slider-inner">
+        <div className="slider-inner" ref={sliderRef}>
           <div
           className="movies"
           style={{
@@ -60,12 +73,13 @@ function CategorySlider(props: Props) {
               aspectRatio={movieDivAspectRatio}
             />
           ))}
+          
         </div>
         </div>
-        
         <div className="move-right" onClick={() => slide(1)}>
           {'\u276F'}
         </div>
+        
       </div>
     </div>
   );
