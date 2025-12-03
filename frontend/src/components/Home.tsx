@@ -50,7 +50,7 @@ function Home() {
               <p className="hero-desc">{featured.overview}</p>
 
               <div className="hero-buttons">
-                <button className="btn-primary">Details</button>
+                <button className="btn-primary" onClick={() => navigate('/movie/'+featured.id)}>Details</button>
                 <button className="btn-secondary">More Like This</button>
               </div>
 
