@@ -41,9 +41,10 @@
 .preference-editor-tabs {
     display: flex;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
+    margin-left: 20%;
     gap: 4rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
     flex-direction: row;
     color: rgb(228, 228, 228);
 

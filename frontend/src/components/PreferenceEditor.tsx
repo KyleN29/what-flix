@@ -63,7 +63,7 @@ function PreferenceEditor() {
         className={`preference-editor-container ${visible ? 'animate-in' : ''}`}
       >
         <div className="preference-editor">
-          <div className="preference-editor-header header-gradient">
+          <div className="preference-editor-header">
             Personalize Your Experience
           </div>
           
