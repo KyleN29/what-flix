@@ -29,16 +29,14 @@ class SearchSuggestionQueryService {
     this.loadActors();
   }
   private async loadActors() {
-    const parser = fs
-      .createReadStream('./popular_actors.csv')
-      .pipe(
-        parse({
-          columns: true,
-          skip_empty_lines: true,
-          trim: true,
-          relax_column_count: true,
-        })
-      );
+    const parser = fs.createReadStream('src/data/people.csv').pipe(
+      parse({
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        relax_column_count: true
+      })
+    );
 
     try {
       for await (const row of parser) {
@@ -47,21 +45,23 @@ class SearchSuggestionQueryService {
           name: row.name,
           known_for_department: row.known_for_department,
           profile_path: row.profile_path || null,
-          popularity: Number(row.popularity),
+          popularity: Number(row.popularity)
         });
-        console.log({
-          id: row.id,
-          name: row.name,
-          known_for_department: row.known_for_department,
-          profile_path: row.profile_path || null,
-          popularity: Number(row.popularity),
-        })
       }
     } catch (err: any) {
       console.error('CSV Load Error:', err.message);
     }
   }
 
+  searchPeople(query: string): Person[] {
+    if (!query) return [];
+
+    const q = query.toLowerCase();
+
+    return this.actors
+      .filter((a) => a.name.toLowerCase().startsWith(q))
+      .slice(0, 20);
+  }
 }
 
 const searchSuggestionQueryService = new SearchSuggestionQueryService();
