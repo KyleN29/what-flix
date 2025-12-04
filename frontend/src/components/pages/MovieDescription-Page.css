@@ -1,79 +1,78 @@
 .MovieDescription {
-    background-color: var(--black);
-    padding-top: 8rem;
-    padding-bottom: 8rem;
-    min-height: 100vh;
+  background-color: var(--black);
+  padding-top: 8rem;
+  min-height: 100vh;
 }
 
 .container {
-    background: color-mix(in srgb, var(--color-5) 80%, transparent);
-    border-radius: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
+  background: color-mix(in srgb, var(--color-5) 80%, transparent);
+  border-radius: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
 }
 
 .movie-img {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    margin-left: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  margin-left: 1rem;
 }
 
 .movie-details {
-    padding-left: 3rem;
-    padding-top: 2rem;
+  padding-left: 3rem;
+  padding-top: 2rem;
 }
 
 .movie-title {
-    font-family: 'Arial Black', 'Arial Bold', sans-serif;
-    color: var(--white);
+  font-family: 'Arial Black', 'Arial Bold', sans-serif;
+  color: var(--white);
 }
 
 .movie-subtitle {
-    font-style: italic;
-    padding-left: 3px;
+  font-style: italic;
+  padding-left: 3px;
 }
 
 .movie-trailer {
-    display: flex;
-    justify-content: center;
-    padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
 }
 
 .movie-trailer iframe {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .movie-description {
-    color: var(--white);
-    padding-top: 2rem;
-    border-color: var(--color-2);
+  color: var(--white);
+  padding-top: 2rem;
+  border-color: var(--color-2);
 }
 
 .watch-later-button {
-    padding: 0.5rem 1rem;
-    margin: 1rem;
-    background-color: var(--color-2);
-    color: var(--black);
-    border-radius: 0.5rem;
-    transition: background-color 200ms;
-    margin-left: auto;
-    display: flex;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  background-color: var(--color-2);
+  color: var(--black);
+  border-radius: 0.5rem;
+  transition: background-color 200ms;
+  margin-left: auto;
+  display: flex;
 }
 
 .watch-later-button:hover {
-    background-color: var(--white);
+  background-color: var(--white);
 }
 
 .watch-later-button:active {
-    border-color: var(--black);
+  border-color: var(--black);
 }
 
 .genre-button {
-    padding: 0.1rem;
-    color: var(--white);
-    border-radius: 0.5rem;
-    transition: background-color 200ms;
+  padding: 0.1rem;
+  color: var(--white);
+  border-radius: 0.5rem;
+  transition: background-color 200ms;
 }
 
 .genre-button:hover {
-    background-color: var(--color-3);
+  background-color: var(--color-3);
 }
