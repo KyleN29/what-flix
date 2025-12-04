@@ -2,54 +2,52 @@ import { usePreferenceEditor } from '../context/PreferenceEditorContext';
 import { useEffect, useState } from 'react';
 import './PreferenceEditor.css';
 import GenreRanking from './GenreRanking';
-import GenreService, {type Genre} from '../services/GenreService';
+import GenreService, { type Genre } from '../services/GenreService';
+import PersonSearch from './PersonSearch';
 
 function PreferenceEditor() {
   const { isOpen, closeEditor } = usePreferenceEditor();
   const [visible, setVisible] = useState(false);
-
-  const tabs = ['Genres', 'Actors', 'Favorite Movies'];
-  const [activeTab, setActiveTab] = useState(tabs[0]);
   const [genres, setGenres] = useState<Genre[]>([]);
 
-  useEffect(() => {
-  async function loadGenres() {
-    const genreList = await GenreService.getGenreList();
-    setGenres(genreList);
-  }
-
-  loadGenres();
-}, []);
-
-  const tabContent = {
+  const tabContent: Record<string, any> = {
     Genres: (
       <div className="tab-body-container">
         <GenreRanking genres={genres}></GenreRanking>
       </div>
     ),
 
-    Actors: (
+    People: (
       <div>
+        <PersonSearch></PersonSearch>
       </div>
     ),
 
-    'Favorite Movies': (
-      <div>
-      </div>
-    )
+    'Favorite Movies': <div></div>
   };
+  const tabs = Object.keys(tabContent);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  useEffect(() => {
+    async function loadGenres() {
+      const genreList = await GenreService.getGenreList();
+      setGenres(genreList);
+    }
+
+    loadGenres();
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
-        document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
       requestAnimationFrame(() => setVisible(true));
     } else {
-        document.body.style.overflow = "";
+      document.body.style.overflow = '';
       setVisible(false);
     }
     return () => {
-    document.body.style.overflow = "";
-  };
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
   if (!isOpen) return;
 
@@ -66,7 +64,7 @@ function PreferenceEditor() {
           <div className="preference-editor-header">
             Personalize Your Experience
           </div>
-          
+
           <div className="preference-editor-tabs">
             {tabs.map((tabName) => (
               <div
