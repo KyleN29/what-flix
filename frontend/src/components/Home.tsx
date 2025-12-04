@@ -5,9 +5,11 @@ import CategorySlider from './CategorySlider';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { usePreferenceEditor } from '../context/PreferenceEditorContext.js';
 
 function Home() {
   const navigate = useNavigate();
+  const {openEditor} = usePreferenceEditor();
   const { isLoggedIn } = useAuth();
   const { data: popularMovies } = useQuery<Movie[]>({
     queryKey: ['popularMovies'],
@@ -44,7 +46,6 @@ function Home() {
           <div className="hero-overlay" />
 
           <div className="hero-inner">
-            {/* LEFT SIDE - MOVIE CONTENT */}
             <div className="hero-left">
               <h1 className="hero-title">{featured.title}</h1>
               <p className="hero-desc">{featured.overview}</p>
@@ -74,7 +75,7 @@ function Home() {
                     recommendations.
                   </p>
                   <button
-                    onClick={() => navigate('/preferences')}
+                    onClick={() => openEditor()}
                     className="btn-primary hero-login-btn"
                   >
                     Update Preferences
