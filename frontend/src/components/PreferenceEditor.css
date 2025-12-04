@@ -45,6 +45,10 @@ position: fixed;
     color: rgb(44, 44, 44);
 
 }
+.preference-editor-tabs .tab {
+    cursor:pointer;
+
+}
 .active-tab {
     border-bottom: 3px solid rgb(255, 255, 255);
     color: white;
