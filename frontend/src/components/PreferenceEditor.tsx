@@ -18,7 +18,7 @@ function PreferenceEditor() {
     ),
 
     People: (
-      <div>
+      <div className="tab-body-container">
         <PersonSearch></PersonSearch>
       </div>
     ),
