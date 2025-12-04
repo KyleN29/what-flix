@@ -142,8 +142,8 @@ function GenreRanking(props: Props) {
                         className="genre-item"
                         style={{
                           ...provided.draggableProps.style,
-                          backgroundColor: snapshot.isDragging ? '#f0f9ff' : 'white',
-                          borderColor: snapshot.isDragging ? '#2563eb' : '#e5e7eb'
+                          backgroundColor: snapshot.isDragging ? '#5c374c' : '#5c374c',
+                          borderColor: snapshot.isDragging ? '#5c374c' : '#5c374c'
                         }}
                       >
                         <span className="rank-badge">{genre.rank}</span>

@@ -1,5 +1,5 @@
 .preference-editor-backdrop {
-position: fixed;
+    position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 9998;
@@ -11,13 +11,14 @@ position: fixed;
     top: 20%;
     left: 25%;
     opacity: 0;
-    width: 50%;
-    height: 60%;
-    background: linear-gradient(135deg, var(--color-3), var(--color-4));
+    width: 1000px;
+    height: 600px;
+    background: var(--black);
     transition: opacity 0.3s ease, margin-top 0.3s ease;
     border-radius: 10px;
     z-index: 9999; 
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    
 }
 .preference-editor-container.animate-in {
   opacity: 1;
@@ -32,8 +33,9 @@ position: fixed;
     display: flex;
     justify-content: center;
     text-align: center;
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 700;
+    color: var(--color-3);
 }
 .preference-editor-tabs {
     display: flex;
@@ -42,7 +44,7 @@ position: fixed;
     gap: 4rem;
     font-size: 2rem;
     flex-direction: row;
-    color: rgb(44, 44, 44);
+    color: rgb(228, 228, 228);
 
 }
 .preference-editor-tabs .tab {
@@ -53,12 +55,6 @@ position: fixed;
     border-bottom: 3px solid rgb(255, 255, 255);
     color: white;
 }
-.header-gradient {
-    background: white;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent; /* important */
-}
 .preference-editor-body {
     height: 100%;
     display: flex;
@@ -67,7 +63,13 @@ position: fixed;
 }
 .tab-body-container {
     width: 60%;
+    height: 400px;
     margin-top: 30px;
+    padding-top: 30px;
+    background-color: #271720;
+    border-radius: 10px;
+    overflow-y: auto;
+    
 }
 .delete-button {
   margin-left: auto;

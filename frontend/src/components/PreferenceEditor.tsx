@@ -66,6 +66,7 @@ function PreferenceEditor() {
           <div className="preference-editor-header header-gradient">
             Personalize Your Experience
           </div>
+          
           <div className="preference-editor-tabs">
             {tabs.map((tabName) => (
               <div
