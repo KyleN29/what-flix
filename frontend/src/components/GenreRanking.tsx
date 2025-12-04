@@ -92,20 +92,22 @@ function GenreRanking(props: Props) {
   }
 
   return (
-    <>
-      {/* Genre dropdown container */}
-      <div className="bg-green-500 cursor-pointer relative select-none">
-        <div onClick={() => setShowingGenreOptions(!showingGenreOptions)}>
+  <>
+    <div className="genre-ranking">
+      <div className="genre-picker">
+        <div
+          className="genre-picker-button"
+          onClick={() => setShowingGenreOptions(!showingGenreOptions)}
+        >
           + Add Genre
         </div>
 
-        {/* Dropdown options list */}
         {showingGenreOptions && (
           <div id="genreOptions" ref={genreOptionsRef}>
             {props.genres.map((genre) => (
               <button
                 key={genre.id}
-                disabled={genres.some((g) => g.name === genre.name)} // Prevent selecting duplicates
+                disabled={genres.some((g) => g.name === genre.name)}
                 onClick={() => addGenre(genre)}
               >
                 {genre.name}
@@ -115,47 +117,55 @@ function GenreRanking(props: Props) {
         )}
       </div>
 
-      {/* Ranking list with drag-and-drop support */}
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable" direction="vertical">
           {(provided) => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              style={{
-                listStyleType: 'none',
-                padding: 0
-              }}
+              className="genre-list-container"
             >
               {genres.map((genre, index) => (
                 <Draggable
-                  key={genre.rank}
-                  draggableId={genre.rank.toString()}
+                  key={genre.name}
+                  draggableId={genre.name}
                   index={index}
                 >
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      className="genre-item"
                       style={{
-                        ...provided.draggableProps.style
+                        ...provided.draggableProps.style,
+                        backgroundColor: snapshot.isDragging ? '#f0f9ff' : 'white',
+                        borderColor: snapshot.isDragging ? '#2563eb' : '#e5e7eb'
                       }}
-                      className="bg-blue-500 select-none"
                     >
-                      {genre.rank}: {genre.name}
+                      <span className="drag-handle">
+                         ⋮⋮
+                      </span>
+
+                      <span className="rank-badge">
+                        {genre.rank}
+                      </span>
+
+                      <span className="genre-name">
+                        {genre.name}
+                      </span>
                     </div>
                   )}
                 </Draggable>
               ))}
-
               {provided.placeholder}
             </div>
           )}
         </Droppable>
       </DragDropContext>
-    </>
-  );
+    </div>
+  </>
+);
 }
 
 export default GenreRanking;
