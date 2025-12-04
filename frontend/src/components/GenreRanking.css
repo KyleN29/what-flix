@@ -51,6 +51,23 @@
   flex-direction: column;
 }
 
+#genreOptions::-webkit-scrollbar {
+  width: 8px;
+}
+
+#genreOptions::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 8px;
+}
+#genreOptions::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 8px;
+}
+
+#genreOptions::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
 #genreOptions button {
   background: white;
   border: none;

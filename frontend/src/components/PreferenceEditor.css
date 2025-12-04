@@ -71,6 +71,22 @@
     overflow-y: auto;
     
 }
+.tab-body-container::-webkit-scrollbar {
+    width: 8px;
+}
+.tab-body-container::-webkit-scrollbar track {
+    background: #271720;
+    border-radius: 8px;
+}
+.tab-body-container::-webkit-scrollbar-thumb {
+  background: #5c374c;
+  border-radius: 8px;
+}
+
+.tab-body-container::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
 .delete-button {
   margin-left: auto;
   background: none;
