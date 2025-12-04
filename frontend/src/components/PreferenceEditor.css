@@ -36,6 +36,7 @@
     font-size: 3rem;
     font-weight: 700;
     color: var(--color-3);
+    margin-top: 10px;
 }
 .preference-editor-tabs {
     display: flex;
