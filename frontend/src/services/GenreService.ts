@@ -1,17 +1,21 @@
 import axios from 'axios';
-
 export interface Genre {
   id: number;
   name: string;
 }
 
+export interface GenreRank {
+  rank: Number;
+  name: string;
+}
+
 class GenreService {
   static axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: import.meta.env.VITE_API_URL,
   }); 
   
   static async getGenreList(): Promise<Genre[]> {
-    console.log("HELLO!")
+    console.log(import.meta.env.VITE_API_URL)
     const response = await this.axiosInstance.get('/genre/list');
     console.log(response.data[0])
 

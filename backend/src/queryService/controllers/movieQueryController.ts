@@ -42,7 +42,7 @@ router.get('/trailer', async (req, res) => {
 
     // Find official YouTube trailer first
     const officialTrailer = data.find(
-      (trailer) => trailer.site === 'YouTube' && trailer.official
+      (trailer) => trailer.site === 'YouTube' && trailer.official && trailer.type == "Trailer"
     );
 
     if (officialTrailer) {

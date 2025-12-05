@@ -1,10 +1,12 @@
 import { Router, type Request, type Response } from 'express';
 import UserRead from '../models/UserRead.js';
-import PreferencesRead from '../models/PreferencesRead.js';
+import UserAuthRead from '../models/UserAuthRead.js';
+import GenrePreferencesRead from '../models/GenrePreferencesRead.js';
+import PeoplePreferencesRead from '../models/PeoplePreferencesRead.js';
 
 const router = Router();
 
-router.post('/events', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   const event = req.body;
 
   console.log('Received event:', event.type);
@@ -12,23 +14,45 @@ router.post('/events', async (req: Request, res: Response) => {
   try {
     switch (event.type) {
       case 'UserCreated': {
-        const { userId, email, name } = event.payload;
+        const { user_id, email, username } = event.payload;
 
         await UserRead.findOneAndUpdate(
-          { userId },
-          { userId, email, name },
+          { user_id },
+          { user_id, email, username },
+          { upsert: true }
+        );
+
+        break;
+      }
+      case 'UserAuthCreated': {
+        const { user_id, password_hash } = event.payload;
+
+        await UserAuthRead.findOneAndUpdate(
+          { user_id },
+          { user_id, password_hash },
           { upsert: true }
         );
 
         break;
       }
 
-      case 'PreferencesUpdated': {
-        const { userId, preferences } = event.payload;
+      case 'GenrePreferencesUpdated': {
+        const { user_id, preferences } = event.payload;
 
-        await PreferencesRead.findOneAndUpdate(
-          { userId },
-          { userId, ...preferences },
+        await GenrePreferencesRead.findOneAndUpdate(
+          { user_id },
+          { user_id, ...preferences },
+          { upsert: true }
+        );
+
+        break;
+      }
+      case 'PeoplePreferencesUpdated': {
+        const { user_id, preferences } = event.payload;
+
+        await PeoplePreferencesRead.findOneAndUpdate(
+          { user_id },
+          { user_id, ...preferences },
           { upsert: true }
         );
 

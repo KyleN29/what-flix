@@ -1,0 +1,45 @@
+import axios from 'axios';
+
+export interface RegisterPayload {
+  email: string;
+  username: string;
+  password: string;
+}
+
+export interface LoginPaylod {
+  email: string;
+  password: string;
+}
+
+interface AuthResponse {
+  accessToken: string;
+}
+
+class AuthService {
+  static axiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_API_URL
+  });
+
+  static async registerUser(formData: RegisterPayload) {
+    const endpoint = '/user/register';
+
+    const response = await AuthService.axiosInstance.post<AuthResponse>(endpoint, formData);
+
+    return response.data
+  }
+
+  static async loginUser(formData: LoginPaylod) {
+    const endpoint = '/user/login';
+
+    const response = await AuthService.axiosInstance.post<AuthResponse>(endpoint, formData);
+    return response.data;
+  }
+  static getAccessToken() {
+    return localStorage.getItem("accessToken");
+  }
+  static getAuthConfig() {
+    return {headers: {Authorization: `Bearer ${AuthService.getAccessToken()}`}}
+  }
+}
+
+export default AuthService;

@@ -6,13 +6,17 @@
   "scripts": {
     "install-all": "npm install && npm install --prefix backend && npm install --prefix frontend",
     "frontend": "npm run serve --prefix frontend",
-    "backend": "npm run start --prefix backend"
+    "backend": "npm run start --prefix backend",
+    "build-frontend": "npm run build --prefix frontend"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "csv-parse": "^6.1.0",
     "lucide-react": "^0.553.0",
-    "react-router-dom": "^7.9.4"
+    "react-router-dom": "^7.9.4",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
