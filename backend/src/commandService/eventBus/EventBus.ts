@@ -1,4 +1,6 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export interface DomainEvent {
   type: string;
@@ -20,5 +22,5 @@ class EventBus {
 }
 
 
-const eventBus = new EventBus('http://localhost:3000');
+const eventBus = new EventBus(process.env.API_URL as string);
 export default eventBus;
