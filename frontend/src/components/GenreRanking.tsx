@@ -95,6 +95,7 @@ function GenreRanking(props: Props) {
 
     const ranked = assignRanks(items);
     setGenres(ranked);
+    
   }
 
   async function savePreferences() {
@@ -107,7 +108,6 @@ function GenreRanking(props: Props) {
     setSaveSuccess(true);
     setSaving(false);
 
-    // Hide success after 2s
     setTimeout(() => setSaveSuccess(false), 2000);
   } catch (error) {
     setSaving(false);
@@ -119,18 +119,19 @@ function GenreRanking(props: Props) {
   return (
     <>
       <div className="genre-ranking">
-        <button
-  className="save-preferences-button"
-  onClick={savePreferences}
-  disabled={genres.length === 0 || saving}
->
-  {saving ? "Saving..." : "Save Preferences"}
-</button>
+        
 {saveSuccess && (
   <div className="save-success-message">
     Preferences saved!
   </div>
 )}
+<button
+      className="save-preferences-button"
+      onClick={savePreferences}
+      disabled={genres.length === 0 || saving}
+    >
+      {saving ? "Saving..." : "Save Preferences"}
+    </button>
         <div className="genre-picker">
           <div
             className="genre-picker-button"
@@ -138,6 +139,8 @@ function GenreRanking(props: Props) {
           >
             + Add Genre
           </div>
+                    
+
 
           {showingGenreOptions && (
             <div id="genreOptions" ref={genreOptionsRef}>
