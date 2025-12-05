@@ -86,7 +86,7 @@ function PersonSearch() {
       <button
         className="save-preferences-button"
         onClick={savePreferences}
-        disabled={selectedPeople.length === 0 || saving}
+        disabled={saving}
       >
         {saving ? 'Saving...' : 'Save Preferences'}
       </button>

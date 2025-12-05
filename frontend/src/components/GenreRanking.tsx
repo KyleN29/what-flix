@@ -139,7 +139,7 @@ function GenreRanking(props: Props) {
         <button
           className="save-preferences-button"
           onClick={savePreferences}
-          disabled={genres.length === 0 || saving}
+          disabled={saving}
         >
           {saving ? 'Saving...' : 'Save Preferences'}
         </button>
