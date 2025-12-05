@@ -7,7 +7,7 @@ import {
 } from '@hello-pangea/dnd';
 import './GenreRanking.css';
 import { type Genre } from '../services/GenreService';
-
+import GenreService from '../services/GenreService';
 interface AddedGenre {
   rank: number;
   name: string;
@@ -26,6 +26,9 @@ function GenreRanking(props: Props) {
 
   // List of genres added and ranked by the user
   const [genres, setGenres] = useState<AddedGenre[]>([]);
+
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -94,9 +97,40 @@ function GenreRanking(props: Props) {
     setGenres(ranked);
   }
 
+  async function savePreferences() {
+  try {
+    setSaving(true);
+    setSaveSuccess(false);
+
+    await GenreService.updateGenres(genres);
+
+    setSaveSuccess(true);
+    setSaving(false);
+
+    // Hide success after 2s
+    setTimeout(() => setSaveSuccess(false), 2000);
+  } catch (error) {
+    setSaving(false);
+    console.error("Error saving preferences:", error);
+  }
+}
+
+
   return (
     <>
       <div className="genre-ranking">
+        <button
+  className="save-preferences-button"
+  onClick={savePreferences}
+  disabled={genres.length === 0 || saving}
+>
+  {saving ? "Saving..." : "Save Preferences"}
+</button>
+{saveSuccess && (
+  <div className="save-success-message">
+    Preferences saved!
+  </div>
+)}
         <div className="genre-picker">
           <div
             className="genre-picker-button"

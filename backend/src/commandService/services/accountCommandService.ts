@@ -1,7 +1,7 @@
 import UserWrite from '../models/UserWrite.js';
 import UserRead from '../../queryService/models/UserRead.js';
 import UserAuthRead from '../../queryService/models/UserAuthRead.js';
-import PreferencesWrite from '../models/PreferencesWrite.js';
+import PreferencesWrite from '../models/GenrePreferencesWrite.js';
 import UserMovieRankingWrite from '../models/UserMovieRankingWrite.js';
 import WatchLaterWrite from '../models/WatchLaterWrite.js';
 import eventBus from '../eventBus/EventBus.js';
@@ -9,6 +9,8 @@ import { hashPassword, comparePassword } from '../../password-utils.js';
 import jwt from 'jsonwebtoken';
 import UserAuthWrite from '../models/UserAuthWrite.js';
 import { v4 as uuidv4 } from 'uuid'
+import GenrePreferencesWrite from '../models/GenrePreferencesWrite.js';
+
 
 class AccountCommandService {
   async createUser(dto: any) {
@@ -37,14 +39,18 @@ class AccountCommandService {
     return userAuth;
   }
 
-  async updatePreferences(userId: string, dto: any) {
-    const prefs = await PreferencesWrite.findOneAndUpdate({ userId }, dto, {
+  async updateGenrePreferences(userId: string, genres: any) {
+    const dto = {
+      user_id: userId,
+      genre_rankings: genres,
+    }
+    const prefs = await GenrePreferencesWrite.findOneAndUpdate({ user_id: userId }, dto, {
       new: true,
       upsert: true
     });
 
-    await eventBus.publish('PreferencesUpdated', {
-      userId,
+    await eventBus.publish('GenrePreferencesUpdated', {
+      user_id: userId,
       preferences: prefs
     });
 
@@ -68,8 +74,8 @@ class AccountCommandService {
     }
 
     const accessToken = jwt.sign(
-      { id: user._id, email: email },
-      'access-secret',
+      { user_id: user.user_id, email: email },
+      'jwt-secret',
       {
         expiresIn: '3d'
       }
@@ -90,8 +96,8 @@ class AccountCommandService {
     const userAuth = await this.createUserAuth({user_id: user.user_id, password_hash: hashedPassword})
     console.log(userAuth)
     const accessToken = jwt.sign(
-      { id: user.id, email: user.email },
-      'access-secret',
+      { user_id: user.user_id, email: user.email },
+      'jwt-secret',
       {
         expiresIn: '3d'
       }

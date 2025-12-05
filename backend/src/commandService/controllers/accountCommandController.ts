@@ -1,19 +1,28 @@
 import { Router, type Request, type Response } from 'express';
 import accountCommandService from '../services/accountCommandService.js'
 import eventBus from '../eventBus/EventBus.js';
-
+import { authMiddleware } from '../../middleware/authMiddleware.js';
 
 const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   const user = await accountCommandService.createUser(req.body);
+  
   res.json({ status: 'success' });
 });
 
-router.put('/:id/genre_ranking', async (req: Request, res: Response) => {
-  const prefs = await accountCommandService.updatePreferences(
-    req.params.id,
-    req.body
+router.put('/genre_ranking', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  console.log("User: ", req.user);
+  const genres = req.body;
+
+  if (!Array.isArray(genres)) {
+    return res.status(400).json({ error: "Body must be an array of genres" });
+  }
+
+  const prefs = await accountCommandService.updateGenrePreferences(
+    userId,
+    genres
   );
 
   res.json({ status: 'success' });

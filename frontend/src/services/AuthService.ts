@@ -34,6 +34,12 @@ class AuthService {
     const response = await AuthService.axiosInstance.post<AuthResponse>(endpoint, formData);
     return response.data;
   }
+  static getAccessToken() {
+    return localStorage.getItem("accessToken");
+  }
+  static getAuthConfig() {
+    return {headers: {Authorization: `Bearer ${AuthService.getAccessToken()}`}}
+  }
 }
 
 export default AuthService;
