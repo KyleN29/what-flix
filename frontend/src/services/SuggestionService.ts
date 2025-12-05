@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export interface Person {
+export interface SuggestedPerson {
   id: string;
   name: string;
   known_for_department: string;
@@ -13,7 +13,7 @@ class SuggestionService {
     baseURL: 'http://localhost:3000'
   });
 
-  static async searchPeople(query: string): Promise<Person[]> {
+  static async searchPeople(query: string): Promise<SuggestedPerson[]> {
     if (!query) return [];
     const response = await this.axiosInstance.get('/suggestion/people', {
       params: { query }

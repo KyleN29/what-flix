@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
-import SuggestionService, { type Person } from '../services/SuggestionService';
+import SuggestionService, {
+  type SuggestedPerson
+} from '../services/SuggestionService';
+import UserService, { type Person } from '../services/UserService';
 import './PersonSearch.css';
 
 function PersonSearch() {
@@ -7,6 +10,26 @@ function PersonSearch() {
   const [results, setResults] = useState<Person[]>([]);
   const [show, setShow] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState<Person[]>([]);
+
+  // Load user's current liked people from the database
+  useEffect(() => {
+    async function loadUserGenres() {
+      try {
+        const saved = await UserService.getLikedPeople();
+        if (saved && saved.length > 0) {
+          setSelectedPeople(saved);
+        }
+      } catch (error) {
+        console.error("Error loading user's saved genre ranking:", error);
+      }
+    }
+
+    loadUserGenres();
+  }, []);
+
+  // Controls visual of save button
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (!show) return;
@@ -17,7 +40,11 @@ function PersonSearch() {
 
     const timeout = setTimeout(async () => {
       const data = await SuggestionService.searchPeople(query);
-      setResults(data);
+      const convertedData: Person[] = data.map((p) => ({
+        person_id: Number(p.id),
+        name: p.name
+      }));
+      setResults(convertedData);
     }, 200);
 
     return () => clearTimeout(timeout);
@@ -25,9 +52,9 @@ function PersonSearch() {
 
   // Add selected person
   const addPerson = (person: Person) => {
-    const exists = selectedPeople.some(p => p.id === person.id);
+    const exists = selectedPeople.some((p) => p.person_id === person.person_id);
     if (!exists) {
-      setSelectedPeople(prev => [...prev, person]);
+      setSelectedPeople((prev) => [...prev, person]);
     }
     setQuery('');
     setShow(false);
@@ -35,12 +62,37 @@ function PersonSearch() {
   };
 
   // Remove selected person
-  const removePerson = (id: string) => {
-    setSelectedPeople(prev => prev.filter(p => p.id !== id));
+  const removePerson = (id: Number) => {
+    setSelectedPeople((prev) => prev.filter((p) => p.person_id !== id));
   };
+
+  // Save users liked people to database
+  async function savePreferences() {
+    try {
+      setSaving(true);
+      setSaveSuccess(false);
+
+      await UserService.updateLikedPeople(selectedPeople);
+
+      setSaveSuccess(true);
+      setSaving(false);
+
+      setTimeout(() => setSaveSuccess(false), 2000);
+    } catch (error) {
+      setSaving(false);
+      console.error('Error saving preferences:', error);
+    }
+  }
 
   return (
     <div className="actor-search-container">
+      <button
+        className="save-preferences-button"
+        onClick={savePreferences}
+        disabled={selectedPeople.length === 0 || saving}
+      >
+        {saving ? 'Saving...' : 'Save Preferences'}
+      </button>
       <input
         type="text"
         value={query}
@@ -56,7 +108,7 @@ function PersonSearch() {
         <ul className="actor-search-dropdown">
           {results.map((actor) => (
             <li
-              key={actor.id}
+              key={actor.person_id.toString()}
               className="actor-item"
               onClick={() => addPerson(actor)}
             >
@@ -66,12 +118,12 @@ function PersonSearch() {
         </ul>
       )}
       <div className="selected-people">
-        {selectedPeople.map(person => (
-          <div key={person.id} className="person-chip">
+        {selectedPeople.map((person) => (
+          <div key={person.person_id.toString()} className="person-chip">
             {person.name}
             <button
               className="remove-chip"
-              onClick={() => removePerson(person.id)}
+              onClick={() => removePerson(person.person_id)}
             >
               ×
             </button>
@@ -79,7 +131,6 @@ function PersonSearch() {
         ))}
       </div>
     </div>
-    
   );
 }
 

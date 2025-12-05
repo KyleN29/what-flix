@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import UserAuthWrite from '../models/UserAuthWrite.js';
 import { v4 as uuidv4 } from 'uuid'
 import GenrePreferencesWrite from '../models/GenrePreferencesWrite.js';
+import PeoplePreferencesWrite from '../models/PeoplePreferencesWrite.js';
 
 
 class AccountCommandService {
@@ -50,6 +51,24 @@ class AccountCommandService {
     });
 
     await eventBus.publish('GenrePreferencesUpdated', {
+      user_id: userId,
+      preferences: prefs
+    });
+
+    return prefs;
+  }
+
+  async updatePeoplePreferences(userId: string, people: any) {
+    const dto = {
+      user_id: userId,
+      liked_people: people,
+    }
+    const prefs = await PeoplePreferencesWrite.findOneAndUpdate({ user_id: userId }, dto, {
+      new: true,
+      upsert: true
+    });
+
+    await eventBus.publish('PeoplePreferencesUpdated', {
       user_id: userId,
       preferences: prefs
     });
