@@ -7,7 +7,7 @@ import {
 } from '@hello-pangea/dnd';
 import './GenreRanking.css';
 import { type Genre } from '../services/GenreService';
-import GenreService from '../services/GenreService';
+import UserService from '../services/GenreService';
 interface AddedGenre {
   rank: number;
   name: string;
@@ -103,7 +103,7 @@ function GenreRanking(props: Props) {
     setSaving(true);
     setSaveSuccess(false);
 
-    await GenreService.updateGenres(genres);
+    await UserService.updateGenres(genres);
 
     setSaveSuccess(true);
     setSaving(false);

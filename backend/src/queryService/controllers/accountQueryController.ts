@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import accountQueryService from '../services/accountQueryService.js'
 import GenrePreferencesRead from '../models/GenrePreferencesRead.js';
-
+import { authMiddleware } from '../../middleware/authMiddleware.js';
 const router = Router();
 
 router.get('/:id', async (req: Request, res: Response) => {
