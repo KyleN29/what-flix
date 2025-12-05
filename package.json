@@ -6,7 +6,8 @@
   "scripts": {
     "install-all": "npm install && npm install --prefix backend && npm install --prefix frontend",
     "frontend": "npm run serve --prefix frontend",
-    "backend": "npm run start --prefix backend"
+    "backend": "npm run start --prefix backend",
+    "build-frontend": "npm run build --prefix frontend"
   },
   "author": "",
   "license": "ISC",

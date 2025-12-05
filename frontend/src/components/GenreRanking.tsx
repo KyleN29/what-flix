@@ -29,7 +29,7 @@ function GenreRanking(props: Props) {
 
   // Controls visual of save button
   const [saving, setSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+
 
   // Load user's current rankings from the database
   useEffect(() => {
@@ -122,14 +122,11 @@ function GenreRanking(props: Props) {
   async function savePreferences() {
     try {
       setSaving(true);
-      setSaveSuccess(false);
 
       await UserService.updateGenres(genres);
 
-      setSaveSuccess(true);
       setSaving(false);
 
-      setTimeout(() => setSaveSuccess(false), 2000);
     } catch (error) {
       setSaving(false);
       console.error('Error saving preferences:', error);
@@ -142,7 +139,7 @@ function GenreRanking(props: Props) {
         <button
           className="save-preferences-button"
           onClick={savePreferences}
-          disabled={genres.length === 0 || saving}
+          disabled={saving}
         >
           {saving ? 'Saving...' : 'Save Preferences'}
         </button>

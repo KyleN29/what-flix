@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import SuggestionService, {
-  type SuggestedPerson
-} from '../services/SuggestionService';
+import SuggestionService from '../services/SuggestionService';
 import UserService, { type Person } from '../services/UserService';
 import './PersonSearch.css';
 
@@ -10,6 +8,9 @@ function PersonSearch() {
   const [results, setResults] = useState<Person[]>([]);
   const [show, setShow] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState<Person[]>([]);
+
+  // Controls visual of save button
+  const [saving, setSaving] = useState(false);
 
   // Load user's current liked people from the database
   useEffect(() => {
@@ -28,8 +29,7 @@ function PersonSearch() {
   }, []);
 
   // Controls visual of save button
-  const [saving, setSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+  
 
   useEffect(() => {
     if (!show) return;
@@ -70,14 +70,11 @@ function PersonSearch() {
   async function savePreferences() {
     try {
       setSaving(true);
-      setSaveSuccess(false);
 
       await UserService.updateLikedPeople(selectedPeople);
 
-      setSaveSuccess(true);
       setSaving(false);
 
-      setTimeout(() => setSaveSuccess(false), 2000);
     } catch (error) {
       setSaving(false);
       console.error('Error saving preferences:', error);
@@ -89,7 +86,7 @@ function PersonSearch() {
       <button
         className="save-preferences-button"
         onClick={savePreferences}
-        disabled={selectedPeople.length === 0 || saving}
+        disabled={saving}
       >
         {saving ? 'Saving...' : 'Save Preferences'}
       </button>
