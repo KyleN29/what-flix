@@ -14,7 +14,7 @@ class GenreService {
 
 
   static async getUserGenreList(): Promise<GenreRank[]> {
-    const response = await this.axiosInstance.get('/user/gerne_ranking');
+    const response = await this.axiosInstance.get('/user/genre_ranking', AuthService.getAuthConfig());
     return response.data
   }
 

@@ -7,7 +7,7 @@ import {
 } from '@hello-pangea/dnd';
 import './GenreRanking.css';
 import { type Genre } from '../services/GenreService';
-import UserService from '../services/GenreService';
+import UserService from '../services/UserService';
 interface AddedGenre {
   rank: number;
   name: string;
@@ -29,6 +29,28 @@ function GenreRanking(props: Props) {
 
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Load user's current rankings from the database
+  useEffect(() => {
+  async function loadUserGenres() {
+    try {
+      const saved = await UserService.getUserGenreList();
+      if (saved && saved.length > 0) {
+        // Ensure they have correct ranks assigned
+        const ranked = saved
+          .sort((a, b) => Number(a.rank) - Number(b.rank))
+          .map((g) => ({ name: g.name, rank: Number(g.rank) }));
+
+        setGenres(ranked);
+      }
+    } catch (error) {
+      console.error("Error loading user's saved genre ranking:", error);
+    }
+  }
+
+  loadUserGenres();
+}, []);
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
