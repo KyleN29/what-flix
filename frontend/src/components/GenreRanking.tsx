@@ -141,12 +141,7 @@ function GenreRanking(props: Props) {
   return (
     <>
       <div className="genre-ranking">
-        
-{saveSuccess && (
-  <div className="save-success-message">
-    Preferences saved!
-  </div>
-)}
+  
 <button
       className="save-preferences-button"
       onClick={savePreferences}
