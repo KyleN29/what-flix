@@ -22,5 +22,5 @@ class EventBus {
 }
 
 
-const eventBus = new EventBus(process.env.VITE_API_URL as string);
+const eventBus = new EventBus((process.env.VITE_API_URL || process.env.PUBLIC_URL) as string);
 export default eventBus;
