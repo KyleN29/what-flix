@@ -1,7 +1,8 @@
 import { Router, type Request, type Response } from 'express';
 import UserRead from '../models/UserRead.js';
 import UserAuthRead from '../models/UserAuthRead.js';
-import PreferencesRead from '../models/PreferencesRead.js';
+import GenrePreferencesRead from '../models/GenrePreferencesRead.js';
+import PeoplePreferencesRead from '../models/PeoplePreferencesRead.js';
 
 const router = Router();
 
@@ -35,10 +36,21 @@ router.post('/', async (req: Request, res: Response) => {
         break;
       }
 
-      case 'PreferencesUpdated': {
+      case 'GenrePreferencesUpdated': {
         const { user_id, preferences } = event.payload;
 
-        await PreferencesRead.findOneAndUpdate(
+        await GenrePreferencesRead.findOneAndUpdate(
+          { user_id },
+          { user_id, ...preferences },
+          { upsert: true }
+        );
+
+        break;
+      }
+      case 'PeoplePreferencesUpdated': {
+        const { user_id, preferences } = event.payload;
+
+        await PeoplePreferencesRead.findOneAndUpdate(
           { user_id },
           { user_id, ...preferences },
           { upsert: true }

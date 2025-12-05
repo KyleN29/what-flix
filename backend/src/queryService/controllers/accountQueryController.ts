@@ -1,7 +1,26 @@
 import { Router, type Request, type Response } from 'express';
 import accountQueryService from '../services/accountQueryService.js'
+import GenrePreferencesRead from '../models/GenrePreferencesRead.js';
+import PeoplePreferencesRead from '../models/PeoplePreferencesRead.js';
 
+import { authMiddleware } from '../../middleware/authMiddleware.js';
 const router = Router();
+
+router.get('/genre_ranking', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+
+  const prefs = await GenrePreferencesRead.findOne({user_id: userId})
+
+  res.json(prefs?.genre_rankings);
+});
+
+router.get('/liked_people', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+
+  const prefs = await PeoplePreferencesRead.findOne({user_id: userId})
+
+  res.json(prefs?.liked_people);
+});
 
 router.get('/:id', async (req: Request, res: Response) => {
   const user = await accountQueryService.getUser(req.params.id);
@@ -19,6 +38,9 @@ router.get('/:id/genre_ranking/:genre_code', async (req: Request, res: Response)
   const genrePreference = preferences.find(pref => pref.genre_code === genreCode);
   res.json(genrePreference);
 });
+
+
+
 
 router.get('/:id/movie_rating/:movie_id', async (req: Request, res: Response) => {
   const movieRating = await accountQueryService.getMovieRanking(req.params.id, req.params.movie_id);

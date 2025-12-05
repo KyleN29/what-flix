@@ -7,7 +7,7 @@ import {
 } from '@hello-pangea/dnd';
 import './GenreRanking.css';
 import { type Genre } from '../services/GenreService';
-
+import UserService from '../services/UserService';
 interface AddedGenre {
   rank: number;
   name: string;
@@ -26,6 +26,31 @@ function GenreRanking(props: Props) {
 
   // List of genres added and ranked by the user
   const [genres, setGenres] = useState<AddedGenre[]>([]);
+
+  // Controls visual of save button
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Load user's current rankings from the database
+  useEffect(() => {
+    async function loadUserGenres() {
+      try {
+        const saved = await UserService.getUserGenreList();
+        if (saved && saved.length > 0) {
+          // Ensure they have correct ranks assigned
+          const ranked = saved
+            .sort((a, b) => Number(a.rank) - Number(b.rank))
+            .map((g) => ({ name: g.name, rank: Number(g.rank) }));
+
+          setGenres(ranked);
+        }
+      } catch (error) {
+        console.error("Error loading user's saved genre ranking:", error);
+      }
+    }
+
+    loadUserGenres();
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -94,9 +119,33 @@ function GenreRanking(props: Props) {
     setGenres(ranked);
   }
 
+  async function savePreferences() {
+    try {
+      setSaving(true);
+      setSaveSuccess(false);
+
+      await UserService.updateGenres(genres);
+
+      setSaveSuccess(true);
+      setSaving(false);
+
+      setTimeout(() => setSaveSuccess(false), 2000);
+    } catch (error) {
+      setSaving(false);
+      console.error('Error saving preferences:', error);
+    }
+  }
+
   return (
     <>
       <div className="genre-ranking">
+        <button
+          className="save-preferences-button"
+          onClick={savePreferences}
+          disabled={genres.length === 0 || saving}
+        >
+          {saving ? 'Saving...' : 'Save Preferences'}
+        </button>
         <div className="genre-picker">
           <div
             className="genre-picker-button"
@@ -142,8 +191,12 @@ function GenreRanking(props: Props) {
                         className="genre-item"
                         style={{
                           ...provided.draggableProps.style,
-                          backgroundColor: snapshot.isDragging ? '#5c374c' : '#5c374c',
-                          borderColor: snapshot.isDragging ? '#5c374c' : '#5c374c'
+                          backgroundColor: snapshot.isDragging
+                            ? '#5c374c'
+                            : '#5c374c',
+                          borderColor: snapshot.isDragging
+                            ? '#5c374c'
+                            : '#5c374c'
                         }}
                       >
                         <span className="rank-badge">{genre.rank}</span>

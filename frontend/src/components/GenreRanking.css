@@ -2,6 +2,7 @@
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
+  position: relative;
 }
 
 
@@ -10,7 +11,8 @@
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
-  width: 100%
+  width: 100%;
+  height: 100%;
 }
 
 .genre-picker-button {
@@ -18,6 +20,7 @@
   width: 100%;
   color: white;
   padding: 10px 20px;
+  margin-top: 20px;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
@@ -37,18 +40,22 @@
 
 #genreOptions {
   position: absolute;
-  top: 110%;
-  right: 0;
-  width: 220px;
+  top: 100%;
+  left: 0;
+  width: 100%;
   max-height: 300px;
   overflow-y: auto;
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   z-index: 50;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  padding-top: 30px;
+  
 }
 
 #genreOptions::-webkit-scrollbar {
@@ -71,6 +78,7 @@
 #genreOptions button {
   background: white;
   border: none;
+  width: 100%;
   padding: 12px 16px;
   text-align: left;
   font-size: 0.95rem;
@@ -78,6 +86,7 @@
   cursor: pointer;
   border-bottom: 1px solid #f3f4f6;
   transition: background 0.1s;
+  text-align: center;
 }
 
 #genreOptions button:last-child {
@@ -142,4 +151,32 @@
 .genre-name {
   font-weight: 500;
   font-size: 1rem;
+}
+.save-preferences-button {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  border-radius: 8px;
+  width: auto;
+  color: white;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: var(--color-5);
+  cursor: pointer;
+  display: block;
+  z-index: 5;
+}
+.save-preferences-button:hover {
+  background-color: #462f3c;
+}
+
+.save-preferences-button:active {
+  transform: translateY(1px);
+}
+.save-preferences-button:disabled {
+  background-color: #503e48;
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
 }

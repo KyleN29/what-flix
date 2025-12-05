@@ -1,5 +1,5 @@
 import UserRead from "../models/UserRead.js"
-import PreferencesRead from "../models/PreferencesRead.js";
+import PreferencesRead from "../models/GenrePreferencesRead.js";
 import WatchListRead from "../models/WatchListRead.js";
 import AccessibilityRead from "../models/UserAccessibilityRead.js";
 import MoviesSeenRead from "../models/UserMoviesSeenRead.js";
