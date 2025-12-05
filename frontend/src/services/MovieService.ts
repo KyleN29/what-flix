@@ -92,7 +92,7 @@ export interface TrailerResponse {
 }
 class MovieService {
   static axiosInstance = axios.create({
-    baseURL: import.meta.env.API_URL
+    baseURL: import.meta.env.VITE_API_URL
   });
 
   static async getPopularMovies(page = 1): Promise<Movie[]> {

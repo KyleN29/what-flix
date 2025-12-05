@@ -12,7 +12,7 @@ export interface GenreRank {
 
 class GenreService {
   static axiosInstance = axios.create({
-    baseURL: import.meta.env.API_URL,
+    baseURL: import.meta.env.VITE_API_URL,
   }); 
   
 
