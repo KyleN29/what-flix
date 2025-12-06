@@ -13,10 +13,13 @@
 
   background: linear-gradient(
     135deg,
-    var(--color-4),
-    var(--color-2),
-    var(--color-4)
+    var(--color-4) 0%,
+    var(--color-2) 25%,
+    var(--color-4) 50%,
+    var(--color-4) 60%,
+    var(--color-2) 85%
   );
+  background-size: 200%;
 
   display: flex;
   align-items: center;
@@ -28,7 +31,7 @@
   /* Text */
   font-weight: bold;
 
-  transition-property: width, padding;
+  transition-property: width, padding, border-radius, margin-left, background;
   transition-duration: 0.5s;
   transition-timing-function: ease-in-out;
 }
@@ -36,6 +39,11 @@
 .nav-bar.minimized {
   width: 3rem; /* This should be equal to the height of the div */
   padding: 0 0 0 3rem;
+  border-radius: 0 0 10px 10px;
+  margin-left: 1rem;
+
+  background-position: -3.75rem 0;
+  background-size: 300%;
 
   cursor: pointer;
 }
@@ -119,13 +127,13 @@
   padding-right: 1rem;
 }
 
-.nav-bar.minimized .search-bar-container {
-  max-width: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+.nav-bar .search-bar-container {
+  transition: opacity 0.8s ease-in;
 }
 
-.nav-bar .search-bar-container {
-  transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+.nav-bar.minimized .search-bar-container {
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
 }
