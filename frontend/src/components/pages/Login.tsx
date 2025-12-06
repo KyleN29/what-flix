@@ -19,33 +19,48 @@ function Login() {
   const [registerPassword, setRegisterPassword] = useState('');
   const [registerRepeatPassword, setRegisterRepeatPassword] = useState('');
 
+  const [loginErrorText, setLoginErrorText] = useState('');
+  const [registerErrorText, setRegisterErrorText] = useState('');
+
   const registerMutation = useMutation({
     mutationFn: (formData: RegisterPayload) =>
       AuthService.registerUser(formData),
     onSuccess: (data) => {
+      setRegisterErrorText('');
       console.log('Registered successfully!');
       localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
     },
     onError: (err) => {
       console.error('Registration failed:', err);
+      setRegisterErrorText(String(err));
     }
   });
 
   const loginMutation = useMutation({
     mutationFn: (formData: LoginPaylod) => AuthService.loginUser(formData),
     onSuccess: (data) => {
+      setLoginErrorText('');
       console.log('Login successfully!');
       localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
     },
     onError: (err) => {
       console.error('Login failed:', err);
+      setLoginErrorText(String(err));
     }
   });
 
   const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (loginEmail == '' || loginPassword == '') {
+      setLoginErrorText(
+        'One or more text fields are empty. Please enter your username and password.'
+      );
+
+      return;
+    }
 
     loginMutation.mutate({
       email: loginEmail,
@@ -56,8 +71,24 @@ function Login() {
   const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (
+      registerEmail == '' ||
+      registerPassword == '' ||
+      registerUsername == '' ||
+      registerRepeatPassword == ''
+    ) {
+      setRegisterErrorText(
+        'One or more text fields are empty. Please enter your email address, username, and password.*'
+      );
+
+      return;
+    }
+
     if (registerPassword !== registerRepeatPassword) {
-      alert('Error: Passwords do not match!');
+      setRegisterErrorText(
+        'Passwords do not match. Please input the same password for both fields.'
+      );
+
       return;
     }
 
@@ -87,6 +118,10 @@ function Login() {
           onChange={(e) => setLoginPassword(e.target.value)}
         />
         <br />
+        <p className="error-text">
+          {loginErrorText != '' ? 'Login Error: ' : ''}
+          {loginErrorText}
+        </p>
         <button type="submit">Submit</button>
       </form>
       <br />
@@ -120,6 +155,10 @@ function Login() {
           onChange={(e) => setRegisterRepeatPassword(e.target.value)}
         />
         <br />
+        <p className="error-text">
+          {registerErrorText != '' ? 'Registration Error: ' : ''}
+          {registerErrorText}
+        </p>
         <button type="submit">Submit</button>
       </form>
     </div>
