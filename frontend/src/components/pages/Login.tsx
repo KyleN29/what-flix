@@ -78,7 +78,7 @@ function Login() {
       registerRepeatPassword == ''
     ) {
       setRegisterErrorText(
-        'One or more text fields are empty. Please enter your email address, username, and password.*'
+        'One or more text fields are empty. Please enter your email address, username, and password.'
       );
 
       return;
