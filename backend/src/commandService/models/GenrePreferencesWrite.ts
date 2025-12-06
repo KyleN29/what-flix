@@ -1,6 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 
 export interface IGenreRank {
+  id: Number;
   rank: number;
   name: string;
 }
@@ -12,6 +13,7 @@ export interface IGenrePreferencesWrite extends Document {
 
 const GenreRankSchema = new Schema(
   {
+    id: {type: Number, required: true},
     rank: { type: Number, required: true },
     name: { type: String, required: true }
   },

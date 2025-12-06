@@ -4,7 +4,7 @@ import AuthService, {
   type LoginPaylod,
   type RegisterPayload
 } from '../../services/AuthService';
-import MovieService, { type Movie } from '../../services/MovieService';
+// import MovieService, { type Movie } from '../../services/MovieService';
 import './../variables.css';
 import './Login.css';
 import { useAuth } from '../../context/AuthContext';

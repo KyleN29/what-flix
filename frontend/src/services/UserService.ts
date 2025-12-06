@@ -7,10 +7,11 @@ export interface Person {
 }
 export interface GenreRank {
   rank: Number;
+  id: Number;
   name: string;
 }
 
-class GenreService {
+class UserService {
   static axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
   }); 
@@ -37,4 +38,4 @@ class GenreService {
   }
 }
 
-export default GenreService
+export default UserService

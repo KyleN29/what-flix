@@ -99,7 +99,6 @@ class MovieService {
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
     });
-    console.log(response.data);
     return response.data;
   }
 
@@ -117,9 +116,9 @@ class MovieService {
     return response.data;
   }
 
-  static async searchMovies(query: string, page = 1): Promise<Movie[]> {
+  static async searchMovies(query: string, numPages = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/search', {
-      params: { query, page }
+      params: { query, numPages }
     });
     return response.data;
   }
