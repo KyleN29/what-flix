@@ -6,13 +6,17 @@
   justify-content: space-between;
   gap: 1rem;
 
-  
   z-index: 99;
   position: fixed;
   top: 0;
   text-wrap-mode: nowrap;
 
-  background: linear-gradient(135deg, var(--color-4), var(--color-3));
+  background: linear-gradient(
+    135deg,
+    var(--color-4),
+    var(--color-2),
+    var(--color-4)
+  );
 
   display: flex;
   align-items: center;
@@ -22,7 +26,6 @@
   scrollbar-width: none;
 
   /* Text */
-  color: var(--white);
   font-weight: bold;
 
   transition-property: width, padding;
@@ -82,8 +85,8 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 25rem;
+  width: 40vw;
+  min-width: 25rem;
 }
 
 .search-bar {
@@ -94,13 +97,13 @@
   border: none;
   outline: none;
 
-  background-color: rgba(255, 255, 255, 0.2);
-  color: var(--white);
+  background-color: var(--color-5);
   backdrop-filter: blur(3px);
+  color: var(--white);
 }
 
 .search-bar::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-3);
 }
 
 .nav-right {
