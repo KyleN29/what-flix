@@ -4,10 +4,11 @@ import type { Movie } from '../services/MovieService';
 import './CategorySlider.css';
 import './variables.css';
 import MovieCard from './MovieCard';
+import type { MovieScore } from '../services/RecommendationService';
 
 interface Props {
   title: string;
-  movies: Movie[];
+  movies: Movie[] | MovieScore[];
 }
 
 function CategorySlider(props: Props) {

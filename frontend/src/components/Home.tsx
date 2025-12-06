@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import MovieService, { type Movie } from '../services/MovieService';
+import RecommendationService, {type MovieScore} from '../services/RecommendationService.js';
 import CategorySlider from './CategorySlider';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +15,10 @@ function Home() {
   const { data: popularMovies } = useQuery<Movie[]>({
     queryKey: ['popularMovies'],
     queryFn: () => MovieService.getPopularMovies()
+  });
+  const { data: recommendedMovies } = useQuery<MovieScore[]>({
+    queryKey: ['recommendedMovies'],
+    queryFn: () => RecommendationService.getGeneralRecommendations()
   });
 
   const topThree = popularMovies?.slice(0, 3) ?? [];
@@ -108,6 +113,9 @@ function Home() {
 
       {popularMovies && (
         <CategorySlider title="Popular Movies" movies={popularMovies} />
+      )}
+      {recommendedMovies && (
+        <CategorySlider title="Recommended Movies" movies={recommendedMovies} />
       )}
       {/* <p style={{ height: '50vh' }}>e</p> */}
     </div>

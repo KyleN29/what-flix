@@ -2,12 +2,12 @@ import axios from 'axios';
 import AuthService from './AuthService';
 
 export interface Person {
-    person_id: Number;
+    person_id: number;
     name: string;
 }
 export interface GenreRank {
-  rank: Number;
-  id: Number;
+  rank: number;
+  id: number;
   name: string;
 }
 
