@@ -134,7 +134,7 @@ function Home() {
       <div className="pt-4">
         {lesserKnownRecommendedMovies && (
           <CategorySlider
-            title="Movies You Probably Missed"
+            title="Movies You Might Have Missed"
             movies={lesserKnownRecommendedMovies}
           />
         )}

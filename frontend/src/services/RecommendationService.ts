@@ -13,43 +13,49 @@ class RecommendationService {
   });
 
   static async getGeneralRecommendations() {
-    const userGenreList: GenreRank[] = await UserService.getUserGenreList();
-    const userPeopleList: Person[] = await UserService.getLikedPeople();
+  const userGenreList: GenreRank[] = await UserService.getUserGenreList();
+  const userPeopleList: Person[] = await UserService.getLikedPeople();
 
-    const numPages = 10;
+  const numPages = 10;
 
-    // Fetch popular movies
-    const popularMovies: Movie[] = [];
-    for (let i = 0; i < numPages; i++) {
-      const page = await MovieService.getPopularMovies(i + 1);
-      popularMovies.push(...page);
-    }
-
-    // Fetch credits for each movie and score them
-    const scoredMovies: MovieScore[] = [];
-
-    for (const movie of popularMovies) {
-      // Fetch cast + crew
-      const credits = await MovieService.getMovieCredits(movie.id);
-
-      // Combine cast and crew into a single list
-      const people = [...(credits.cast ?? []), ...(credits.crew ?? [])];
-
-      // Attach people to the movie object
-      (movie as any).people = people;
-
-      // Compute the score
-      const score = await this.scoreMovie(movie, userGenreList, userPeopleList);
-
-      // Add to final list
-      scoredMovies.push({ ...movie, score });
-    }
-
-    // Sort highest score
-    scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
-
-    return scoredMovies.slice(0, 30);
+  const movies: Movie[] = [];
+  for (let i = 0; i < numPages; i++) {
+    const results = await MovieService.discoverMovies({
+      sort_by: "popularity.desc",
+      page: i + 1,
+      include_adult: false,
+      certification_country: "US",
+      "certification.gte": "G",
+      "certification.lte": "R"
+    });
+    movies.push(...results);
   }
+
+  // Fetch credits for each movie and score them
+  const scoredMovies: MovieScore[] = [];
+
+  for (const movie of movies) {
+    // Fetch cast + crew
+    const credits = await MovieService.getMovieCredits(movie.id);
+
+    // Combine cast and crew into a single list
+    const people = [...(credits.cast ?? []), ...(credits.crew ?? [])];
+
+    // Attach people to the movie object
+    (movie as any).people = people;
+
+    // Compute the score
+    const score = await this.scoreMovie(movie, userGenreList, userPeopleList);
+
+    // Add to final list
+    scoredMovies.push({ ...movie, score });
+  }
+
+  // Sort highest score
+  scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
+
+  return scoredMovies.slice(0, 30);
+}
 
   static async getLesserKnownRecommendations() {
     const userGenreList = await UserService.getUserGenreList();
@@ -69,6 +75,8 @@ class RecommendationService {
           certification_country: "US",
           "certification.gte": "G",
           "certification.lte": "R",
+          "popularity.lte": 50,
+          "primary_release_date.lte": "2024-12-31",
           page
         });
 
