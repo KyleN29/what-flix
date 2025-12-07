@@ -48,28 +48,42 @@ class RecommendationService {
     // Sort highest score
     scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
 
-    return scoredMovies;
+    return scoredMovies.slice(0, 30);
   }
 
   static async getLesserKnownRecommendations() {
     const userGenreList = await UserService.getUserGenreList();
     const userPeopleList = await UserService.getLikedPeople();
 
-    const numPages = 30;
+    // Sort genres by user rank
+    const sortedGenres = userGenreList.sort((a, b) => a.rank - b.rank);
 
     const movies: Movie[] = [];
-    for (let i = 0; i < numPages; i++) {
-      const page = await MovieService.getPopularMovies(i + 1);
-      movies.push(...page);
+    const pagesPerGenre = 3;
+    for (const genre of sortedGenres) {
+      for (let page = 1; page <= pagesPerGenre; page++) {
+        const results = await MovieService.discoverMovies({
+          with_genres: genre.id,
+          "vote_count.gte": 50,
+          "vote_count.lte": 800,
+          certification_country: "US",
+          "certification.gte": "G",
+          "certification.lte": "R",
+          page
+        });
+
+        movies.push(...results);
+      }
     }
 
-    const hiddenGems = movies.filter((m) => {
-      const year = Number(m.release_date.split('-')[0]);
-      return year <= 2024 && m.vote_count > 90 && m.vote_count < 800 && m.popularity < 50 && m.adult == false;
-    });
+    // Remove duplicates
+    const seen = new Set();
+    const uniqueMovies = movies.filter(
+      (m) => !seen.has(m.id) && seen.add(m.id)
+    );
 
     const scoredMovies: MovieScore[] = [];
-    for (const movie of hiddenGems) {
+    for (const movie of uniqueMovies) {
       const credits = await MovieService.getMovieCredits(movie.id);
       const cast = credits.cast ?? [];
       const crew = credits.crew ?? [];
@@ -81,8 +95,8 @@ class RecommendationService {
     }
 
     scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
-    console.log(scoredMovies);
-    return scoredMovies;
+
+    return scoredMovies.slice(0, 30);;
   }
 
   static async scoreMovie(

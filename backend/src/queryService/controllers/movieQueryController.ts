@@ -100,5 +100,18 @@ router.get('/credits', async (req, res) => {
   }
 });
 
+router.get('/discover', async (req, res) => {
+  try {
+    const params = { ...req.query };
+
+    const data = await movieQueryService.discoverMovies(params);
+
+    return res.json(data);
+  } catch (error) {
+    console.error("Error fetching discovered movies:", error);
+    return res.status(500).json({ message: "Error fetching discover movies" });
+  }
+});
+
 
 export default router;

@@ -117,15 +117,27 @@ class MovieService {
   }
 
   static async getMovieCredits(movieId: number) {
-  const response = await this.axiosInstance.get('/movie/credits', {
-    params: { movieId }
-  });
-  return response.data;
-}
+    const response = await this.axiosInstance.get('/movie/credits', {
+      params: { movieId }
+    });
+    return response.data;
+  }
 
   static async searchMovies(query: string, numPages = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/search', {
       params: { query, numPages }
+    });
+    return response.data;
+  }
+
+  static async discoverMovies(params: {
+    with_genres?: number | string;
+    sort_by?: string;
+    page?: number;
+    [key: string]: any;
+  }): Promise<Movie[]> {
+    const response = await this.axiosInstance.get('/movie/discover', {
+      params
     });
     return response.data;
   }

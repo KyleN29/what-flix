@@ -219,6 +219,31 @@ class MovieQueryService {
 
     return data;
   }
+
+  discoverCache: Record<string, any> = {};
+  DISCOVER_CACHE_TIMEOUT = 1000 * 60 * 60 * 24;
+  async discoverMovies(params: Record<string, any>): Promise<Movie[]> {
+    const cacheKey = JSON.stringify(params);
+  const cached = this.discoverCache[cacheKey];
+
+  if (cached && Date.now() - cached.timestamp < this.DISCOVER_CACHE_TIMEOUT) {
+    return cached.movies;
+  }
+
+  const response = await this.axiosInstance.get('/discover/movie', {
+    params
+  });
+
+  const movies: Movie[] = response.data.results;
+
+  // Save in cache
+  this.discoverCache[cacheKey] = {
+    timestamp: Date.now(),
+    movies
+  };
+
+  return movies;
+  }
 }
 
 const movieQueryService = new MovieQueryService();
