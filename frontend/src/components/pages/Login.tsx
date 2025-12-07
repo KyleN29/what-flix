@@ -27,7 +27,6 @@ function Login() {
       AuthService.registerUser(formData),
     onSuccess: (data) => {
       setRegisterErrorText('');
-      console.log('Registered successfully!');
       localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
     },
@@ -41,7 +40,6 @@ function Login() {
     mutationFn: (formData: LoginPaylod) => AuthService.loginUser(formData),
     onSuccess: (data) => {
       setLoginErrorText('');
-      console.log('Login successfully!');
       localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
     },

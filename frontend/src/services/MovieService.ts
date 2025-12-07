@@ -117,9 +117,11 @@ class MovieService {
   }
 
   static async getMovieCredits(movieId: number) {
-    const response = await axios.get(`/movie/${movieId}/credits`);
-    return response.data;
-  }
+  const response = await this.axiosInstance.get('/movie/credits', {
+    params: { movieId }
+  });
+  return response.data;
+}
 
   static async searchMovies(query: string, numPages = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/search', {

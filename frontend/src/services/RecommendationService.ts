@@ -31,6 +31,7 @@ class RecommendationService {
     for (const movie of popularMovies) {
       // Fetch cast + crew
       const credits = await MovieService.getMovieCredits(movie.id);
+      
 
       // Combine cast and crew into a single list
       const people = [...(credits.cast ?? []), ...(credits.crew ?? [])];

@@ -34,7 +34,6 @@ function CategorySlider(props: Props) {
   const movieWidthInPx =
     sliderHeightRem * movieDivAspectRatio *
     parseFloat(getComputedStyle(document.documentElement).fontSize);
-  console.log(movieWidthInPx)
   // Width of movies div (viewport width) in movies
   const moviesDivWidth = window.innerWidth / movieWidthInPx;
 
