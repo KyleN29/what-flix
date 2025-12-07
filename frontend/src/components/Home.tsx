@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import MovieService, { type Movie } from '../services/MovieService';
-import RecommendationService, {type MovieScore} from '../services/RecommendationService.js';
+import RecommendationService, {
+  type MovieScore
+} from '../services/RecommendationService.js';
 import CategorySlider from './CategorySlider';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +21,10 @@ function Home() {
   const { data: recommendedMovies } = useQuery<MovieScore[]>({
     queryKey: ['recommendedMovies'],
     queryFn: () => RecommendationService.getGeneralRecommendations()
+  });
+  const { data: lesserKnownRecommendedMovies } = useQuery<MovieScore[]>({
+    queryKey: ['lesserKnownRecommendedMovies'],
+    queryFn: () => RecommendationService.getLesserKnownRecommendations()
   });
 
   const topThree = popularMovies?.slice(0, 3) ?? [];
@@ -111,12 +117,29 @@ function Home() {
         </div>
       )}
 
-      {popularMovies && (
-        <CategorySlider title="Popular Movies" movies={popularMovies} />
-      )}
-      {recommendedMovies && (
-        <CategorySlider title="Recommended Movies" movies={recommendedMovies} />
-      )}
+      <div >
+        {popularMovies && (
+          <CategorySlider title="Popular Movies" movies={popularMovies} />
+        )}
+      </div>
+      <div className="pt-4">
+        {recommendedMovies && (
+          <CategorySlider
+            title="Recommended Movies"
+            movies={recommendedMovies}
+          />
+        )}
+      </div>
+
+      <div className="pt-4">
+        {lesserKnownRecommendedMovies && (
+          <CategorySlider
+            title="Movies You Probably Missed"
+            movies={lesserKnownRecommendedMovies}
+          />
+        )}
+      </div>
+
       {/* <p style={{ height: '50vh' }}>e</p> */}
     </div>
   );

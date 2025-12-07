@@ -18,7 +18,7 @@ function CategorySlider(props: Props) {
   const sliderRef = useRef<HTMLDivElement>(null);
 
   // Aspect ratio of each movie card container
-  const movieDivAspectRatio = 3 / 4.2;
+  const movieDivAspectRatio = 2 / 3;
 
   // Get the slider height dynamically
   useEffect(() => {
@@ -27,7 +27,7 @@ function CategorySlider(props: Props) {
     const sliderPx = sliderRef.current.getBoundingClientRect().height;
     const rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
-    setSliderHeightRem(sliderPx / rootFont);
+    setSliderHeightRem((sliderPx / rootFont));
   }, []);
 
   // Compute movie width in px based on actual slider height

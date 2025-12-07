@@ -31,7 +31,6 @@ class RecommendationService {
     for (const movie of popularMovies) {
       // Fetch cast + crew
       const credits = await MovieService.getMovieCredits(movie.id);
-      
 
       // Combine cast and crew into a single list
       const people = [...(credits.cast ?? []), ...(credits.crew ?? [])];
@@ -46,9 +45,43 @@ class RecommendationService {
       scoredMovies.push({ ...movie, score });
     }
 
-    // 3. Sort highest score → lowest
+    // Sort highest score
     scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
 
+    return scoredMovies;
+  }
+
+  static async getLesserKnownRecommendations() {
+    const userGenreList = await UserService.getUserGenreList();
+    const userPeopleList = await UserService.getLikedPeople();
+
+    const numPages = 30;
+
+    const movies: Movie[] = [];
+    for (let i = 0; i < numPages; i++) {
+      const page = await MovieService.getPopularMovies(i + 1);
+      movies.push(...page);
+    }
+
+    const hiddenGems = movies.filter((m) => {
+      const year = Number(m.release_date.split('-')[0]);
+      return year <= 2024 && m.vote_count > 90 && m.vote_count < 800 && m.popularity < 50 && m.adult == false;
+    });
+
+    const scoredMovies: MovieScore[] = [];
+    for (const movie of hiddenGems) {
+      const credits = await MovieService.getMovieCredits(movie.id);
+      const cast = credits.cast ?? [];
+      const crew = credits.crew ?? [];
+      const people = [...cast, ...crew];
+      (movie as any).people = people;
+
+      const score = await this.scoreMovie(movie, userGenreList, userPeopleList);
+      scoredMovies.push({ ...movie, score });
+    }
+
+    scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
+    console.log(scoredMovies);
     return scoredMovies;
   }
 
