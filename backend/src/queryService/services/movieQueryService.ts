@@ -92,6 +92,42 @@ export interface TrailerResponse {
   id: number;
   results: Trailer[];
 }
+
+export interface CastMember {
+  adult: boolean;
+  gender: number;
+  id: number;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path: string | null;
+  cast_id: number;
+  character: string;
+  credit_id: string;
+  order: number;
+}
+
+export interface CrewMember {
+  adult: boolean;
+  gender: number;
+  id: number;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path: string | null;
+  credit_id: string;
+  department: string;
+  job: string;
+}
+
+export interface MovieCredits {
+  id: number;
+  cast: CastMember[];
+  crew: CrewMember[];
+}
+
 interface Cache {
   timestamp: number;
   movies: Movie[];
@@ -151,7 +187,6 @@ class MovieQueryService {
 
   async searchMovies(query: string, pagesToFetch = 3): Promise<Movie[]> {
     let allResults: Movie[] = [];
-    console.log(pagesToFetch)
     for (let page = 1; page <= pagesToFetch; page++) {
       const response = await this.axiosInstance.get<MovieResponse>(
         '/search/movie',
@@ -161,8 +196,53 @@ class MovieQueryService {
       allResults.push(...response.data.results);
       if (page >= response.data.total_pages) break;
     }
-    
+
     return allResults.sort((a, b) => b.popularity - a.popularity);
+  }
+
+  creditCache: Record<number, any> = {};
+  CREDIT_CACHE_TIMEOUT = 1000 * 60 * 60 * 24;
+  async getMovieCredits(movieId: number): Promise<MovieCredits> {
+    const cached = this.creditCache[movieId];
+
+    if (cached && Date.now() - cached.timestamp < this.CREDIT_CACHE_TIMEOUT) {
+      return cached.data;
+    }
+
+    const response = await this.axiosInstance.get(`/movie/${movieId}/credits`);
+    const data = response.data;
+
+    this.creditCache[movieId] = {
+      timestamp: Date.now(),
+      data
+    };
+
+    return data;
+  }
+
+  discoverCache: Record<string, any> = {};
+  DISCOVER_CACHE_TIMEOUT = 1000 * 60 * 60 * 24;
+  async discoverMovies(params: Record<string, any>): Promise<Movie[]> {
+    const cacheKey = JSON.stringify(params);
+  const cached = this.discoverCache[cacheKey];
+
+  if (cached && Date.now() - cached.timestamp < this.DISCOVER_CACHE_TIMEOUT) {
+    return cached.movies;
+  }
+
+  const response = await this.axiosInstance.get('/discover/movie', {
+    params
+  });
+
+  const movies: Movie[] = response.data.results;
+
+  // Save in cache
+  this.discoverCache[cacheKey] = {
+    timestamp: Date.now(),
+    movies
+  };
+
+  return movies;
   }
 }
 

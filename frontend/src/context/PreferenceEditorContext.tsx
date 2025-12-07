@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const PreferenceEditorContext = createContext({
   isOpen: false,
@@ -14,9 +14,6 @@ export function PreferenceEditorProvider({
   const openEditor = () => setIsOpen(true);
   const closeEditor = () => setIsOpen(false);
 
-  useEffect(() => {
-    console.log(isOpen);
-  }, [isOpen])
   return (
     <PreferenceEditorContext.Provider
       value={{ isOpen, openEditor, closeEditor }}

@@ -7,11 +7,8 @@ import {
 } from '@hello-pangea/dnd';
 import './GenreRanking.css';
 import { type Genre } from '../services/GenreService';
-import UserService from '../services/UserService';
-interface AddedGenre {
-  rank: number;
-  name: string;
-}
+import UserService, {type GenreRank} from '../services/UserService';
+
 
 interface Props {
   genres: Genre[];
@@ -25,7 +22,7 @@ function GenreRanking(props: Props) {
   const genreOptionsRef = useRef<HTMLDivElement>(null);
 
   // List of genres added and ranked by the user
-  const [genres, setGenres] = useState<AddedGenre[]>([]);
+  const [genres, setGenres] = useState<GenreRank[]>([]);
 
   // Controls visual of save button
   const [saving, setSaving] = useState(false);
@@ -40,7 +37,7 @@ function GenreRanking(props: Props) {
           // Ensure they have correct ranks assigned
           const ranked = saved
             .sort((a, b) => Number(a.rank) - Number(b.rank))
-            .map((g) => ({ name: g.name, rank: Number(g.rank) }));
+            .map((g) => ({ id: g.id, name: g.name, rank: Number(g.rank) }));
 
           setGenres(ranked);
         }
@@ -82,7 +79,7 @@ function GenreRanking(props: Props) {
       if (exists) return prev;
 
       const nextRank = prev.length + 1;
-      return [...prev, { rank: nextRank, name: genre.name }];
+      return [...prev, { id: genre.id, rank: nextRank, name: genre.name }];
     });
   }
 
@@ -95,7 +92,7 @@ function GenreRanking(props: Props) {
   }
 
   // Updates rank numbers based on array order
-  function assignRanks(list: AddedGenre[]) {
+  function assignRanks(list: GenreRank[]) {
     return list.map((item, index) => ({
       ...item,
       rank: index + 1
@@ -196,7 +193,7 @@ function GenreRanking(props: Props) {
                             : '#5c374c'
                         }}
                       >
-                        <span className="rank-badge">{genre.rank}</span>
+                        <span className="rank-badge">{genre.rank.toString()}</span>
 
                         <span className="genre-name">{genre.name}</span>
 

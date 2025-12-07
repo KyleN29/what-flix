@@ -2,15 +2,16 @@ import axios from 'axios';
 import AuthService from './AuthService';
 
 export interface Person {
-    person_id: Number;
+    person_id: number;
     name: string;
 }
 export interface GenreRank {
-  rank: Number;
+  rank: number;
+  id: number;
   name: string;
 }
 
-class GenreService {
+class UserService {
   static axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
   }); 
@@ -37,4 +38,4 @@ class GenreService {
   }
 }
 
-export default GenreService
+export default UserService

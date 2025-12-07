@@ -4,10 +4,11 @@ import type { Movie } from '../services/MovieService';
 import './CategorySlider.css';
 import './variables.css';
 import MovieCard from './MovieCard';
+import type { MovieScore } from '../services/RecommendationService';
 
 interface Props {
   title: string;
-  movies: Movie[];
+  movies: Movie[] | MovieScore[];
 }
 
 function CategorySlider(props: Props) {
@@ -17,7 +18,7 @@ function CategorySlider(props: Props) {
   const sliderRef = useRef<HTMLDivElement>(null);
 
   // Aspect ratio of each movie card container
-  const movieDivAspectRatio = 3 / 4.2;
+  const movieDivAspectRatio = 2 / 3;
 
   // Get the slider height dynamically
   useEffect(() => {
@@ -26,14 +27,13 @@ function CategorySlider(props: Props) {
     const sliderPx = sliderRef.current.getBoundingClientRect().height;
     const rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
-    setSliderHeightRem(sliderPx / rootFont);
+    setSliderHeightRem((sliderPx / rootFont));
   }, []);
 
   // Compute movie width in px based on actual slider height
   const movieWidthInPx =
     sliderHeightRem * movieDivAspectRatio *
     parseFloat(getComputedStyle(document.documentElement).fontSize);
-  console.log(movieWidthInPx)
   // Width of movies div (viewport width) in movies
   const moviesDivWidth = window.innerWidth / movieWidthInPx;
 
