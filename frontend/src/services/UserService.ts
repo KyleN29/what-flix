@@ -10,7 +10,7 @@ export interface GenreRank {
   name: string;
 }
 
-class GenreService {
+class UserService {
   static axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
   }); 
@@ -35,6 +35,11 @@ class GenreService {
   static async updateLikedPeople(people: Person[]) {
     return this.axiosInstance.put("/user/liked_people", people, AuthService.getAuthConfig());
   }
+
+  static async getUserData(): Promise<Person> {
+    const response = await this.axiosInstance.get('/user/getUser', AuthService.getAuthConfig());
+    return response.data;
+  }
 }
 
-export default GenreService
+export default UserService

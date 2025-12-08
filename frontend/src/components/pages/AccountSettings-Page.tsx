@@ -3,8 +3,8 @@ import NavigationSidebar from "../SettingsNavigationSidebar";
 import { useRef } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { Settings, CreditCard, Sliders, Accessibility } from "lucide-react";
-import AccountService from "../../services/AccountService";
-import { type user } from "../../services/AccountService";
+import UserService from "../../services/UserService";
+import { type Person, type GenreRank } from "../../services/UserService";
 import { useParams } from "react-router-dom";
 
 function AccountSettings() {
@@ -77,19 +77,11 @@ function AccountSettings() {
         },
     ];
 
-    const { data: userData, isLoading, isError } = useQuery<user>({
-        queryKey: ['getUser', userId],
-        queryFn: () => AccountService.getUserData(userId!),
-        enabled: !!userId, 
-    });
+    
 
     if(isError) {
         console.log("Unable to find user");
     }
-
-    console.log("userData:", userData);
-    console.log("isLoading:", isLoading);
-    console.log("isError:", isError);
 
     const dummyUser = {
         email: "someone@gmail.com",
@@ -101,6 +93,12 @@ function AccountSettings() {
             <NavigationSidebar sections={sections} user={userData ?? dummyUser}/>
         </div>
     );
+
+    const { data: userGenreList, isLoading, isError } = useQuery<GenreRank[]>({
+        queryKey: ['getUser', userId],
+        queryFn: () => UserService.getUserGenreList(),
+        enabled: !!userId, 
+    });
 
     const generalSettings = (
         <div className="flex flex-col gap-4">
