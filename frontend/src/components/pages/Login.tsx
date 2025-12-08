@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import AuthService, {type LoginPaylod, type RegisterPayload} from '../../services/AuthService';
+import AuthService, {
+  type LoginPaylod,
+  type RegisterPayload
+} from '../../services/AuthService';
+import MovieService, { type Movie } from '../../services/MovieService';
 import './../variables.css';
 import './Login.css';
-import { useAuth } from "../../context/AuthContext";
-
+import { useAuth } from '../../context/AuthContext';
 
 function Login() {
   const { setIsLoggedIn } = useAuth();
@@ -16,33 +19,48 @@ function Login() {
   const [registerPassword, setRegisterPassword] = useState('');
   const [registerRepeatPassword, setRegisterRepeatPassword] = useState('');
 
+  const [loginErrorText, setLoginErrorText] = useState('');
+  const [registerErrorText, setRegisterErrorText] = useState('');
+
   const registerMutation = useMutation({
-    mutationFn: (formData: RegisterPayload) => AuthService.registerUser(formData),
+    mutationFn: (formData: RegisterPayload) =>
+      AuthService.registerUser(formData),
     onSuccess: (data) => {
+      setRegisterErrorText('');
       console.log('Registered successfully!');
-      localStorage.setItem('accessToken', data.accessToken)
+      localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
     },
     onError: (err) => {
       console.error('Registration failed:', err);
+      setRegisterErrorText(String(err));
     }
   });
 
   const loginMutation = useMutation({
     mutationFn: (formData: LoginPaylod) => AuthService.loginUser(formData),
     onSuccess: (data) => {
+      setLoginErrorText('');
       console.log('Login successfully!');
-      localStorage.setItem('accessToken', data.accessToken)
+      localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
     },
     onError: (err) => {
       console.error('Login failed:', err);
+      setLoginErrorText(String(err));
     }
   });
 
   const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (loginEmail == '' || loginPassword == '') {
+      setLoginErrorText(
+        'One or more text fields are empty. Please enter your username and password.'
+      );
+
+      return;
+    }
 
     loginMutation.mutate({
       email: loginEmail,
@@ -50,11 +68,27 @@ function Login() {
     });
   };
 
-    const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (
+      registerEmail == '' ||
+      registerPassword == '' ||
+      registerUsername == '' ||
+      registerRepeatPassword == ''
+    ) {
+      setRegisterErrorText(
+        'One or more text fields are empty. Please enter your email address, username, and password.*'
+      );
+
+      return;
+    }
+
     if (registerPassword !== registerRepeatPassword) {
-      alert('Error: Passwords do not match!');
+      setRegisterErrorText(
+        'Passwords do not match. Please input the same password for both fields.'
+      );
+
       return;
     }
 
@@ -65,14 +99,11 @@ function Login() {
     });
   };
 
-
-  
-
-
   return (
     <div className="login-page">
-      <h3>Login:</h3>
+      <div className="background"></div>
       <form className="login" onSubmit={handleLoginSubmit}>
+        <h3>Login</h3>
         <p>Username:</p>
         <input
           type="text"
@@ -87,11 +118,15 @@ function Login() {
           onChange={(e) => setLoginPassword(e.target.value)}
         />
         <br />
+        <p className="error-text">
+          {loginErrorText != '' ? 'Login Error: ' : ''}
+          {loginErrorText}
+        </p>
         <button type="submit">Submit</button>
       </form>
       <br />
-      <h3>Create Account:</h3>
       <form className="create-account" onSubmit={handleRegisterSubmit}>
+        <h3>Create Account</h3>
         <p>Email:</p>
         <input
           type="text"
@@ -120,6 +155,10 @@ function Login() {
           onChange={(e) => setRegisterRepeatPassword(e.target.value)}
         />
         <br />
+        <p className="error-text">
+          {registerErrorText != '' ? 'Registration Error: ' : ''}
+          {registerErrorText}
+        </p>
         <button type="submit">Submit</button>
       </form>
     </div>

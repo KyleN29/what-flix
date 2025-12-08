@@ -9,7 +9,7 @@ import { usePreferenceEditor } from '../context/PreferenceEditorContext.js';
 
 function Home() {
   const navigate = useNavigate();
-  const {openEditor} = usePreferenceEditor();
+  const { openEditor } = usePreferenceEditor();
   const { isLoggedIn } = useAuth();
   const { data: popularMovies } = useQuery<Movie[]>({
     queryKey: ['popularMovies'],
@@ -51,7 +51,12 @@ function Home() {
               <p className="hero-desc">{featured.overview}</p>
 
               <div className="hero-buttons">
-                <button className="btn-primary" onClick={() => navigate('/movie/'+featured.id)}>Details</button>
+                <button
+                  className="btn-primary"
+                  onClick={() => navigate('/movie/' + featured.id)}
+                >
+                  Details
+                </button>
                 <button className="btn-secondary">More Like This</button>
               </div>
 
@@ -104,6 +109,7 @@ function Home() {
       {popularMovies && (
         <CategorySlider title="Popular Movies" movies={popularMovies} />
       )}
+      {/* <p style={{ height: '50vh' }}>e</p> */}
     </div>
   );
 }

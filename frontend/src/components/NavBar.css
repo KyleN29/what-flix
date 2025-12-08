@@ -6,13 +6,20 @@
   justify-content: space-between;
   gap: 1rem;
 
-  
   z-index: 99;
   position: fixed;
   top: 0;
   text-wrap-mode: nowrap;
 
-  background: linear-gradient(135deg, var(--color-4), var(--color-3));
+  background: linear-gradient(
+    135deg,
+    var(--color-4) 0%,
+    var(--color-2) 25%,
+    var(--color-4) 50%,
+    var(--color-4) 60%,
+    var(--color-2) 85%
+  );
+  background-size: 200%;
 
   display: flex;
   align-items: center;
@@ -22,10 +29,9 @@
   scrollbar-width: none;
 
   /* Text */
-  color: var(--white);
   font-weight: bold;
 
-  transition-property: width, padding;
+  transition-property: width, padding, border-radius, margin-left, background;
   transition-duration: 0.5s;
   transition-timing-function: ease-in-out;
 }
@@ -33,6 +39,11 @@
 .nav-bar.minimized {
   width: 3rem; /* This should be equal to the height of the div */
   padding: 0 0 0 3rem;
+  border-radius: 0 0 10px 10px;
+  margin-left: 1rem;
+
+  background-position: -3.75rem 0;
+  background-size: 300%;
 
   cursor: pointer;
 }
@@ -82,8 +93,8 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 25rem;
+  width: 40vw;
+  min-width: 25rem;
 }
 
 .search-bar {
@@ -94,13 +105,13 @@
   border: none;
   outline: none;
 
-  background-color: rgba(255, 255, 255, 0.2);
-  color: var(--white);
+  background-color: var(--color-5);
   backdrop-filter: blur(3px);
+  color: var(--white);
 }
 
 .search-bar::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-3);
 }
 
 .nav-right {
@@ -116,13 +127,13 @@
   padding-right: 1rem;
 }
 
-.nav-bar.minimized .search-bar-container {
-  max-width: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+.nav-bar .search-bar-container {
+  transition: opacity 0.8s ease-in;
 }
 
-.nav-bar .search-bar-container {
-  transition: max-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+.nav-bar.minimized .search-bar-container {
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
 }

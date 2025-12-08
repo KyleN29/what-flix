@@ -1,9 +1,15 @@
 .login-page {
-  padding-top: 5rem;
-  padding-left: 2rem;
-  background: var(--black);
+  padding: 0 5rem 5rem 5rem;
   min-height: 100vh;
+
+  background: var(--color-5);
   color: var(--white);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.5rem;
 }
 
 .login-page button {
@@ -17,17 +23,33 @@
   cursor: pointer;
 }
 
-form {
+.login-page form {
   width: fit-content;
+  border-radius: 32px;
+  padding: 1.5rem;
+  margin: 0 4rem 0 4rem;
+
+  justify-items: left;
+
+  background-color: var(--black);
 }
 
-form input {
+.login-page input {
+  padding-left: 0.25rem;
   background: var(--white);
   border-radius: 5px;
   color: var(--black);
 }
 
 h3 {
-  font-size: x-large;
+  color: var(--color-1);
+  justify-self: center;
+  font-size: 1.5em;
   font-weight: bold;
+}
+
+.error-text {
+  width: 15.2em; /* This should be the default input width */
+  font-size: 0.75em;
+  color: var(--color-4);
 }
