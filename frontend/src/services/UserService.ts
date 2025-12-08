@@ -37,7 +37,7 @@ class UserService {
   }
 
   static async getUserData(): Promise<Person> {
-    const response = await this.axiosInstance.get('/user/getUser', AuthService.getAuthConfig());
+    const response = await this.axiosInstance.get('/user/', AuthService.getAuthConfig());
     return response.data;
   }
 }

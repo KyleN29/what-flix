@@ -22,25 +22,29 @@ router.get('/liked_people', authMiddleware, async (req: Request, res: Response) 
   res.json(prefs?.liked_people);
 });
 
-router.get('/:id', authMiddleware, async (req: Request, res: Response) => {
-  const user = await accountQueryService.getUser(req.params.id);
+router.get('/', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const user = await accountQueryService.getUser(userId);
   res.json(user);
 });
 
-router.get('/:id/watch_later', authMiddleware, async (req: Request, res: Response) => {
-  const watchList = await accountQueryService.getWatchList(req.params.id);
+router.get('/watch_later', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const watchList = await accountQueryService.getWatchList(userId);
   res.json(watchList);
 });
 
-router.get('/:id/genre_ranking/:genre_code', authMiddleware, async (req: Request, res: Response) => {
-  const preferences = await accountQueryService.getPreferences(req.params.id);
+router.get('/genre_ranking/:genre_code', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const preferences = await accountQueryService.getPreferences(userId);
   const genreCode = req.params.genre_code;
   const genrePreference = preferences.find(pref => pref.genre_code === genreCode);
   res.json(genrePreference);
 });
 
-router.get('/:id/movie_rating/:movie_id', authMiddleware, async (req: Request, res: Response) => {
-  const movieRating = await accountQueryService.getMovieRanking(req.params.id, req.params.movie_id);
+router.get('/movie_rating/:movie_id', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const movieRating = await accountQueryService.getMovieRanking(userId, req.params.movie_id);
   res.json(movieRating);
 });
 
