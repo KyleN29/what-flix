@@ -1,12 +1,11 @@
 import "./AccountSettings-Page.css";
 import "./Accessibility.css";
 import NavigationSidebar from "../SettingsNavigationSidebar";
-import { useRef } from "react";
-//import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Settings, Sliders, Accessibility, X, Minus } from "lucide-react";
-//import UserService from "../../services/UserService";
-//import { type Person, type GenreRank } from "../../services/UserService";
-import { useState } from "react";
+import UserService, { type UserData } from "../../services/UserService";
+import { type Person, type GenreRank } from "../../services/UserService";
+import { useState, useEffect, useRef } from "react";
 
 function ButtonBox({ items, onRemove, title }) {
   const [deleteMode, setDeleteMode] = useState(false);
@@ -167,17 +166,6 @@ function AccountSettings() {
 
     // dummy data for debugging //////////////////
 
-    const dummyUser = {
-        email: "someone@gmail.com",
-        username: "someone User Name"
-    }
-
-    const [genres, setGenres] = useState([
-        { rank: 1, name: "Family" },
-        { rank: 2, name: "Drama" },
-        { rank: 3, name: "History" }
-    ]);
-
     const [genreBlacklist, setGenreBlacklist] = useState([
         { rank: 1, name: "Action" },
         { rank: 2, name: "Comedy" },
@@ -185,6 +173,36 @@ function AccountSettings() {
     ]);
 
     //////////////////////////////////////////////
+
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        async function fetchUserData() {
+                try {
+                    const data = await UserService.getUserData();
+                    setUserData(data);
+                } catch (err) {
+                    setError('Failed to load user data');
+                    console.error(err);
+                }
+            }
+            fetchUserData();
+    }, []);
+
+    const [genres, setGenres] = useState<GenreRank[]>([]);
+    useEffect(() => {
+        async function fetchUserGenres() {
+            try {
+                const data = await UserService.getUserGenreList();
+                setGenres(data);
+            } catch (err) {
+                setError('Failed to load user genres');
+                console.error(err);
+            }
+        }
+        fetchUserGenres();
+    }, []);
+
 
     const handleRemoveGenre = (genre: any) => {
         setGenres(genres.filter(g => g.rank !== genre.rank));
@@ -239,9 +257,12 @@ function AccountSettings() {
         }
     };
 
-    const settingsNav = (
+    const settingsNav = userData ? (
         <div className="col-span-1 AccountNavigationBar">
-            <NavigationSidebar sections={sections} user={dummyUser}/>
+            <NavigationSidebar sections={sections} user={userData}/>
+        </div>
+    ) : (
+        <div className="col-span-1 AccountNavigationBar">
         </div>
     );
 

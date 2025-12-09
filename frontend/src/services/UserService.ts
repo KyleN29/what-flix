@@ -10,6 +10,13 @@ export interface GenreRank {
   name: string;
 }
 
+export interface UserData {
+  user_id: string;
+  email: string;
+  username: string;
+  created_at: Date;
+}
+
 class UserService {
   static axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -36,7 +43,7 @@ class UserService {
     return this.axiosInstance.put("/user/liked_people", people, AuthService.getAuthConfig());
   }
 
-  static async getUserData(): Promise<Person> {
+  static async getUserData(): Promise<UserData> {
     const response = await this.axiosInstance.get('/user/', AuthService.getAuthConfig());
     return response.data;
   }

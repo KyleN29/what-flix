@@ -1,5 +1,6 @@
 import { useState, useEffect, type RefObject } from "react";
 import "./SettingsNavigationSidebar.css"
+import type { UserData } from "../services/UserService";
 
 type setting = {
     name: string,
@@ -14,14 +15,9 @@ type section = {
     settings: setting[]
 };
 
-type user = {
-    username: string,
-    email: string,
-}
-
 interface props {
     sections: section[],
-    user: user
+    user: UserData
 }
 
 function NavigationSidebar({ sections, user }: props) {
