@@ -1,0 +1,35 @@
+[data-text-size="small"] {
+    font-size: 14px;
+}
+
+[data-text-size="medium"] {
+    font-size: 16px;
+}
+
+[data-text-size="large"] {
+    font-size: 18px;
+}
+
+[data-text-size="extra-large"] {
+    font-size: 20px;
+}
+
+.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.dark-mode .AccountSettings-Section {
+    background-color: #2d2d2d;
+}
+
+.dark-mode .buttonBox {
+    background-color: #2d2d2d;
+    border-color: #444;
+}
+
+.dark-mode input {
+    background-color: #3a3a3a;
+    color: #ffffff;
+    border-color: #555;
+}
