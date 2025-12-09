@@ -224,6 +224,21 @@ function AccountSettings() {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete your account? This action cannot be undone.'
+        );
+        
+        if (confirmed) {
+            try {
+                console.log('Deleting account...');
+                // await UserService.deleteAccount();
+            } catch (error) {
+                console.error('Error deleting account:', error);
+            }
+        }
+    };
+
     const settingsNav = (
         <div className="col-span-1 AccountNavigationBar">
             <NavigationSidebar sections={sections} user={dummyUser}/>
@@ -300,6 +315,20 @@ function AccountSettings() {
                         onClick={handleUpdatePassword}
                     >
                         Apply
+                    </button>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-24" ref={deleteRef}>
+                <div className="flex items-center justify-end">
+                    <label>Delete Account</label>
+                </div>
+                <div className="flex items-center justify-start">
+                    <button 
+                        className="delete-account-button"
+                        onClick={handleDeleteAccount}
+                    >
+                        Delete Account
                     </button>
                 </div>
             </div>
