@@ -65,6 +65,39 @@
     color: red
 }
 
+.dropdown-menu {
+    position: absolute;
+    background-color: var(--white);
+    border: 1px solid var(--color-5);
+    border-radius: 0.375rem;
+    margin-top: 0.25rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    max-height: 12rem;
+    overflow-y: auto;
+}
+
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: var(--white);
+    color: var(--black);
+    transition: background-color 200ms;
+}
+
+.dropdown-menu button:hover {
+    background-color: var(--color-5);
+    color: var(--white);
+}
+
+.dropdown-menu .no-genres {
+    padding: 0.5rem 1rem;
+    color: #6b7280;
+}
+
 button.active {
     background-color: var(--color-5);
 }

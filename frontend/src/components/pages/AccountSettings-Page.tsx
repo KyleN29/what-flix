@@ -1,20 +1,73 @@
 import "./AccountSettings-Page.css";
 import "./Accessibility.css";
 import NavigationSidebar from "../SettingsNavigationSidebar";
-import { useQuery } from '@tanstack/react-query';
 import { Settings, Sliders, Accessibility, X, Minus } from "lucide-react";
 import UserService, { type UserData } from "../../services/UserService";
-import { type Person, type GenreRank } from "../../services/UserService";
+import { type GenreRank } from "../../services/UserService";
 import { useState, useEffect, useRef } from "react";
+import GenreService, {type Genre} from "../../services/GenreService";
 
-function ButtonBox({ items, onRemove, title }) {
+function ButtonBox({ items, onRemove, onAdd, title, genreList }) {
   const [deleteMode, setDeleteMode] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showDropdown]);
 
   const handleClick = (item: any) => {
     if (deleteMode) {
       onRemove(item);
     }
   };
+
+  const getAvailableGenres = () => {
+    const selectedGenreNames = items.map(item => item.name);
+    return genreList.filter(genre => !selectedGenreNames.includes(genre.name));
+  };
+
+  const handleSelectGenre = (genre: any) => {
+    onAdd(genre);
+    setShowDropdown(false);
+  };
+
+  const availableGenres = getAvailableGenres();
+
+  const dropdownContent = (
+    <div className="dropdown-menu">
+      {availableGenres.length > 0 ? (
+        availableGenres.map((genre: any) => (
+          <button
+            key={genre.id}
+            onClick={() => handleSelectGenre(genre)}
+          >
+            {genre.name}
+          </button>
+        ))
+      ) : (
+        <div className="no-genres">No genres available</div>
+      )}
+    </div>
+  );
+
+  const addItemButton = (
+    <div className="relative" ref={dropdownRef}>
+      <button onClick={() => setShowDropdown(!showDropdown)} className="px-4 py-2 rounded">
+        +
+      </button>
+      {showDropdown && dropdownContent}
+    </div>
+  );
 
   return (
     <div className="buttonBox shadow-lg">
@@ -40,6 +93,7 @@ function ButtonBox({ items, onRemove, title }) {
             {deleteMode && <X size={16} />}
           </button>
         ))}
+        {!deleteMode && addItemButton}
       </div>
     </div>
   );
@@ -189,12 +243,12 @@ function AccountSettings() {
             fetchUserData();
     }, []);
 
-    const [genres, setGenres] = useState<GenreRank[]>([]);
+    const [genres, setUserGenres] = useState<GenreRank[]>([]);
     useEffect(() => {
         async function fetchUserGenres() {
             try {
                 const data = await UserService.getUserGenreList();
-                setGenres(data);
+                setUserGenres(data);
             } catch (err) {
                 setError('Failed to load user genres');
                 console.error(err);
@@ -204,10 +258,49 @@ function AccountSettings() {
     }, []);
 
 
-    const handleRemoveGenre = (genre: any) => {
-        setGenres(genres.filter(g => g.rank !== genre.rank));
-        // todo: UPDATE user genre rankings
+    const [genreList, setGenreList] = useState<Genre[]>([]);
+    useEffect(() => {
+        async function loadGenres() {
+            const genreList = await GenreService.getGenreList();
+            setGenreList(genreList);
+        }
+        loadGenres();
+    }, []);
+
+
+
+    const handleAddGenre = async (genre: any) => {
+        try {
+            const updatedGenres = [...genres, { rank: genres.length + 1, name: genre.name }];
+            setUserGenres(updatedGenres);
+            await UserService.updateGenres(updatedGenres);
+        } catch (err) {
+            setError('Failed to add genre');
+            console.error(err);
+        }
+    }
+
+    const handleRemoveGenre = async (genre: any) => {
+        const updatedGenres = genres.filter(g => g.rank !== genre.rank);
+        const previousGenres = genres; // Save for rollback
+        
+        setUserGenres(updatedGenres);
+        
+        try {
+            await UserService.updateGenres(updatedGenres);
+            console.log("Updated user genres: ", updatedGenres);
+        } catch (err) {
+            console.error('Error updating genres:', err);
+            setUserGenres(previousGenres); // Rollback on error
+            setError('Failed to update genres. Please try again.');
+        }
     };
+
+    const handleAddBlacklistGenre = async (genre: any) => {
+        const updatedBlacklist = [...genreBlacklist, { rank: genreBlacklist.length + 1, name: genre.name }];
+        setGenreBlacklist(updatedBlacklist);
+        // todo: UPDATE user blacklist
+    }
 
     const handleRemoveBlacklistGenre = (genre: any) => {
         setGenreBlacklist(genreBlacklist.filter(g => g.rank !== genre.rank));
@@ -370,10 +463,10 @@ function AccountSettings() {
                     <h1>Preferences</h1>
                     <hr className="w-full border-t border-gray-300" />
                     <div ref={favoriteGenresRef} className="buttonBoxContainer">
-                        <ButtonBox items={genres} onRemove={handleRemoveGenre} title="Favorite Genres" />
+                        <ButtonBox items={genres} onRemove={handleRemoveGenre} onAdd={handleAddGenre} genreList={genreList} title="Favorite Genres" />
                     </div>
                     <div ref={genreBlacklistRef} className="buttonBoxContainer">
-                        <ButtonBox items={genreBlacklist} onRemove={handleRemoveBlacklistGenre} title="Genre Blacklist" />
+                        <ButtonBox items={genreBlacklist} onRemove={handleRemoveBlacklistGenre} onAdd={handleAddBlacklistGenre} genreList={genreList} title="Genre Blacklist" />
                     </div>
                 </div>
                 <div ref={accessibilityRef} className="AccountSettings-Section">
