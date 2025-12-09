@@ -117,3 +117,7 @@ button:hover {
     background-color: #b91c1c;
     border-color: #b91c1c;
 }
+
+.profile-pic-input label {
+    background-color: var(--color-5);
+}

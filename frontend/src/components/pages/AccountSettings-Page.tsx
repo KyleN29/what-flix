@@ -1,13 +1,13 @@
 import "./AccountSettings-Page.css";
 import "./Accessibility.css";
 import NavigationSidebar from "../SettingsNavigationSidebar";
-import { Settings, Sliders, Accessibility, X, Minus } from "lucide-react";
+import { Settings, Sliders, Accessibility, X, Minus, Plus } from "lucide-react";
 import UserService, { type UserData } from "../../services/UserService";
 import { type GenreRank } from "../../services/UserService";
 import { useState, useEffect, useRef } from "react";
 import GenreService, {type Genre} from "../../services/GenreService";
 
-function ButtonBox({ items, onRemove, onAdd, title, genreList }) {
+function ButtonBox({ items, onRemove, onAdd, title, genreList, excludeGenres = [] }) {
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -33,7 +33,10 @@ function ButtonBox({ items, onRemove, onAdd, title, genreList }) {
 
   const getAvailableGenres = () => {
     const selectedGenreNames = items.map(item => item.name);
-    return genreList.filter(genre => !selectedGenreNames.includes(genre.name));
+    const excludedNames = excludeGenres.map(item => item.name);
+    return genreList.filter(
+      genre => !selectedGenreNames.includes(genre.name) && !excludedNames.includes(genre.name)
+    );
   };
 
   const handleSelectGenre = (genre: any) => {
@@ -218,16 +221,6 @@ function AccountSettings() {
         },
     ];
 
-    // dummy data for debugging //////////////////
-
-    const [genreBlacklist, setGenreBlacklist] = useState([
-        { rank: 1, name: "Action" },
-        { rank: 2, name: "Comedy" },
-        { rank: 3, name: "Adventure"}
-    ]);
-
-    //////////////////////////////////////////////
-
     const [userData, setUserData] = useState<UserData | null>(null);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
@@ -296,15 +289,44 @@ function AccountSettings() {
         }
     };
 
+    const [genreBlacklist, setGenreBlacklist] = useState<GenreRank[]>([]);
+    useEffect(() => {
+        async function fetchUserBlacklist() {
+            try {
+                const data = await UserService.getUserGenreBlacklist();
+                setGenreBlacklist(data);
+            } catch (err) {
+                setError('Failed to load genre blacklist');
+                console.error(err);
+            }
+        }
+        fetchUserBlacklist();
+    }, []);
+
     const handleAddBlacklistGenre = async (genre: any) => {
-        const updatedBlacklist = [...genreBlacklist, { rank: genreBlacklist.length + 1, name: genre.name }];
-        setGenreBlacklist(updatedBlacklist);
-        // todo: UPDATE user blacklist
+        try {
+            const updatedBlacklist = [...genreBlacklist, { rank: genreBlacklist.length + 1, name: genre.name }];
+            setGenreBlacklist(updatedBlacklist);
+            await UserService.updateGenreBlacklist(updatedBlacklist);
+        } catch (err) {
+            setError('Failed to add genre to blacklist');
+            console.error(err);
+        }
     }
 
-    const handleRemoveBlacklistGenre = (genre: any) => {
-        setGenreBlacklist(genreBlacklist.filter(g => g.rank !== genre.rank));
-        // todo: UPDATE user genre blacklist
+    const handleRemoveBlacklistGenre = async (genre: any) => {
+        const updatedBlacklist = genreBlacklist.filter(g => g.rank !== genre.rank);
+        const previousBlacklist = genreBlacklist;
+        
+        setGenreBlacklist(updatedBlacklist);
+        
+        try {
+            await UserService.updateGenreBlacklist(updatedBlacklist);
+        } catch (err) {
+            console.error('Error updating blacklist:', err);
+            setGenreBlacklist(previousBlacklist);
+            setError('Failed to remove genre from blacklist. Please try again.');
+        }
     };
 
     const [emailCurrentPassword, setEmailCurrentPassword] = useState('');
@@ -359,11 +381,28 @@ function AccountSettings() {
         </div>
     );
 
-    //const { data: userGenreList, isLoading, isError } = useQuery<GenreRank[]>({
-    //    queryKey: ['getUser', userId],
-    //    queryFn: () => UserService.getUserGenreList(),
-    //    enabled: !!userId, 
-    //});
+    const [profilePicName, setProfilePicName] = useState<string | null>(null);
+
+    const handleProfilePicChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setProfilePicName(file.name);
+
+        try {
+            // Convert file to base64
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const base64String = event.target?.result as string;
+                await UserService.updateProfilePicture(base64String);
+                setError(null);
+            };
+            reader.readAsDataURL(file);
+        } catch (err) {
+            setError('Failed to upload profile picture');
+            console.error(err);
+        }
+    };
 
     const generalSettings = (
         <div className="flex flex-col gap-4">
@@ -373,7 +412,21 @@ function AccountSettings() {
                     <label>Profile Picture</label>
                 </div>
                 <div className="flex items-center justify-start">
-                    <input type="file" />
+                    <div className="profile-pic-input relative flex items-center gap-3">
+                        <input
+                            type="file"
+                            id="profile-pic-upload"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleProfilePicChange}
+                        />
+                        <label htmlFor="profile-pic-upload" className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-300 cursor-pointer hover:bg-gray-400 transition-colors">
+                            <Plus size={28} />
+                        </label>
+                        {profilePicName && (
+                            <span className="ml-2 text-sm text-gray-200">{profilePicName}</span>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -463,10 +516,23 @@ function AccountSettings() {
                     <h1>Preferences</h1>
                     <hr className="w-full border-t border-gray-300" />
                     <div ref={favoriteGenresRef} className="buttonBoxContainer">
-                        <ButtonBox items={genres} onRemove={handleRemoveGenre} onAdd={handleAddGenre} genreList={genreList} title="Favorite Genres" />
+                        <ButtonBox
+                          items={genres}
+                          onRemove={handleRemoveGenre}
+                          onAdd={handleAddGenre}
+                          genreList={genreList}
+                          title="Favorite Genres"
+                        />
                     </div>
                     <div ref={genreBlacklistRef} className="buttonBoxContainer">
-                        <ButtonBox items={genreBlacklist} onRemove={handleRemoveBlacklistGenre} onAdd={handleAddBlacklistGenre} genreList={genreList} title="Genre Blacklist" />
+                        <ButtonBox
+                          items={genreBlacklist}
+                          onRemove={handleRemoveBlacklistGenre}
+                          onAdd={handleAddBlacklistGenre}
+                          genreList={genreList}
+                          excludeGenres={genres}
+                          title="Genre Blacklist"
+                        />
                     </div>
                 </div>
                 <div ref={accessibilityRef} className="AccountSettings-Section">

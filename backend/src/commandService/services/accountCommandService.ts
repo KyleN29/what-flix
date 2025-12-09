@@ -11,6 +11,8 @@ import UserAuthWrite from '../models/UserAuthWrite.js';
 import { v4 as uuidv4 } from 'uuid'
 import GenrePreferencesWrite from '../models/GenrePreferencesWrite.js';
 import PeoplePreferencesWrite from '../models/PeoplePreferencesWrite.js';
+import GenreBlacklistWrite from '../models/GenreBlacklistWrite.js';
+import ProfilePictureWrite from '../models/ProfilePictureWrite.js';
 
 
 class AccountCommandService {
@@ -74,6 +76,24 @@ class AccountCommandService {
     });
 
     return prefs;
+  }
+
+  async updateGenreBlacklist(userId: string, genres: any) {
+    const dto = {
+      user_id: userId,
+      blacklisted_genres: genres,
+    }
+    const blacklist = await GenreBlacklistWrite.findOneAndUpdate({ user_id: userId }, dto, {
+      new: true,
+      upsert: true
+    });
+
+    await eventBus.publish('GenreBlacklistUpdated', {
+      user_id: userId,
+      blacklist: blacklist
+    });
+
+    return blacklist;
   }
 
   async login(email: string, password: string) {
@@ -172,6 +192,21 @@ class AccountCommandService {
     }
 
     return { message: 'Movie removed from watch later list' };
+  }
+
+  async updateProfilePicture(userId: string, pictureData: any) {
+    const result = await ProfilePictureWrite.findOneAndUpdate(
+      { user_id: userId },
+      { user_id: userId, profile_pic_url: pictureData, uploaded_at: Date.now() },
+      { new: true, upsert: true }
+    );
+
+    await eventBus.publish('ProfilePictureUpdated', {
+      user_id: userId,
+      pictureData: result.profile_pic_url
+    });
+
+    return result;
   }
 }
 

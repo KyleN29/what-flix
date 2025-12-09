@@ -51,6 +51,26 @@ router.put(
   }
 );
 
+router.put(
+  '/genre_blacklist',
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const userId = req.user.user_id;
+    const genres = req.body;
+
+    if (!Array.isArray(genres)) {
+      return res.status(400).json({ error: 'Body must be an array of genres' });
+    }
+
+    const blacklist = await accountCommandService.updateGenreBlacklist(
+      userId,
+      genres
+    );
+
+    res.json({ status: 'success' });
+  }
+);
+
 router.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -149,5 +169,28 @@ router.post('/:id/remove_watch_later', async (req: Request, res: Response) => {
     return res.status(err.status || 500).json({ error: err.message });
   }
 });
+
+router.put(
+  '/profile_picture',
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const userId = req.user.user_id;
+    const { profile_pic_url } = req.body;
+
+    if (!profile_pic_url) {
+      return res.status(400).json({ error: 'profile_pic_url is required' });
+    }
+
+    try {
+      const result = await accountCommandService.updateProfilePicture(
+        userId,
+        profile_pic_url
+      );
+      return res.json({ status: 'success', profile_pic_url: result.profile_pic_url });
+    } catch (err: any) {
+      return res.status(err.status || 500).json({ error: err.message });
+    }
+  }
+);
 
 export default router;

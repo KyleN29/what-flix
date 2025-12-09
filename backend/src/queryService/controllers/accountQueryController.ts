@@ -48,4 +48,24 @@ router.get('/movie_rating/:movie_id', authMiddleware, async (req: Request, res: 
   res.json(movieRating);
 });
 
+router.get('/genre_blacklist', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.user_id;
+    const blacklist = await accountQueryService.getGenreBlacklist(userId);
+    res.json(blacklist?.blacklisted_genres || []);
+  } catch (err: any) {
+    return res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
+router.get('/profile_picture', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.user_id;
+    const profilePic = await accountQueryService.getProfilePicture(userId);
+    res.json(profilePic?.profile_pic_url || null);
+  } catch (err: any) {
+    return res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
 export default router;

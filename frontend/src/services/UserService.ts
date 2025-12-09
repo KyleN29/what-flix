@@ -47,6 +47,24 @@ class UserService {
     const response = await this.axiosInstance.get('/user/', AuthService.getAuthConfig());
     return response.data;
   }
+
+  static async getUserGenreBlacklist(): Promise<GenreRank[]> {
+    const response = await this.axiosInstance.get('/user/genre_blacklist', AuthService.getAuthConfig());
+    return response.data
+  }
+
+  static async updateGenreBlacklist(genres: GenreRank[]) {
+    return this.axiosInstance.put("/user/genre_blacklist", genres, AuthService.getAuthConfig());
+  }
+
+  static async updateProfilePicture(profile_pic_url: string) {
+    return this.axiosInstance.put("/user/profile_picture", { profile_pic_url }, AuthService.getAuthConfig());
+  }
+
+  static async getProfilePicture(): Promise<string | null> {
+    const response = await this.axiosInstance.get('/user/profile_picture', AuthService.getAuthConfig());
+    return response.data;
+  }
 }
 
 export default UserService

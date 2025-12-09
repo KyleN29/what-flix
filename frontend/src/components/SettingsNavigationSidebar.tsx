@@ -1,6 +1,7 @@
 import { useState, useEffect, type RefObject } from "react";
 import "./SettingsNavigationSidebar.css"
 import type { UserData } from "../services/UserService";
+import UserService from "../services/UserService";
 
 type setting = {
     name: string,
@@ -23,6 +24,7 @@ interface props {
 function NavigationSidebar({ sections, user }: props) {
     const [activeSection, setActiveSection] = useState(0);
     const [activeSetting, setActiveSetting] = useState<number | null>(null);
+    const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -53,6 +55,18 @@ function NavigationSidebar({ sections, user }: props) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [sections]);
 
+    useEffect(() => {
+        async function fetchProfilePic() {
+            try {
+                const pic = await UserService.getProfilePicture();
+                setProfilePicUrl(pic);
+            } catch (err) {
+                console.error('Failed to load profile picture:', err);
+            }
+        }
+        fetchProfilePic();
+    }, []);
+
     const scrollToSection = (index: number) => {
         sections[index].ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -67,7 +81,7 @@ function NavigationSidebar({ sections, user }: props) {
     const heading = (
         <div className='nav-sidebar-heading flex items-center gap-4'>
             <img 
-                src="vite.svg" 
+                src={profilePicUrl || "vite.svg"}
                 alt="Profile" 
                 className="w-12 h-12 rounded-full object-cover"
             />
