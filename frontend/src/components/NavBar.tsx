@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import './NavBar.css';
 import './variables.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,32 +9,36 @@ function NavBar() {
   const [pageY, setPageY] = useState(0);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+
+  // Track scroll position for visual adjustments
   const handleScroll = () => {
     setPageY(window.pageYOffset);
   };
 
+  // Attach and clean up scroll listener
   useEffect(() => {
-    // When component mounts, add event listener
     window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // When component unmounts, remove event listener
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
+  // Determine when navbar should shrink
   const passedScrollThreshold = () => {
-    return pageY > 30 * 16; // This 16 should be equal to an em, not really sure how to find that though
+    return pageY > 30 * 16; // This 16 should be equal to an em
   };
 
+  // Handle search submission
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim() !== '') navigate(`/search?q=${search.trim()}`);
   };
 
   return (
-    <div className={'nav-bar' + (passedScrollThreshold() ? ' minimized' : '')}
-    onClick={() => setPageY(0)}>
+    <div
+      className={'nav-bar' + (passedScrollThreshold() ? ' minimized' : '')}
+      onClick={() => setPageY(0)}
+    >
       <Link to="/" className="logo">
         {'W'}
         <span className="expanding">hat</span>

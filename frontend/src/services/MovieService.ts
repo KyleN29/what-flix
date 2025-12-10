@@ -39,6 +39,7 @@ export interface spoken_language {
   iso_639_1: string;
   name: string;
 }
+
 export interface MovieDetail {
   adult: boolean;
   backdrop_path: string;
@@ -86,15 +87,18 @@ export interface Trailer {
   published_at: string;
   id: string;
 }
+
 export interface TrailerResponse {
   id: number;
   results: Trailer[];
 }
+
 class MovieService {
   static axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL
   });
 
+  // Fetch popular movies for a given page
   static async getPopularMovies(page = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
@@ -102,13 +106,15 @@ class MovieService {
     return response.data;
   }
 
+  // Fetch detailed information for a single movie
   static async getMovieDetail(movieId: string): Promise<MovieDetail> {
-    const response = await this.axiosInstance.get(`/movie/detail`, {
+    const response = await this.axiosInstance.get('/movie/detail', {
       params: { movieId }
     });
     return response.data;
   }
 
+  // Fetch trailer information for a movie
   static async getMovieTrailer(movieId: string): Promise<Trailer> {
     const response = await this.axiosInstance.get('/movie/trailer', {
       params: { movieId }
@@ -116,6 +122,7 @@ class MovieService {
     return response.data;
   }
 
+  // Fetch credits (cast + crew)
   static async getMovieCredits(movieId: number) {
     const response = await this.axiosInstance.get('/movie/credits', {
       params: { movieId }
@@ -123,6 +130,7 @@ class MovieService {
     return response.data;
   }
 
+  // Search for movies across N pages
   static async searchMovies(query: string, numPages = 1): Promise<Movie[]> {
     const response = await this.axiosInstance.get('/movie/search', {
       params: { query, numPages }
@@ -130,6 +138,7 @@ class MovieService {
     return response.data;
   }
 
+  // Discover movies using arbitrary filter parameters
   static async discoverMovies(params: {
     with_genres?: number | string;
     sort_by?: string;

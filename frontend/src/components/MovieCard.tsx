@@ -8,19 +8,20 @@ interface Props {
 }
 
 function MovieCard({ movie, aspectRatio = 3 / 4.2 }: Props) {
+  // Build poster URL
+  const posterUrl = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
+
   return (
     <Link to={`/movie/${movie.id}`} className="movie-card">
       <div className="movie-card-inner" style={{ aspectRatio }}>
-        <img
-          src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
-          alt={movie.title}
-          className="movie-card-img"
-        />
+        <img src={posterUrl} alt={movie.title} className="movie-card-img" />
+
         <div className="hover-popup">
           <p>
             <b>
               {movie.title} ({movie.release_date.substring(0, 4)})
             </b>
+
             <div className="watch-later" title="Add to Watch Later">
               <b>+</b>
             </div>
