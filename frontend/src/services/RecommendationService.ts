@@ -2,15 +2,22 @@ import axios from 'axios';
 import UserService, { type GenreRank, type Person } from './UserService';
 import { type Movie } from './MovieService';
 import MovieService from './MovieService';
-
+import { GenreScoringStrategy } from '../strategies/GenreScoringStrategy';
+import { PeopleScoringStrategy } from '../strategies/PeopleScoringStrategy';
+import type { ScoreContext, ScoringStrategy } from '../strategies/ScoringStrategy';
 export interface MovieScore extends Movie {
   score: number;
 }
+
 
 class RecommendationService {
   static axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL
   });
+  static scoringStrategies: ScoringStrategy[] = [
+    new GenreScoringStrategy(),
+    new PeopleScoringStrategy()
+]
 
   static async getGeneralRecommendations() {
   const userGenreList: GenreRank[] = await UserService.getUserGenreList();
@@ -44,8 +51,18 @@ class RecommendationService {
     // Attach people to the movie object
     (movie as any).people = people;
 
+    // Create scoring context
+    const context: ScoreContext = {
+      movie: movie,
+      userGenres: userGenreList,
+      userPeople: userPeopleList
+    }
+
     // Compute the score
-    const score = await this.scoreMovie(movie, userGenreList, userPeopleList);
+    var score = 0
+    for (const strategy of this.scoringStrategies) {
+      score += strategy.score(context);
+    }
 
     // Add to final list
     scoredMovies.push({ ...movie, score });
