@@ -94,8 +94,4 @@ class UserService {
   }
 }
 
-<<<<<<< HEAD
-export default UserService
-=======
 export default UserService;
->>>>>>> origin/main
