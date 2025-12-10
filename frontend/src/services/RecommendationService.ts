@@ -4,11 +4,13 @@ import { type Movie } from './MovieService';
 import MovieService from './MovieService';
 import { GenreScoringStrategy } from '../strategies/GenreScoringStrategy';
 import { PeopleScoringStrategy } from '../strategies/PeopleScoringStrategy';
-import type { ScoreContext, ScoringStrategy } from '../strategies/ScoringStrategy';
+import type {
+  ScoreContext,
+  ScoringStrategy
+} from '../strategies/ScoringStrategy';
 export interface MovieScore extends Movie {
   score: number;
 }
-
 
 class RecommendationService {
   static axiosInstance = axios.create({
@@ -17,62 +19,62 @@ class RecommendationService {
   static scoringStrategies: ScoringStrategy[] = [
     new GenreScoringStrategy(),
     new PeopleScoringStrategy()
-]
+  ];
 
   static async getGeneralRecommendations() {
-  const userGenreList: GenreRank[] = await UserService.getUserGenreList();
-  const userPeopleList: Person[] = await UserService.getLikedPeople();
+    const userGenreList: GenreRank[] = await UserService.getUserGenreList();
+    const userPeopleList: Person[] = await UserService.getLikedPeople();
 
-  const numPages = 10;
+    const numPages = 10;
 
-  const movies: Movie[] = [];
-  for (let i = 0; i < numPages; i++) {
-    const results = await MovieService.discoverMovies({
-      sort_by: "popularity.desc",
-      page: i + 1,
-      include_adult: false,
-      certification_country: "US",
-      "certification.gte": "G",
-      "certification.lte": "R"
-    });
-    movies.push(...results);
-  }
-
-  // Fetch credits for each movie and score them
-  const scoredMovies: MovieScore[] = [];
-
-  for (const movie of movies) {
-    // Fetch cast + crew
-    const credits = await MovieService.getMovieCredits(movie.id);
-
-    // Combine cast and crew into a single list
-    const people = [...(credits.cast ?? []), ...(credits.crew ?? [])];
-
-    // Attach people to the movie object
-    (movie as any).people = people;
-
-    // Create scoring context
-    const context: ScoreContext = {
-      movie: movie,
-      userGenres: userGenreList,
-      userPeople: userPeopleList
+    const movies: Movie[] = [];
+    for (let i = 0; i < numPages; i++) {
+      const results = await MovieService.discoverMovies({
+        sort_by: 'popularity.desc',
+        page: i + 1,
+        include_adult: false,
+        certification_country: 'US',
+        'certification.gte': 'G',
+        'certification.lte': 'R'
+      });
+      movies.push(...results);
     }
 
-    // Compute the score
-    var score = 0
-    for (const strategy of this.scoringStrategies) {
-      score += strategy.score(context);
+    // Fetch credits for each movie and score them
+    const scoredMovies: MovieScore[] = [];
+
+    for (const movie of movies) {
+      // Fetch cast + crew
+      const credits = await MovieService.getMovieCredits(movie.id);
+
+      // Combine cast and crew into a single list
+      const people = [...(credits.cast ?? []), ...(credits.crew ?? [])];
+
+      // Attach people to the movie object
+      (movie as any).people = people;
+
+      // Create scoring context
+      const context: ScoreContext = {
+        movie: movie,
+        userGenres: userGenreList,
+        userPeople: userPeopleList
+      };
+
+      // Compute the score
+      var score = 0;
+      for (const strategy of this.scoringStrategies) {
+        score += strategy.score(context);
+      }
+
+      // Add to final list
+      scoredMovies.push({ ...movie, score });
     }
 
-    // Add to final list
-    scoredMovies.push({ ...movie, score });
+    // Sort highest score
+    scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
+
+    return scoredMovies.slice(0, 30);
   }
-
-  // Sort highest score
-  scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
-
-  return scoredMovies.slice(0, 30);
-}
 
   static async getLesserKnownRecommendations() {
     const userGenreList = await UserService.getUserGenreList();
@@ -87,13 +89,13 @@ class RecommendationService {
       for (let page = 1; page <= pagesPerGenre; page++) {
         const results = await MovieService.discoverMovies({
           with_genres: genre.id,
-          "vote_count.gte": 50,
-          "vote_count.lte": 800,
-          certification_country: "US",
-          "certification.gte": "G",
-          "certification.lte": "R",
-          "popularity.lte": 50,
-          "primary_release_date.lte": "2024-12-31",
+          'vote_count.gte': 50,
+          'vote_count.lte': 800,
+          certification_country: 'US',
+          'certification.gte': 'G',
+          'certification.lte': 'R',
+          'popularity.lte': 50,
+          'primary_release_date.lte': '2024-12-31',
           page
         });
 
@@ -110,47 +112,29 @@ class RecommendationService {
     const scoredMovies: MovieScore[] = [];
     for (const movie of uniqueMovies) {
       const credits = await MovieService.getMovieCredits(movie.id);
+
       const cast = credits.cast ?? [];
       const crew = credits.crew ?? [];
+
       const people = [...cast, ...crew];
       (movie as any).people = people;
+      // Create scoring context
+      const context: ScoreContext = {
+        movie: movie,
+        userGenres: userGenreList,
+        userPeople: userPeopleList
+      };
+      var score = 0;
+      for (const strategy of this.scoringStrategies) {
+        score += strategy.score(context);
+      }
 
-      const score = await this.scoreMovie(movie, userGenreList, userPeopleList);
       scoredMovies.push({ ...movie, score });
     }
 
     scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
 
-    return scoredMovies.slice(0, 30);;
-  }
-
-  static async scoreMovie(
-    movie: any,
-    userGenreList: GenreRank[],
-    userPeopleList: Person[]
-  ) {
-    let score = 0;
-    const maxRank = userGenreList.length; // e.g., 1–10
-
-    for (const movieGenreId of movie.genre_ids ?? []) {
-      const match = userGenreList.find((g) => g.id === movieGenreId);
-      if (match) {
-        // Higher-ranked genres get more points
-        const genreScore = (maxRank - match.rank + 1) * 10;
-        score += genreScore;
-      }
-    }
-
-    const moviePeople = movie.people ?? [];
-
-    for (const person of moviePeople) {
-      if (userPeopleList.find((p) => p.person_id === person.id)) {
-        score += 25;
-      }
-    }
-
-    return score;
+    return scoredMovies.slice(0, 30);
   }
 }
-
 export default RecommendationService;
