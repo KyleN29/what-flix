@@ -7,10 +7,10 @@ import movieQueryService, {
 
 const router = Router();
 
+// Get popular movies
 router.get('/popular', async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
-
     const data: Movie[] = await movieQueryService.getPopularMovies(page);
     res.json(data);
   } catch (error) {
@@ -18,12 +18,14 @@ router.get('/popular', async (req, res) => {
   }
 });
 
+// Get movie details
 router.get('/detail', async (req, res) => {
   try {
     const movieId = req.query.movieId as string;
     if (!movieId) {
       return res.status(400).json({ message: 'Movie ID is required' });
     }
+
     const data: MovieDetail = await movieQueryService.getMovieDetail(movieId);
     res.json(data);
   } catch (error) {
@@ -31,6 +33,7 @@ router.get('/detail', async (req, res) => {
   }
 });
 
+// Get best available trailer
 router.get('/trailer', async (req, res) => {
   try {
     const movieId = req.query.movieId as string;
@@ -40,32 +43,31 @@ router.get('/trailer', async (req, res) => {
 
     const data: Trailer[] = await movieQueryService.getMovieTrailers(movieId);
 
-    // Find official YouTube trailer first
     const officialTrailer = data.find(
-      (trailer) => trailer.site === 'YouTube' && trailer.official && trailer.type == "Trailer"
+      (trailer) =>
+        trailer.site === 'YouTube' &&
+        trailer.official &&
+        trailer.type == 'Trailer'
     );
-
     if (officialTrailer) {
       return res.json(officialTrailer);
     }
 
-    // If no official trailer, get the last YouTube trailer
     const youtubeTrailers = data.filter(
       (trailer) => trailer.site === 'YouTube'
     );
-
     if (youtubeTrailers.length > 0) {
       const lastTrailer = youtubeTrailers[youtubeTrailers.length - 1];
       return res.json(lastTrailer);
     }
 
-    // No YouTube trailers at all
     return res.status(404).json({ message: 'No YouTube trailer found' });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movie trailer' });
   }
 });
 
+// Search movies
 router.get('/search', async (req, res) => {
   try {
     const query = req.query.query as string;
@@ -82,17 +84,17 @@ router.get('/search', async (req, res) => {
   }
 });
 
-
+// Get movie credits
 router.get('/credits', async (req, res) => {
   try {
     const movieId = req.query.movieId as string;
-
-  if (!movieId) {
-      return res.status(400).json({ error: 'movieId query parameter is required' });
+    if (!movieId) {
+      return res
+        .status(400)
+        .json({ error: 'movieId query parameter is required' });
     }
 
     const credits = await movieQueryService.getMovieCredits(movieId);
-
     return res.status(200).json(credits);
   } catch (error: any) {
     console.error('Error fetching movie credits:', error);
@@ -100,18 +102,16 @@ router.get('/credits', async (req, res) => {
   }
 });
 
+// Get discovered movies
 router.get('/discover', async (req, res) => {
   try {
     const params = { ...req.query };
-
     const data = await movieQueryService.discoverMovies(params);
-
     return res.json(data);
   } catch (error) {
-    console.error("Error fetching discovered movies:", error);
-    return res.status(500).json({ message: "Error fetching discover movies" });
+    console.error('Error fetching discovered movies:', error);
+    return res.status(500).json({ message: 'Error fetching discover movies' });
   }
 });
-
 
 export default router;

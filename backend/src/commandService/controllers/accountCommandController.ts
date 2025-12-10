@@ -5,12 +5,13 @@ import { authMiddleware } from '../../middleware/authMiddleware.js';
 
 const router = Router();
 
+// Create user
 router.post('/', async (req: Request, res: Response) => {
   const user = await accountCommandService.createUser(req.body);
-
   res.json({ status: 'success' });
 });
 
+// Update genre ranking
 router.put(
   '/genre_ranking',
   authMiddleware,
@@ -22,15 +23,12 @@ router.put(
       return res.status(400).json({ error: 'Body must be an array of genres' });
     }
 
-    const prefs = await accountCommandService.updateGenrePreferences(
-      userId,
-      genres
-    );
-
+    await accountCommandService.updateGenrePreferences(userId, genres);
     res.json({ status: 'success' });
   }
 );
 
+// Update liked people
 router.put(
   '/liked_people',
   authMiddleware,
@@ -42,15 +40,12 @@ router.put(
       return res.status(400).json({ error: 'Body must be an array of people' });
     }
 
-    const prefs = await accountCommandService.updatePeoplePreferences(
-      userId,
-      people
-    );
-
+    await accountCommandService.updatePeoplePreferences(userId, people);
     res.json({ status: 'success' });
   }
 );
 
+// Login user
 router.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -62,8 +57,10 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 });
 
+// Register user
 router.post('/register', async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
+
   try {
     const result = await accountCommandService.register(
       email,
@@ -76,12 +73,10 @@ router.post('/register', async (req: Request, res: Response) => {
   }
 });
 
+// Add movie rating
 router.post('/:id/add_movie_rating', async (req: Request, res: Response) => {
   const { movie_id, rating } = req.body;
-  const dto = {
-    movie_id,
-    rating
-  };
+  const dto = { movie_id, rating };
 
   const user_id = req.params.id;
   if (user_id == undefined) {
@@ -96,6 +91,7 @@ router.post('/:id/add_movie_rating', async (req: Request, res: Response) => {
   }
 });
 
+// Remove movie rating
 router.post('/:id/remove_movie_rating', async (req: Request, res: Response) => {
   const user_id = req.params.id;
   if (user_id == undefined) {
@@ -115,6 +111,7 @@ router.post('/:id/remove_movie_rating', async (req: Request, res: Response) => {
   }
 });
 
+// Add watch later
 router.post('/:id/add_watch_later', async (req: Request, res: Response) => {
   const user_id = req.params.id;
   if (user_id == undefined) {
@@ -131,6 +128,7 @@ router.post('/:id/add_watch_later', async (req: Request, res: Response) => {
   }
 });
 
+// Remove watch later
 router.post('/:id/remove_watch_later', async (req: Request, res: Response) => {
   const user_id = req.params.id;
   if (user_id == undefined) {

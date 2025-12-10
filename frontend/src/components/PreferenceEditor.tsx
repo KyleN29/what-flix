@@ -10,31 +10,33 @@ function PreferenceEditor() {
   const [visible, setVisible] = useState(false);
   const [genres, setGenres] = useState<Genre[]>([]);
 
+  // Map tab labels to rendered content
   const tabContent: Record<string, any> = {
     Genres: (
       <div className="tab-body-container">
         <GenreRanking genres={genres}></GenreRanking>
       </div>
     ),
-
     People: (
       <div className="tab-body-container">
         <PersonSearch></PersonSearch>
       </div>
-    ),
+    )
   };
+
   const tabs = Object.keys(tabContent);
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
+  // Load genre list on mount
   useEffect(() => {
     async function loadGenres() {
       const genreList = await GenreService.getGenreList();
       setGenres(genreList);
     }
-
     loadGenres();
   }, []);
 
+  // Handle open/close transitions and body scroll lock
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -43,10 +45,13 @@ function PreferenceEditor() {
       document.body.style.overflow = '';
       setVisible(false);
     }
+
     return () => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  // Do not render when closed
   if (!isOpen) return;
 
   return (
@@ -55,6 +60,7 @@ function PreferenceEditor() {
         className={`preference-editor-backdrop ${visible ? 'animate-in' : ''}`}
         onClick={closeEditor}
       ></div>
+
       <div
         className={`preference-editor-container ${visible ? 'animate-in' : ''}`}
       >
@@ -73,6 +79,7 @@ function PreferenceEditor() {
               </div>
             ))}
           </div>
+
           <div className="preference-editor-body">{tabContent[activeTab]}</div>
         </div>
       </div>

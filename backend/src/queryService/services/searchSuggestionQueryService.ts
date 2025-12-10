@@ -13,9 +13,20 @@ export interface Person {
 }
 
 class SearchSuggestionQueryService {
+  // Base TMDB API information
   baseURL = 'https://api.themoviedb.org/3';
   apiKey = process.env.TMDB_API_KEY;
 
+  // CSV file path and parser config
+  private csvPath = 'src/data/people.csv';
+  private csvParseConfig = {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_column_count: true
+  };
+
+  // Axios instance configured with TMDB credentials
   axiosInstance = axios.create({
     baseURL: this.baseURL,
     params: {
@@ -23,20 +34,18 @@ class SearchSuggestionQueryService {
     }
   });
 
+  // Local in-memory list of actors loaded from CSV
   actors: Person[] = [];
 
   constructor() {
     this.loadActors();
   }
+
+  // Load actors from CSV into memory
   private async loadActors() {
-    const parser = fs.createReadStream('src/data/people.csv').pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        trim: true,
-        relax_column_count: true
-      })
-    );
+    const parser = fs
+      .createReadStream(this.csvPath)
+      .pipe(parse(this.csvParseConfig));
 
     try {
       for await (const row of parser) {
@@ -53,13 +62,14 @@ class SearchSuggestionQueryService {
     }
   }
 
+  // Search actor list by name prefix
   searchPeople(query: string): Person[] {
     if (!query) return [];
 
-    const q = query.toLowerCase();
+    const normalizedQuery = query.toLowerCase();
 
     return this.actors
-      .filter((a) => a.name.toLowerCase().startsWith(q))
+      .filter((a) => a.name.toLowerCase().startsWith(normalizedQuery))
       .slice(0, 20);
   }
 }

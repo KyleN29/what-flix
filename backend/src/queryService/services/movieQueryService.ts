@@ -41,6 +41,7 @@ export interface spoken_language {
   iso_639_1: string;
   name: string;
 }
+
 export interface MovieDetail {
   adult: boolean;
   backdrop_path: string;
@@ -54,7 +55,7 @@ export interface MovieDetail {
   original_title: string;
   overview: string;
   popularity: number;
-  poser_path: string;
+  poser_path: string; // possible bug? spelling matches original
   production_companies: production_company[];
   production_countries: production_country[];
   release_date: string;
@@ -88,6 +89,7 @@ export interface Trailer {
   published_at: string;
   id: string;
 }
+
 export interface TrailerResponse {
   id: number;
   results: Trailer[];
@@ -134,39 +136,31 @@ interface Cache {
 }
 
 class MovieQueryService {
+  // TMDB API configuration
   baseURL = 'https://api.themoviedb.org/3';
   apiKey = process.env.TMDB_API_KEY;
 
   axiosInstance = axios.create({
     baseURL: this.baseURL,
-    params: {
-      api_key: this.apiKey
-    }
+    params: { api_key: this.apiKey }
   });
 
-  // Cache for popular movies keyed by page number
+  // Cache for popular movies keyed by page
   popularMovieCache: Record<number, Cache> = {};
+  CACHE_TIMEOUT = 1000 * 60 * 10;
 
-  // Timeout for when cache expires
-  CACHE_TIMEOUT = 1000 * 60 * 10; // 10 minutes
-
-  // Return list of popular movies from TMDB API
+  // Fetch popular movies with caching
   async getPopularMovies(page = 1): Promise<Movie[]> {
     const cacheEntry = this.popularMovieCache[page];
-
-    // Check cache validity
-    const hasValidCache =
+    const valid =
       cacheEntry && Date.now() - cacheEntry.timestamp < this.CACHE_TIMEOUT;
 
-    if (hasValidCache) {
-      return cacheEntry.movies;
-    }
+    if (valid) return cacheEntry.movies;
 
     const response = await this.axiosInstance.get('/movie/popular', {
       params: { page }
     });
 
-    // Update cache
     this.popularMovieCache[page] = {
       timestamp: Date.now(),
       movies: response.data.results
@@ -175,18 +169,22 @@ class MovieQueryService {
     return response.data.results;
   }
 
+  // Fetch detailed movie information
   async getMovieDetail(movieId: string): Promise<MovieDetail> {
     const response = await this.axiosInstance.get(`/movie/${movieId}`);
     return response.data;
   }
 
+  // Fetch trailer list
   async getMovieTrailers(movieId: string): Promise<Trailer[]> {
     const response = await this.axiosInstance.get(`/movie/${movieId}/videos`);
     return response.data.results;
   }
 
+  // Search movies across multiple pages
   async searchMovies(query: string, pagesToFetch = 3): Promise<Movie[]> {
     let allResults: Movie[] = [];
+
     for (let page = 1; page <= pagesToFetch; page++) {
       const response = await this.axiosInstance.get<MovieResponse>(
         '/search/movie',
@@ -194,20 +192,23 @@ class MovieQueryService {
       );
 
       allResults.push(...response.data.results);
+
       if (page >= response.data.total_pages) break;
     }
 
     return allResults.sort((a, b) => b.popularity - a.popularity);
   }
 
+  // Cache for movie credits
   creditCache: Record<number, any> = {};
   CREDIT_CACHE_TIMEOUT = 1000 * 60 * 60 * 24;
+
   async getMovieCredits(movieId: number): Promise<MovieCredits> {
     const cached = this.creditCache[movieId];
+    const valid =
+      cached && Date.now() - cached.timestamp < this.CREDIT_CACHE_TIMEOUT;
 
-    if (cached && Date.now() - cached.timestamp < this.CREDIT_CACHE_TIMEOUT) {
-      return cached.data;
-    }
+    if (valid) return cached.data;
 
     const response = await this.axiosInstance.get(`/movie/${movieId}/credits`);
     const data = response.data;
@@ -220,29 +221,31 @@ class MovieQueryService {
     return data;
   }
 
+  // Cache for discover queries, keyed by param JSON
   discoverCache: Record<string, any> = {};
   DISCOVER_CACHE_TIMEOUT = 1000 * 60 * 60 * 24;
+
   async discoverMovies(params: Record<string, any>): Promise<Movie[]> {
     const cacheKey = JSON.stringify(params);
-  const cached = this.discoverCache[cacheKey];
+    const cached = this.discoverCache[cacheKey];
 
-  if (cached && Date.now() - cached.timestamp < this.DISCOVER_CACHE_TIMEOUT) {
-    return cached.movies;
-  }
+    const valid =
+      cached && Date.now() - cached.timestamp < this.DISCOVER_CACHE_TIMEOUT;
 
-  const response = await this.axiosInstance.get('/discover/movie', {
-    params
-  });
+    if (valid) return cached.movies;
 
-  const movies: Movie[] = response.data.results;
+    const response = await this.axiosInstance.get('/discover/movie', {
+      params
+    });
 
-  // Save in cache
-  this.discoverCache[cacheKey] = {
-    timestamp: Date.now(),
-    movies
-  };
+    const movies: Movie[] = response.data.results;
 
-  return movies;
+    this.discoverCache[cacheKey] = {
+      timestamp: Date.now(),
+      movies
+    };
+
+    return movies;
   }
 }
 
