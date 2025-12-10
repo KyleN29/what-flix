@@ -273,7 +273,7 @@ function AccountSettings() {
 
     const handleAddGenre = async (genre: any) => {
         try {
-            const updatedGenres = [...genres, { rank: genres.length + 1, name: genre.name }];
+            const updatedGenres = [...genres, { rank: genres.length + 1, name: genre.name, id: genre.id }];
             setUserGenres(updatedGenres);
             await UserService.updateGenres(updatedGenres);
         } catch (err) {
@@ -311,7 +311,7 @@ function AccountSettings() {
 
     const handleAddBlacklistGenre = async (genre: any) => {
         try {
-            const updatedBlacklist = [...genreBlacklist, { rank: genreBlacklist.length + 1, name: genre.name }];
+            const updatedBlacklist = [...genreBlacklist, { rank: genreBlacklist.length + 1, name: genre.name, id: genre.id }];
             setGenreBlacklist(updatedBlacklist);
             await UserService.updateGenreBlacklist(updatedBlacklist);
         } catch (err) {
