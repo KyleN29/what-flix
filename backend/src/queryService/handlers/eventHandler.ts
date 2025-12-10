@@ -3,6 +3,8 @@ import UserRead from '../models/UserRead.js';
 import UserAuthRead from '../models/UserAuthRead.js';
 import GenrePreferencesRead from '../models/GenrePreferencesRead.js';
 import PeoplePreferencesRead from '../models/PeoplePreferencesRead.js';
+import GenreBlacklistRead from '../models/GenreBlacklistRead.js';
+import ProfilePictureRead from '../models/ProfilePictureRead.js';
 
 const router = Router();
 
@@ -62,6 +64,47 @@ router.post('/', async (req: Request, res: Response) => {
           { upsert: true }
         );
 
+        break;
+      }
+      case 'GenreBlacklistUpdated': {
+        const { user_id, blacklist } = event.payload;
+
+        await GenreBlacklistRead.findOneAndUpdate(
+          { user_id },
+          { user_id, ...blacklist },
+          { upsert: true }
+        );
+
+        break;
+      }
+      case 'ProfilePictureUpdated': {
+        const { user_id, pictureData } = event.payload;
+
+        await ProfilePictureRead.findOneAndUpdate(
+          { user_id },
+          { user_id, profile_pic_url: pictureData },
+          { upsert: true }
+        );
+
+        break;
+      }
+      case 'UserEmailUpdated': {
+        const { user_id, email } = event.payload;
+
+        await UserRead.findOneAndUpdate(
+          { user_id },
+          { user_id, email }
+        );
+        break;
+      }
+      case 'UserPasswordUpdated': {
+        const { user_id, password_hash } = event.payload;
+        
+        await UserAuthRead.findOneAndUpdate(
+          { user_id },
+          { user_id, password_hash },
+          { upsert: true }
+        );
         break;
       }
     }

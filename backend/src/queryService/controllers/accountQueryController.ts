@@ -28,41 +28,50 @@ router.get(
   }
 );
 
-// Get user information
-router.get('/:id', async (req: Request, res: Response) => {
-  const user = await accountQueryService.getUser(req.params.id);
+router.get('/', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const user = await accountQueryService.getUser(userId);
   res.json(user);
 });
 
-// Get user's watch later list
-router.get('/:id/watch_later', async (req: Request, res: Response) => {
-  const watchList = await accountQueryService.getWatchList(req.params.id);
+router.get('/watch_later', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const watchList = await accountQueryService.getWatchList(userId);
   res.json(watchList);
 });
 
-// Get user's genre ranking for a specific genre
-router.get(
-  '/:id/genre_ranking/:genre_code',
-  async (req: Request, res: Response) => {
-    const preferences = await accountQueryService.getPreferences(req.params.id);
-    const genreCode = req.params.genre_code;
-    const genrePreference = preferences.find(
-      (pref) => pref.genre_code === genreCode
-    );
-    res.json(genrePreference);
-  }
-);
+router.get('/genre_ranking/:genre_code', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const preferences = await accountQueryService.getPreferences(userId);
+  const genreCode = req.params.genre_code;
+  const genrePreference = preferences.find(pref => pref.genre_code === genreCode);
+  res.json(genrePreference);
+});
 
-// Get user's movie rating for a specific movie
-router.get(
-  '/:id/movie_rating/:movie_id',
-  async (req: Request, res: Response) => {
-    const movieRating = await accountQueryService.getMovieRanking(
-      req.params.id,
-      req.params.movie_id
-    );
-    res.json(movieRating);
+router.get('/movie_rating/:movie_id', authMiddleware, async (req: Request, res: Response) => {
+  const userId = req.user.user_id;
+  const movieRating = await accountQueryService.getMovieRanking(userId, req.params.movie_id);
+  res.json(movieRating);
+});
+
+router.get('/genre_blacklist', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.user_id;
+    const blacklist = await accountQueryService.getGenreBlacklist(userId);
+    res.json(blacklist?.blacklisted_genres || []);
+  } catch (err: any) {
+    return res.status(err.status || 500).json({ error: err.message });
   }
-);
+});
+
+router.get('/profile_picture', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.user_id;
+    const profilePic = await accountQueryService.getProfilePicture(userId);
+    res.json(profilePic?.profile_pic_url || null);
+  } catch (err: any) {
+    return res.status(err.status || 500).json({ error: err.message });
+  }
+});
 
 export default router;

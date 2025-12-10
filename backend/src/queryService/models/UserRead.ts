@@ -11,7 +11,7 @@ const UserReadSchema = new Schema<IUserRead>({
   user_id: { type: String, required: true, index: true, unique: true },
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true },
-  created_at: {type: Date, required: true}
+  created_at: { type: Date, required: true }
 });
 
 export default model<IUserRead>("UserRead", UserReadSchema);

@@ -2,6 +2,15 @@ import axios from 'axios';
 import AuthService from './AuthService';
 
 export interface Person {
+    person_id: Number;
+    name: string;
+}
+
+export interface UserData {
+  user_id: string;
+  email: string;
+  username: string;
+  created_at: Date;
   person_id: number;
   name: string;
 }
@@ -51,6 +60,37 @@ class UserService {
       people,
       AuthService.getAuthConfig()
     );
+  }
+
+  static async getUserData(): Promise<UserData> {
+    const response = await this.axiosInstance.get('/user/', AuthService.getAuthConfig());
+    return response.data;
+  }
+
+  static async getUserGenreBlacklist(): Promise<GenreRank[]> {
+    const response = await this.axiosInstance.get('/user/genre_blacklist', AuthService.getAuthConfig());
+    return response.data
+  }
+
+  static async updateGenreBlacklist(genres: GenreRank[]) {
+    return this.axiosInstance.put("/user/genre_blacklist", genres, AuthService.getAuthConfig());
+  }
+
+  static async updateProfilePicture(profile_pic_url: string) {
+    return this.axiosInstance.put("/user/profile_picture", { profile_pic_url }, AuthService.getAuthConfig());
+  }
+
+  static async getProfilePicture(): Promise<string | null> {
+    const response = await this.axiosInstance.get('/user/profile_picture', AuthService.getAuthConfig());
+    return response.data;
+  }
+
+  static async updateEmail(newEmail: string) {
+    return this.axiosInstance.put("/user/update_email", { newEmail }, AuthService.getAuthConfig());
+  } 
+
+  static async updatePassword(currentPassword: string, newPassword: string) {
+    return this.axiosInstance.put("/user/update_password", { currentPassword, newPassword }, AuthService.getAuthConfig());
   }
 }
 

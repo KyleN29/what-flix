@@ -4,11 +4,12 @@ import WatchListRead from "../models/WatchListRead.js";
 import AccessibilityRead from "../models/UserAccessibilityRead.js";
 import MoviesSeenRead from "../models/UserMoviesSeenRead.js";
 import MovieRatingRead from "../models/MovieRatingRead.js";
+import GenreBlacklistRead from "../models/GenreBlacklistRead.js";
+import ProfilePictureRead from "../models/ProfilePictureRead.js";
 
 class AccountQueryService {
-  // Fetch user profile document
-  async getUser(id: string) {
-    return UserRead.findById(id);
+  async getUser(userId: string) {
+    return UserRead.findOne({ user_id: userId });
   }
 
   // Fetch user genre preferences
@@ -35,6 +36,15 @@ class AccountQueryService {
   async getMovieRanking(userId: string, movieId: number) {
     return MovieRatingRead.findOne({ userId, movieId });
   }
+
+  async getGenreBlacklist(userId: string) {
+    return GenreBlacklistRead.findOne({ user_id: userId });
+  }
+
+  async getProfilePicture(userId: string) {
+    return ProfilePictureRead.findOne({ user_id: userId });
+  }
+
 }
 
 const accountQueryService = new AccountQueryService();

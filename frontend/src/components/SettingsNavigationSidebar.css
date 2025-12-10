@@ -1,0 +1,47 @@
+
+.nav-sidebar-container {
+    padding: 2%;
+    margin-top: 4rem;
+    color: var(--white);
+}
+
+.nav-sidebar-item {
+    margin-left: 5%;
+    margin-top: 0.5rem;
+}
+
+.nav-sidebar-item h1 {
+    color: var(--white);
+    border-bottom-width: 2px;
+    padding: 5%;
+    padding-bottom: 1%;
+    margin-bottom: 1rem;
+}
+
+.nav-sidebar-item h2 {
+    color: var(--color-1);
+    border-bottom-width: 1px;
+    margin-left: 10%;
+    justify-content: center;
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.nav-sidebar-heading {
+    border-color: var(--white);
+    border-bottom-width: 3px;
+    padding-bottom: 1rem;
+}
+
+#logout-button {
+    border-width: 0;
+    border-color: red;
+    border-bottom-width: 1px;
+    border-radius: 0;
+    color: red;
+}
+
+#logout-button:hover {
+    background-color: darkred;
+    color: var(--white);
+}

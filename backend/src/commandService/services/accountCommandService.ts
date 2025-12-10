@@ -10,6 +10,8 @@ import UserAuthWrite from '../models/UserAuthWrite.js';
 import { v4 as uuidv4 } from 'uuid';
 import GenrePreferencesWrite from '../models/GenrePreferencesWrite.js';
 import PeoplePreferencesWrite from '../models/PeoplePreferencesWrite.js';
+import GenreBlacklistWrite from '../models/GenreBlacklistWrite.js';
+import ProfilePictureWrite from '../models/ProfilePictureWrite.js';
 
 class AccountCommandService {
   // Creates the user document and publishes the event
@@ -80,6 +82,24 @@ class AccountCommandService {
     });
 
     return prefs;
+  }
+
+  async updateGenreBlacklist(userId: string, genres: any) {
+    const dto = {
+      user_id: userId,
+      blacklisted_genres: genres,
+    }
+    const blacklist = await GenreBlacklistWrite.findOneAndUpdate({ user_id: userId }, dto, {
+      new: true,
+      upsert: true
+    });
+
+    await eventBus.publish('GenreBlacklistUpdated', {
+      user_id: userId,
+      blacklist: blacklist
+    });
+
+    return blacklist;
   }
 
   // Authenticates the user and returns a JWT access token
@@ -191,6 +211,68 @@ class AccountCommandService {
     }
 
     return { message: 'Movie removed from watch later list' };
+  }
+
+  async updateProfilePicture(userId: string, pictureData: any) {
+    const result = await ProfilePictureWrite.findOneAndUpdate(
+      { user_id: userId },
+      { user_id: userId, profile_pic_url: pictureData, uploaded_at: Date.now() },
+      { new: true, upsert: true }
+    );
+
+    await eventBus.publish('ProfilePictureUpdated', {
+      user_id: userId,
+      pictureData: result.profile_pic_url
+    });
+
+    return result;
+  }
+
+  async updateEmail(userId: string, newEmail: string) {
+    const user = await UserWrite.findOneAndUpdate(
+      { user_id: userId },
+      { email: newEmail },
+    );
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    await eventBus.publish('UserEmailUpdated', {
+      user_id: userId,
+      email: newEmail
+    });
+    return user;
+  }
+
+  async updatePassword(userId: string, currentPassword: string, newPassword: string) {
+    const userAuth = await UserAuthRead.findOne({ user_id: userId });
+    
+    if (!userAuth) {
+      throw new Error('User authentication record not found');
+    }
+
+    const isValidPassword = await comparePassword(currentPassword, userAuth.password_hash);
+    
+    if (!isValidPassword) {
+      throw { status: 401, message: 'Current password is incorrect' };
+    }
+
+    const hashedNewPassword = await hashPassword(newPassword);
+    
+    const result = await UserAuthWrite.findOneAndUpdate(
+      { user_id: userId },
+      { password_hash: hashedNewPassword },
+      { new: true }
+    );
+
+    await eventBus.publish('UserPasswordUpdated', {
+      user_id: userId,
+      password_hash: result.password_hash,
+      updated_at: Date.now()
+    });
+
+    return result;
   }
 }
 

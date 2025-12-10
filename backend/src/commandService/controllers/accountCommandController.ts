@@ -45,6 +45,26 @@ router.put(
   }
 );
 
+router.put(
+  '/genre_blacklist',
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const userId = req.user.user_id;
+    const genres = req.body;
+
+    if (!Array.isArray(genres)) {
+      return res.status(400).json({ error: 'Body must be an array of genres' });
+    }
+
+    const blacklist = await accountCommandService.updateGenreBlacklist(
+      userId,
+      genres
+    );
+
+    res.json({ status: 'success' });
+  }
+);
+
 // Login user
 router.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -147,5 +167,72 @@ router.post('/:id/remove_watch_later', async (req: Request, res: Response) => {
     return res.status(err.status || 500).json({ error: err.message });
   }
 });
+
+router.put(
+  '/profile_picture',
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const userId = req.user.user_id;
+    const { profile_pic_url } = req.body;
+
+    if (!profile_pic_url) {
+      return res.status(400).json({ error: 'profile_pic_url is required' });
+    }
+
+    try {
+      const result = await accountCommandService.updateProfilePicture(
+        userId,
+        profile_pic_url
+      );
+      return res.json({ status: 'success', profile_pic_url: result.profile_pic_url });
+    } catch (err: any) {
+      return res.status(err.status || 500).json({ error: err.message });
+    }
+  }
+);
+
+router.put(
+  '/update_email',
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const userId = req.user.user_id;
+    const { newEmail } = req.body;
+
+    if (!newEmail || typeof newEmail !== 'string') {
+      return res.status(400).json({ error: 'newEmail is required and must be a string' });
+    }
+
+    try {
+      const result = await accountCommandService.updateEmail(userId, newEmail);
+      return res.json({ status: 'success', email: result.email });
+    } catch (err: any) {
+      return res.status(err.status || 500).json({ error: err.message });
+    }
+  }
+);
+
+router.put(
+  '/update_password',
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const userId = req.user.user_id;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'currentPassword and newPassword are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    try {
+      await accountCommandService.updatePassword(userId, currentPassword, newPassword);
+      return res.json({ status: 'success', message: 'Password updated successfully' });
+    } catch (err: any) {
+      return res.status(err.status || 500).json({ error: err.message });
+    }
+  }
+);
 
 export default router;
