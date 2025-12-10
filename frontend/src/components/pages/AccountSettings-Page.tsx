@@ -7,14 +7,24 @@ import { type GenreRank } from "../../services/UserService";
 import { useState, useEffect, useRef } from "react";
 import GenreService, {type Genre} from "../../services/GenreService";
 
-function ButtonBox({ items, onRemove, onAdd, title, genreList, excludeGenres = [] }) {
+type ButtonBoxProps = {
+  items: GenreRank[];
+  onRemove: (item: GenreRank) => void;
+  onAdd: (item: Genre) => void;
+  title: string;
+  genreList: Genre[];
+  excludeGenres?: GenreRank[];
+};
+
+function ButtonBox({ items, onRemove, onAdd, title, genreList, excludeGenres = [] }: ButtonBoxProps) {
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setShowDropdown(false);
       }
     };
@@ -25,7 +35,7 @@ function ButtonBox({ items, onRemove, onAdd, title, genreList, excludeGenres = [
     }
   }, [showDropdown]);
 
-  const handleClick = (item: any) => {
+  const handleClick = (item: GenreRank) => {
     if (deleteMode) {
       onRemove(item);
     }
@@ -84,7 +94,7 @@ function ButtonBox({ items, onRemove, onAdd, title, genreList, excludeGenres = [
         </button>
       </div>
       <div className="flex flex-wrap gap-3">
-        {items.map((item: any) => (
+        {items.map((item: GenreRank) => (
           <button
             key={item.rank}
             onClick={() => handleClick(item)}
@@ -222,14 +232,12 @@ function AccountSettings() {
     ];
 
     const [userData, setUserData] = useState<UserData | null>(null);
-    const [error, setError] = useState<string | null>(null);
     useEffect(() => {
         async function fetchUserData() {
                 try {
                     const data = await UserService.getUserData();
                     setUserData(data);
                 } catch (err) {
-                    setError('Failed to load user data');
                     console.error(err);
                 }
             }
@@ -243,7 +251,6 @@ function AccountSettings() {
                 const data = await UserService.getUserGenreList();
                 setUserGenres(data);
             } catch (err) {
-                setError('Failed to load user genres');
                 console.error(err);
             }
         }
@@ -268,7 +275,6 @@ function AccountSettings() {
             setUserGenres(updatedGenres);
             await UserService.updateGenres(updatedGenres);
         } catch (err) {
-            setError('Failed to add genre');
             console.error(err);
         }
     }
@@ -285,7 +291,6 @@ function AccountSettings() {
         } catch (err) {
             console.error('Error updating genres:', err);
             setUserGenres(previousGenres); // Rollback on error
-            setError('Failed to update genres. Please try again.');
         }
     };
 
@@ -296,7 +301,6 @@ function AccountSettings() {
                 const data = await UserService.getUserGenreBlacklist();
                 setGenreBlacklist(data);
             } catch (err) {
-                setError('Failed to load genre blacklist');
                 console.error(err);
             }
         }
@@ -309,7 +313,6 @@ function AccountSettings() {
             setGenreBlacklist(updatedBlacklist);
             await UserService.updateGenreBlacklist(updatedBlacklist);
         } catch (err) {
-            setError('Failed to add genre to blacklist');
             console.error(err);
         }
     }
@@ -325,7 +328,6 @@ function AccountSettings() {
         } catch (err) {
             console.error('Error updating blacklist:', err);
             setGenreBlacklist(previousBlacklist);
-            setError('Failed to remove genre from blacklist. Please try again.');
         }
     };
 
@@ -333,9 +335,8 @@ function AccountSettings() {
     const [newEmail, setNewEmail] = useState('');
     const handleUpdateEmail = async () => {
         try {
-            // todo: authenticate user password and update email
-            console.log('Updating email:', { emailCurrentPassword, newEmail });
-            // await UserService.updateEmail(emailCurrentPassword, newEmail);
+            console.log('Updating email: ', { newEmail });
+            await UserService.updateEmail(newEmail);
             setEmailCurrentPassword('');
             setNewEmail('');
         } catch (error) {
@@ -347,9 +348,8 @@ function AccountSettings() {
     const [newPassword, setNewPassword] = useState('');
     const handleUpdatePassword = async () => {
         try {
-            // todo: update and authenticate user password
-            console.log('Updating password:', { passwordCurrentPassword, newPassword });
-            // await UserService.updatePassword(passwordCurrentPassword, newPassword);
+            await UserService.updatePassword(passwordCurrentPassword, newPassword);
+            console.log('Password updated successfully');
             setPasswordCurrentPassword('');
             setNewPassword('');
         } catch (error) {
@@ -395,11 +395,9 @@ function AccountSettings() {
             reader.onload = async (event) => {
                 const base64String = event.target?.result as string;
                 await UserService.updateProfilePicture(base64String);
-                setError(null);
             };
             reader.readAsDataURL(file);
         } catch (err) {
-            setError('Failed to upload profile picture');
             console.error(err);
         }
     };
@@ -517,7 +515,7 @@ function AccountSettings() {
                     <hr className="w-full border-t border-gray-300" />
                     <div ref={favoriteGenresRef} className="buttonBoxContainer">
                         <ButtonBox
-                          items={genres}
+                          items={genres as GenreRank[]}
                           onRemove={handleRemoveGenre}
                           onAdd={handleAddGenre}
                           genreList={genreList}
@@ -526,11 +524,11 @@ function AccountSettings() {
                     </div>
                     <div ref={genreBlacklistRef} className="buttonBoxContainer">
                         <ButtonBox
-                          items={genreBlacklist}
+                          items={genreBlacklist as GenreRank[]}
                           onRemove={handleRemoveBlacklistGenre}
                           onAdd={handleAddBlacklistGenre}
                           genreList={genreList}
-                          excludeGenres={genres}
+                          excludeGenres={genres as GenreRank[]}
                           title="Genre Blacklist"
                         />
                     </div>

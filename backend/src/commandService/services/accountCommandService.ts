@@ -208,6 +208,53 @@ class AccountCommandService {
 
     return result;
   }
+
+  async updateEmail(userId: string, newEmail: string) {
+    const user = await UserWrite.findOneAndUpdate(
+      { user_id: userId },
+      { email: newEmail },
+    );
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    await eventBus.publish('UserEmailUpdated', {
+      user_id: userId,
+      email: newEmail
+    });
+    return user;
+  }
+
+  async updatePassword(userId: string, currentPassword: string, newPassword: string) {
+    const userAuth = await UserAuthRead.findOne({ user_id: userId });
+    
+    if (!userAuth) {
+      throw new Error('User authentication record not found');
+    }
+
+    const isValidPassword = await comparePassword(currentPassword, userAuth.password_hash);
+    
+    if (!isValidPassword) {
+      throw { status: 401, message: 'Current password is incorrect' };
+    }
+
+    const hashedNewPassword = await hashPassword(newPassword);
+    
+    const result = await UserAuthWrite.findOneAndUpdate(
+      { user_id: userId },
+      { password_hash: hashedNewPassword },
+      { new: true }
+    );
+
+    await eventBus.publish('UserPasswordUpdated', {
+      user_id: userId,
+      password_hash: result.password_hash,
+      updated_at: Date.now()
+    });
+
+    return result;
+  }
 }
 
 const accountCommandService = new AccountCommandService();

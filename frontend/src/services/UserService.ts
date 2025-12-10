@@ -6,7 +6,7 @@ export interface Person {
     name: string;
 }
 export interface GenreRank {
-  rank: Number;
+  rank: number;
   name: string;
 }
 
@@ -64,6 +64,14 @@ class UserService {
   static async getProfilePicture(): Promise<string | null> {
     const response = await this.axiosInstance.get('/user/profile_picture', AuthService.getAuthConfig());
     return response.data;
+  }
+
+  static async updateEmail(newEmail: string) {
+    return this.axiosInstance.put("/user/update_email", { newEmail }, AuthService.getAuthConfig());
+  } 
+
+  static async updatePassword(currentPassword: string, newPassword: string) {
+    return this.axiosInstance.put("/user/update_password", { currentPassword, newPassword }, AuthService.getAuthConfig());
   }
 }
 

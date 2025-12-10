@@ -82,7 +82,25 @@ router.post('/', async (req: Request, res: Response) => {
 
         break;
       }
-      
+      case 'UserEmailUpdated': {
+        const { user_id, email } = event.payload;
+
+        await UserRead.findOneAndUpdate(
+          { user_id },
+          { user_id, email }
+        );
+        break;
+      }
+      case 'UserPasswordUpdated': {
+        const { user_id, password_hash } = event.payload;
+        
+        await UserAuthRead.findOneAndUpdate(
+          { user_id },
+          { user_id, password_hash },
+          { upsert: true }
+        );
+        break;
+      }
     }
 
     res.send({ status: 'ok' });
