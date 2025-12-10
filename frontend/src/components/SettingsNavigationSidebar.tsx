@@ -2,6 +2,7 @@ import { useState, useEffect, type RefObject } from "react";
 import "./SettingsNavigationSidebar.css"
 import type { UserData } from "../services/UserService";
 import UserService from "../services/UserService";
+import { useNavigate } from "react-router-dom";
 
 type setting = {
     name: string,
@@ -25,6 +26,7 @@ function NavigationSidebar({ sections, user }: props) {
     const [activeSection, setActiveSection] = useState(0);
     const [activeSetting, setActiveSetting] = useState<number | null>(null);
     const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -78,6 +80,11 @@ function NavigationSidebar({ sections, user }: props) {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        navigate('/');
+    };
+
     const heading = (
         <div className='nav-sidebar-heading flex items-center gap-4'>
             <img 
@@ -126,6 +133,13 @@ function NavigationSidebar({ sections, user }: props) {
                     </div>
                 );
             })}
+            <button 
+                onClick={handleLogout}
+                className="mt-auto mb-4 px-4 py-2 rounded transition-colors"
+                id="logout-button"
+            >
+                Logout
+            </button>
         </div>
     )
 }

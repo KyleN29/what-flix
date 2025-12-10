@@ -32,3 +32,16 @@
     border-bottom-width: 3px;
     padding-bottom: 1rem;
 }
+
+#logout-button {
+    border-width: 0;
+    border-color: red;
+    border-bottom-width: 1px;
+    border-radius: 0;
+    color: red;
+}
+
+#logout-button:hover {
+    background-color: darkred;
+    color: var(--white);
+}

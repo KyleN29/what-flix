@@ -239,6 +239,8 @@ function AccountSettings() {
                     setUserData(data);
                 } catch (err) {
                     console.error(err);
+                    console.log("unable to get user data, routing back to root");
+                    window.location.href = "/";
                 }
             }
             fetchUserData();
