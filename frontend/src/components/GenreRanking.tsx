@@ -7,40 +7,39 @@ import {
 } from '@hello-pangea/dnd';
 import './GenreRanking.css';
 import { type Genre } from '../services/GenreService';
-import UserService from '../services/UserService';
-interface AddedGenre {
-  rank: number;
-  name: string;
-}
+import UserService, { type GenreRank } from '../services/UserService';
 
 interface Props {
   genres: Genre[];
 }
 
 function GenreRanking(props: Props) {
-  // Controls visibility of the dropdown list of available genres
+  // Controls whether the genre dropdown is visible
   const [showingGenreOptions, setShowingGenreOptions] = useState(false);
 
-  // Ref for detecting clicks outside the genre options dropdown
+  // Tracks outside clicks for dropdown closure
   const genreOptionsRef = useRef<HTMLDivElement>(null);
 
-  // List of genres added and ranked by the user
-  const [genres, setGenres] = useState<AddedGenre[]>([]);
+  // User's ranked genres
+  const [genres, setGenres] = useState<GenreRank[]>([]);
 
-  // Controls visual of save button
+  // Controls visual state of save button
   const [saving, setSaving] = useState(false);
 
-
-  // Load user's current rankings from the database
+  // Load user's saved rankings on mount
   useEffect(() => {
     async function loadUserGenres() {
       try {
         const saved = await UserService.getUserGenreList();
+
         if (saved && saved.length > 0) {
-          // Ensure they have correct ranks assigned
           const ranked = saved
             .sort((a, b) => Number(a.rank) - Number(b.rank))
-            .map((g) => ({ name: g.name, rank: Number(g.rank) }));
+            .map((g) => ({
+              id: g.id,
+              name: g.name,
+              rank: Number(g.rank)
+            }));
 
           setGenres(ranked);
         }
@@ -82,11 +81,11 @@ function GenreRanking(props: Props) {
       if (exists) return prev;
 
       const nextRank = prev.length + 1;
-      return [...prev, { rank: nextRank, name: genre.name }];
+      return [...prev, { id: genre.id, rank: nextRank, name: genre.name }];
     });
   }
 
-  // Removes a genre and recalculates ranks
+  // Remove a genre and reassign ranks
   function removeGenre(genreName: string) {
     setGenres((prev) => {
       const filtered = prev.filter((g) => g.name !== genreName);
@@ -94,21 +93,20 @@ function GenreRanking(props: Props) {
     });
   }
 
-  // Updates rank numbers based on array order
-  function assignRanks(list: AddedGenre[]) {
+  // Reassign rank numbers based on array order
+  function assignRanks(list: GenreRank[]) {
     return list.map((item, index) => ({
       ...item,
       rank: index + 1
     }));
   }
 
-  // Handles drag-and-drop reordering
+  // Handle drag-and-drop reordering
   function onDragEnd(result: DropResult) {
     const { destination, source } = result;
 
     const noDestination = !destination;
     const unchanged = destination && destination.index === source.index;
-
     if (noDestination || unchanged) return;
 
     const items = Array.from(genres);
@@ -119,14 +117,12 @@ function GenreRanking(props: Props) {
     setGenres(ranked);
   }
 
+  // Save updated rankings
   async function savePreferences() {
     try {
       setSaving(true);
-
       await UserService.updateGenres(genres);
-
       setSaving(false);
-
     } catch (error) {
       setSaving(false);
       console.error('Error saving preferences:', error);
@@ -143,6 +139,7 @@ function GenreRanking(props: Props) {
         >
           {saving ? 'Saving...' : 'Save Preferences'}
         </button>
+
         <div className="genre-picker">
           <div
             className="genre-picker-button"
@@ -196,7 +193,9 @@ function GenreRanking(props: Props) {
                             : '#5c374c'
                         }}
                       >
-                        <span className="rank-badge">{genre.rank}</span>
+                        <span className="rank-badge">
+                          {genre.rank.toString()}
+                        </span>
 
                         <span className="genre-name">{genre.name}</span>
 

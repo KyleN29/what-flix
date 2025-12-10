@@ -10,6 +10,7 @@ export interface DomainEvent {
 class EventBus {
   constructor(private queryServiceUrl: string) {}
 
+  // Publishes a domain event to the query service
   async publish(type: string, payload: any): Promise<void> {
     const event: DomainEvent = { type, payload };
 
@@ -21,6 +22,8 @@ class EventBus {
   }
 }
 
+const eventBus = new EventBus(
+  (process.env.VITE_API_URL || process.env.PUBLIC_URL) as string
+);
 
-const eventBus = new EventBus((process.env.VITE_API_URL || process.env.PUBLIC_URL) as string);
 export default eventBus;

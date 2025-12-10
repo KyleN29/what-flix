@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import MovieService, { type Movie } from '../services/MovieService';
+import RecommendationService, {
+  type MovieScore
+} from '../services/RecommendationService.js';
 import CategorySlider from './CategorySlider';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
@@ -11,17 +14,31 @@ function Home() {
   const navigate = useNavigate();
   const { openEditor } = usePreferenceEditor();
   const { isLoggedIn } = useAuth();
+
+  // Fetch popular movies
   const { data: popularMovies } = useQuery<Movie[]>({
     queryKey: ['popularMovies'],
     queryFn: () => MovieService.getPopularMovies()
   });
 
+  // Fetch personalized recommendations
+  const { data: recommendedMovies } = useQuery<MovieScore[]>({
+    queryKey: ['recommendedMovies'],
+    queryFn: () => RecommendationService.getGeneralRecommendations()
+  });
+
+  // Fetch lesser-known recommendations
+  const { data: lesserKnownRecommendedMovies } = useQuery<MovieScore[]>({
+    queryKey: ['lesserKnownRecommendedMovies'],
+    queryFn: () => RecommendationService.getLesserKnownRecommendations()
+  });
+
   const topThree = popularMovies?.slice(0, 3) ?? [];
 
-  // Index of the hero movie currently shown
+  // Track index of the hero movie
   const [heroIndex, setHeroIndex] = useState(0);
 
-  // Auto-rotate every 5 seconds
+  // Auto-rotate hero section every 5 seconds
   useEffect(() => {
     if (topThree.length === 0) return;
 
@@ -106,10 +123,29 @@ function Home() {
         </div>
       )}
 
-      {popularMovies && (
-        <CategorySlider title="Popular Movies" movies={popularMovies} />
-      )}
-      {/* <p style={{ height: '50vh' }}>e</p> */}
+      <div>
+        {popularMovies && (
+          <CategorySlider title="Popular Movies" movies={popularMovies} />
+        )}
+      </div>
+
+      <div className="pt-4">
+        {recommendedMovies && (
+          <CategorySlider
+            title="Recommended Movies"
+            movies={recommendedMovies}
+          />
+        )}
+      </div>
+
+      <div className="pt-4">
+        {lesserKnownRecommendedMovies && (
+          <CategorySlider
+            title="Movies You Might Have Missed"
+            movies={lesserKnownRecommendedMovies}
+          />
+        )}
+      </div>
     </div>
   );
 }

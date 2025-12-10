@@ -5,42 +5,61 @@ export interface Person {
     person_id: Number;
     name: string;
 }
-export interface GenreRank {
-  rank: number;
-  name: string;
-}
 
 export interface UserData {
   user_id: string;
   email: string;
   username: string;
   created_at: Date;
+  person_id: number;
+  name: string;
+}
+
+export interface GenreRank {
+  rank: number;
+  id: number;
+  name: string;
 }
 
 class UserService {
   static axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
-  }); 
-  
+  });
 
-
+  // Fetch ranked genres for the user
   static async getUserGenreList(): Promise<GenreRank[]> {
-    const response = await this.axiosInstance.get('/user/genre_ranking', AuthService.getAuthConfig());
-    return response.data
+    const response = await this.axiosInstance.get(
+      '/user/genre_ranking',
+      AuthService.getAuthConfig()
+    );
+    return response.data;
   }
 
+  // Fetch liked people for the user
   static async getLikedPeople(): Promise<Person[]> {
-    const response = await this.axiosInstance.get('/user/liked_people', AuthService.getAuthConfig());
-    return response.data
+    const response = await this.axiosInstance.get(
+      '/user/liked_people',
+      AuthService.getAuthConfig()
+    );
+    return response.data;
   }
 
-
+  // Update genre rankings
   static async updateGenres(genres: GenreRank[]) {
-    return this.axiosInstance.put("/user/genre_ranking", genres, AuthService.getAuthConfig());
+    return this.axiosInstance.put(
+      '/user/genre_ranking',
+      genres,
+      AuthService.getAuthConfig()
+    );
   }
 
+  // Update liked people
   static async updateLikedPeople(people: Person[]) {
-    return this.axiosInstance.put("/user/liked_people", people, AuthService.getAuthConfig());
+    return this.axiosInstance.put(
+      '/user/liked_people',
+      people,
+      AuthService.getAuthConfig()
+    );
   }
 
   static async getUserData(): Promise<UserData> {
@@ -75,4 +94,8 @@ class UserService {
   }
 }
 
+<<<<<<< HEAD
 export default UserService
+=======
+export default UserService;
+>>>>>>> origin/main

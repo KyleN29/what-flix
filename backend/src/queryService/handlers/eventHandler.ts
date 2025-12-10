@@ -9,12 +9,13 @@ import ProfilePictureRead from '../models/ProfilePictureRead.js';
 const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
+  // Extract incoming event
   const event = req.body;
-
   console.log('Received event:', event.type);
 
   try {
     switch (event.type) {
+      // Create or update user profile
       case 'UserCreated': {
         const { user_id, email, username } = event.payload;
 
@@ -26,6 +27,8 @@ router.post('/', async (req: Request, res: Response) => {
 
         break;
       }
+
+      // Create or update auth credentials
       case 'UserAuthCreated': {
         const { user_id, password_hash } = event.payload;
 
@@ -38,6 +41,7 @@ router.post('/', async (req: Request, res: Response) => {
         break;
       }
 
+      // Update genre preferences
       case 'GenrePreferencesUpdated': {
         const { user_id, preferences } = event.payload;
 
@@ -49,6 +53,8 @@ router.post('/', async (req: Request, res: Response) => {
 
         break;
       }
+
+      // Update people preferences
       case 'PeoplePreferencesUpdated': {
         const { user_id, preferences } = event.payload;
 

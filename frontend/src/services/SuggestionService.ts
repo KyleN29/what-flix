@@ -13,6 +13,7 @@ class SuggestionService {
     baseURL: import.meta.env.VITE_API_URL
   });
 
+  // Search people by text query
   static async searchPeople(query: string): Promise<SuggestedPerson[]> {
     if (!query) return [];
     const response = await this.axiosInstance.get('/suggestion/people', {

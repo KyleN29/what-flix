@@ -7,9 +7,12 @@ import './SearchResults.css';
 
 function SearchResults() {
   const [params] = useSearchParams();
+
+  // Extract search query and page number
   const query = params.get('q') || '';
   const page = Number(params.get('page') || 3);
 
+  // Fetch search results
   const { data, isLoading, error } = useQuery({
     queryKey: ['search', query, page],
     queryFn: () => MovieService.searchMovies(query, page),
@@ -20,7 +23,7 @@ function SearchResults() {
   if (isLoading) return <p>Loading search results…</p>;
   if (error) return <p>Error loading search results.</p>;
 
-
+  // Compute movie card dimensions
   const movieDivAspectRatio = 3 / 4.2;
   const movieHeightRem = 16;
   const movieWidthRem = movieHeightRem * movieDivAspectRatio;

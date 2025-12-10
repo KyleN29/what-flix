@@ -9,12 +9,12 @@ function PersonSearch() {
   const [show, setShow] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState<Person[]>([]);
 
-  // Controls visual of save button
+  // Controls visual state of save button
   const [saving, setSaving] = useState(false);
 
-  // Load user's current liked people from the database
+  // Load user's saved liked people on mount
   useEffect(() => {
-    async function loadUserGenres() {
+    async function loadUserPeople() {
       try {
         const saved = await UserService.getLikedPeople();
         if (saved && saved.length > 0) {
@@ -25,12 +25,10 @@ function PersonSearch() {
       }
     }
 
-    loadUserGenres();
+    loadUserPeople();
   }, []);
 
-  // Controls visual of save button
-  
-
+  // Fetch suggestion results when typing
   useEffect(() => {
     if (!show) return;
     if (!query) {
@@ -40,22 +38,26 @@ function PersonSearch() {
 
     const timeout = setTimeout(async () => {
       const data = await SuggestionService.searchPeople(query);
+
       const convertedData: Person[] = data.map((p) => ({
         person_id: Number(p.id),
         name: p.name
       }));
+
       setResults(convertedData);
     }, 200);
 
     return () => clearTimeout(timeout);
-  }, [query]);
+  }, [query, show]);
 
   // Add selected person
   const addPerson = (person: Person) => {
     const exists = selectedPeople.some((p) => p.person_id === person.person_id);
+
     if (!exists) {
       setSelectedPeople((prev) => [...prev, person]);
     }
+
     setQuery('');
     setShow(false);
     setResults([]);
@@ -66,15 +68,12 @@ function PersonSearch() {
     setSelectedPeople((prev) => prev.filter((p) => p.person_id !== id));
   };
 
-  // Save users liked people to database
+  // Save user's liked people to database
   async function savePreferences() {
     try {
       setSaving(true);
-
       await UserService.updateLikedPeople(selectedPeople);
-
       setSaving(false);
-
     } catch (error) {
       setSaving(false);
       console.error('Error saving preferences:', error);
@@ -90,6 +89,7 @@ function PersonSearch() {
       >
         {saving ? 'Saving...' : 'Save Preferences'}
       </button>
+
       <input
         type="text"
         value={query}
@@ -114,6 +114,7 @@ function PersonSearch() {
           ))}
         </ul>
       )}
+
       <div className="selected-people">
         {selectedPeople.map((person) => (
           <div key={person.person_id.toString()} className="person-chip">
