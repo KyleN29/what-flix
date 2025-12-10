@@ -22,8 +22,6 @@ function PreferenceEditor() {
         <PersonSearch></PersonSearch>
       </div>
     ),
-
-    'Favorite Movies': <div></div>
   };
   const tabs = Object.keys(tabContent);
   const [activeTab, setActiveTab] = useState(tabs[0]);
