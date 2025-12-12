@@ -45,6 +45,7 @@ function Login() {
       console.log('Login successfully!');
       localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
+      navigate('/');
     },
     onError: (err) => {
       console.error('Login failed:', err);
@@ -67,7 +68,7 @@ function Login() {
       email: loginEmail,
       password: loginPassword
     });
-    navigate('/');
+    
   };
 
   const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {

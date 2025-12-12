@@ -42,7 +42,9 @@ function ButtonBox({ items, onRemove, onAdd, title, genreList, excludeGenres = [
   };
 
   const getAvailableGenres = () => {
+    if (!items) return genreList;
     const selectedGenreNames = items.map(item => item.name);
+    if (!excludeGenres) return selectedGenreNames;
     const excludedNames = excludeGenres.map(item => item.name);
     return genreList.filter(
       genre => !selectedGenreNames.includes(genre.name) && !excludedNames.includes(genre.name)
@@ -94,7 +96,7 @@ function ButtonBox({ items, onRemove, onAdd, title, genreList, excludeGenres = [
         </button>
       </div>
       <div className="flex flex-wrap gap-3">
-        {items.map((item: GenreRank) => (
+        {items && items.map((item: GenreRank) => (
           <button
             key={item.rank}
             onClick={() => handleClick(item)}
