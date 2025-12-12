@@ -8,8 +8,9 @@ import AuthService, {
 import './../variables.css';
 import './Login.css';
 import { useAuth } from '../../context/AuthContext';
-
+import { useNavigate } from 'react-router-dom';
 function Login() {
+  const navigate = useNavigate();
   const { setIsLoggedIn } = useAuth();
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -66,6 +67,7 @@ function Login() {
       email: loginEmail,
       password: loginPassword
     });
+    navigate('/');
   };
 
   const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {

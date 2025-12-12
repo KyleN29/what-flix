@@ -61,7 +61,7 @@ function NavBar() {
       <div className="nav-right">
         {isLoggedIn ? (
           <>
-            <Link to="/profile" className="nav-link">
+            <Link to="/account" className="nav-link">
               Profile
             </Link>
           </>
