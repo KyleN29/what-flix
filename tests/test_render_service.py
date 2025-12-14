@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 
 TITLE_GOAL = "What-Flix"
-TITLE_LOADING = "Render - Application Loading"
+TITLE_LOADING = "Render - Application loading"
 
 def test_render_service():
   # This allows the selenium driver to work on Ubuntu
