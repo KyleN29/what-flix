@@ -16,6 +16,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Testing
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-verson: '3.9'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests with coverage
         run: |
-          echo "Hello World!"
+          pytest -q -s \
+            --cov=. \
+            --cov-report=term \
