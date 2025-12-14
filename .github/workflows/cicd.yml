@@ -29,10 +29,6 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run basic tests
-        run: |
-          pytest -q
-
       - name: Run tests with coverage
         run: |
           pytest -q \
