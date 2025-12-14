@@ -1,13 +1,20 @@
 # Tests if the render service is working properly.
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import time
 
 TITLE_GOAL = "What-Flix"
 TITLE_LOADING = "Render - Application Loading"
 
 def test_render_service():
-  driver = webdriver.Chrome()
+  # This allows the selenium driver to work on Ubuntu
+  chrome_options = Options()
+  chrome_options.add_argument("--headless=new")
+  chrome_options.add_argument("--no-sandbox")
+  chrome_options.add_argument("--disable-dev-shm-usage")
+
+  driver = webdriver.Chrome(options=chrome_options)
   driver.get("https://what-flix.onrender.com/")
 
   if driver.title == TITLE_GOAL:
