@@ -34,12 +34,10 @@ class RecommendationService {
       userGenres,
       userPeople
     };
-
     let score = 0;
     for (const strategy of this.scoringStrategies) {
       score += strategy.score(context);
     }
-
     return { ...movie, score };
   }
 
@@ -54,7 +52,6 @@ class RecommendationService {
   static async getGeneralRecommendations() {
     const userGenreList = await UserService.getUserGenreList();
     const userPeopleList = await UserService.getLikedPeople();
-
     // Gather movies from multiple pages
     const numPages = 10;
     const movies: Movie[] = [];
@@ -70,21 +67,18 @@ class RecommendationService {
       });
       movies.push(...results);
     }
-
     const scoredMovies: MovieScore[] = [];
 
     for (const movie of movies) {
       const credits = await MovieService.getMovieCredits(movie.id);
-
       // Attach cast + crew to movie
       this.attachPeopleToMovie(movie, credits);
-
       // Score the movie
       const scored = this.scoreMovie(movie, userGenreList, userPeopleList);
       scoredMovies.push(scored);
     }
-
     scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
+    console.log(scoredMovies.slice(0, 30))
     return scoredMovies.slice(0, 30);
   }
 

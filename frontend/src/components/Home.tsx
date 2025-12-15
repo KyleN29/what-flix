@@ -74,7 +74,6 @@ function Home() {
                 >
                   Details
                 </button>
-                <button className="btn-secondary">More Like This</button>
               </div>
 
               <div className="hero-dots">
@@ -102,6 +101,7 @@ function Home() {
                   >
                     Update Preferences
                   </button>
+                  
                 </>
               ) : (
                 <>

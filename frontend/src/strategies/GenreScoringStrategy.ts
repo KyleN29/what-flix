@@ -11,7 +11,7 @@ export class GenreScoringStrategy implements ScoringStrategy {
         score += (maxRank - match.rank + 1) * 10;
       }
     }
-
+    console.log("genre :)")
     return score;
   }
 }

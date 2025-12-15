@@ -31,6 +31,7 @@ function Login() {
       console.log('Registered successfully!');
       localStorage.setItem('accessToken', data.accessToken);
       setIsLoggedIn(true);
+      navigate('/');
     },
     onError: (err) => {
       console.error('Registration failed:', err);
@@ -107,7 +108,7 @@ function Login() {
       <div className="background"></div>
       <form className="login" onSubmit={handleLoginSubmit}>
         <h3>Login</h3>
-        <p>Username:</p>
+        <p>Email:</p>
         <input
           type="text"
           value={loginEmail}
