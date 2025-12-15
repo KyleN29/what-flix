@@ -1,6 +1,9 @@
 import requests
-
-#curl --request GET --url "https://api.themoviedb.org/3/movie/26963?api_key=e93a224d7c73211daf4ec900a2e287b7"
+import os
 
 def test_tmdb_api():
+  url = f"https://api.themoviedb.org/3/movie/26963?api_key={os.getenv('TMDB_API_KEY')}"
+  data = requests.get(url).json()
+  print(data)
+
   assert True
