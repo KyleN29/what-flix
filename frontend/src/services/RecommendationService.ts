@@ -53,7 +53,7 @@ class RecommendationService {
     const userGenreList = await UserService.getUserGenreList();
     const userPeopleList = await UserService.getLikedPeople();
     // Gather movies from multiple pages
-    const numPages = 3;
+    const numPages = 7;
     const movies: Movie[] = [];
 
     for (let i = 0; i < numPages; i++) {
@@ -78,7 +78,6 @@ class RecommendationService {
       scoredMovies.push(scored);
     }
     scoredMovies.sort((a, b) => Number(b.score) - Number(a.score));
-    console.log(scoredMovies.slice(0, 30))
     return scoredMovies.slice(0, 30);
   }
 
