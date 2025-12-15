@@ -9,4 +9,4 @@ RENDER_URL = "https://what-flix.onrender.com/"
 def test_render_service():
   soup = bs(requests.get(RENDER_URL).text, 'html.parser')
   
-  assert TITLE_GOAL == soup.find_all('title')[0]
+  assert f"<title>{TITLE_GOAL}</title>" == soup.find_all('title')[0]
