@@ -62,7 +62,6 @@ function MovieDescription() {
         vote_average={movie.vote_average}
         vote_count={movie.vote_count}
       />
-      <button className="watch-later-button">Watch Later</button>
     </div>
   );
 

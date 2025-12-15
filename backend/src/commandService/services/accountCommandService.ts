@@ -147,8 +147,6 @@ class AccountCommandService {
       password_hash: hashedPassword
     });
 
-    console.log(userAuth);
-
     const accessToken = jwt.sign(
       { user_id: user.user_id, email: user.email },
       'jwt-secret',
