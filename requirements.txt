@@ -1,3 +1,4 @@
-selenium
+requests
 pytest
 pytest-cov
+beautifulsoup4

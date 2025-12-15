@@ -16,10 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Chrome dependencies
-        run: |
-          sudo apt-get install -y wget libnss3 libnspr4 libfontconfig1 libexpat1
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
