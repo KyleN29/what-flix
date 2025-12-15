@@ -53,7 +53,7 @@ class RecommendationService {
     const userGenreList = await UserService.getUserGenreList();
     const userPeopleList = await UserService.getLikedPeople();
     // Gather movies from multiple pages
-    const numPages = 10;
+    const numPages = 3;
     const movies: Movie[] = [];
 
     for (let i = 0; i < numPages; i++) {
