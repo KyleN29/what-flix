@@ -24,11 +24,11 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
-        env:
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 
       - name: Run tests with coverage
         run: |
           pytest -q -s \
             --cov=. \
             --cov-report=term \
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
