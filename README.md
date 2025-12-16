@@ -12,7 +12,7 @@ with MongoDB for the database. The application is deployed on Render.
 
 ## Deployment Details
 Our website is hosted at https://what-flix.onrender.com/. It may take a minute to
-load since Render stops the application when not in use for a long period of time
+load since Render stops the application when not in use for a long period of time.
 Render automatically verifies our changes made to main and deploys them to the live
 application.
 ## Running locally
